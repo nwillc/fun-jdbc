@@ -1,0 +1,80 @@
+apply plugin: 'java'
+apply plugin: 'nexus'
+apply plugin: 'release'
+
+
+group = "com.github.nwillc"
+archivesBaseName = "fun-jdbc"
+version = "0.1"
+targetCompatibility = "1.8"
+sourceCompatibility = "1.8"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.+',
+                'org.assertj:assertj-core:1.6.+',
+                'com.github.nwillc:contracts:1.+'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+              url 'http://maven.tmatesoft.com/content/repositories/releases/'
+            }
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
+                  'org.tmatesoft.sqljet:sqljet:1.1.9',
+                  'au.com.ish.gradle:release:2.2.2'
+    }
+}
+
+release {
+  failOnSnapshotDependencies = true
+  allowLocalModifications = true
+  releaseDryRun = false
+  scm = 'git'
+}
+
+nexus {
+    attachSources = true
+    attachTests = false
+    attachJavadoc = true
+    sign = true
+}
+
+modifyPom {
+    project {
+        name 'Fun JDBC for Java 8'
+        description 'Java 8 functional JDBC utility code, applying some of Java\'s newer features to reduce JDBC boilerplate code.'
+        url 'https://github.com/nwillc/fun-jdbc'
+        inceptionYear '2014'
+
+        scm {
+            url 'https://github.com/nwillc/fun-jdbc'
+            connection 'scm:https://nwillc@github.com:nwillc/fun-jdbc.git'
+            developerConnection 'scm:git:git@github.com:nwillc/fun-jdbc.git'
+        }
+
+        licenses {
+            license {
+                name 'ISC'
+                url 'http://www.isc.org/downloads/software-support-policy/isc-license/'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'nwillc'
+                name 'N Christopher'
+                email 'nwillc@gmail.com'
+            }
+        }
+    }
+}
