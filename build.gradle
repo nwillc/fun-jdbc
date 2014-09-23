@@ -34,7 +34,7 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.+',
                 'org.assertj:assertj-core:1.6.+',
-                'com.github.nwillc:contracts:1.+'
+                'com.h2database:h2:1.4.181'
 }
 
 buildscript {

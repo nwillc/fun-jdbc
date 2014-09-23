@@ -53,6 +53,14 @@ public interface DbAccessor {
         return list;
     }
 
+    /**
+     * Extract result from a query designed to return at most one result.
+     * @param sql The SQL to execute
+     * @param extractor the extractor to extract teh result
+     * @param <T> the type the extractor will return
+     * @return an Optional of the data
+     * @throws SQLException if the query or extraction fails, or if multiple rows returned
+     */
     default <T> Optional<T> find(final String sql, final Extractor<T> extractor) throws SQLException {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
