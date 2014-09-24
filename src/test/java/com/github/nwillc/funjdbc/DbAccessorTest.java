@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbAccessorTest {
     private InMemWordsDatabase dao;
+    private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
 
     @Before
     public void setUp() throws Exception {
@@ -49,14 +50,14 @@ public class DbAccessorTest {
 
     @Test
     public void testQuery() throws Exception {
-        List<String> words = dao.query("SELECT * FROM WORDS", rs -> rs.getString("WORD"));
+        List<String> words = dao.query("SELECT * FROM WORDS", wordExtractor);
         assertThat(words).isNotNull();
         assertThat(words.size()).isEqualTo(3);
     }
 
     @Test
     public void testFind() throws Exception {
-        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'b'", rs -> rs.getString("WORD"));
+        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'b'", wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get()).isEqualTo("b");
@@ -64,14 +65,14 @@ public class DbAccessorTest {
 
     @Test
     public void testNotFound() throws Exception {
-        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'c'", rs -> rs.getString("WORD"));
+        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'c'", wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
     }
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
-        dao.find("SELECT * FROM WORDS WHERE WORD = 'a'", rs -> rs.getString("WORD"));
+        dao.find("SELECT * FROM WORDS WHERE WORD = 'a'", wordExtractor);
     }
 
 }
