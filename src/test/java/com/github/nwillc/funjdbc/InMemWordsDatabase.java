@@ -23,17 +23,20 @@ import java.sql.Statement;
 
 public class InMemWordsDatabase implements DbAccessor {
     private final static String DRIVER = "org.h2.Driver";
-    private final static String URL = "jdbc:h2:mem:db1";
+    private final static String URL = "jdbc:h2:mem:";
+    private static long instanceId = 0;
+    private final String name;
     private final Connection connection;
 
     public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER);
+        name = String.format("db%04d",instanceId++);
         connection = getConnection();
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+        return DriverManager.getConnection(URL + name);
     }
 
     public void create() throws SQLException {

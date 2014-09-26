@@ -16,14 +16,16 @@
 
 package com.github.nwillc.funjdbc;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static com.github.nwillc.funjdbc.ResultSetIterator.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -37,12 +39,6 @@ public class DbAccessorTest {
         dao.create();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        dao.drop();
-        dao = null;
-    }
-
     @Test
     public void testGetConnection() throws Exception {
         assertThat(dao.getConnection()).isNotNull();
@@ -50,9 +46,9 @@ public class DbAccessorTest {
 
     @Test
     public void testQuery() throws Exception {
-        List<String> words = dao.query("SELECT * FROM WORDS", wordExtractor);
+        Stream<String> words = dao.query("SELECT * FROM WORDS", wordExtractor);
         assertThat(words).isNotNull();
-        assertThat(words.size()).isEqualTo(3);
+        assertThat(words.count()).isEqualTo(3);
     }
 
     @Test
@@ -68,6 +64,16 @@ public class DbAccessorTest {
         Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'c'", wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
+    }
+
+    @Test
+    public void testStream() throws Exception {
+        final String sql = "SELECT * FROM WORDS";
+
+        try (Connection c = dao.getConnection();
+             Stream<String> stream = stream(c, sql, wordExtractor)) {
+            assertThat(stream.count()).isEqualTo(3);
+        }
     }
 
     @Test(expected = SQLException.class)

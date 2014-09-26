@@ -23,6 +23,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+import static almost.functional.utils.LogFactory.getLogger;
+import static com.github.nwillc.funjdbc.ResultSetIterator.stream;
 
 public interface DbAccessor {
 
@@ -38,19 +43,18 @@ public interface DbAccessor {
      * @param sql The SQL being used
      * @param extractor The extractor to process the ResultSet with
      * @param <T> The type of the elements to extract
-     * @return a list of extracted data
+     * @return a stream of the extracted elements
      * @throws SQLException if the query or an extraction fails
      */
-    default <T> List<T> query(final String sql, final Extractor<T> extractor) throws SQLException {
-        final List<T> list = new ArrayList<>();
-        try (Connection conn = getConnection();
-             Statement statement = conn.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                list.add(extractor.extract(rs));
-            }
-        }
-        return list;
+    default <T> Stream<T> query(final String sql, final Extractor<T> extractor) throws SQLException {
+       final Connection connection = getConnection();
+       return stream(connection,sql,extractor).onClose(() -> {
+           try {
+               connection.close();
+           } catch (SQLException e) {
+               getLogger().info("Exception closing connection: " + e);
+           }
+       });
     }
 
     /**
