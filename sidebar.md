@@ -1,6 +1,6 @@
 ## FUN JDBC
 - [Home]()
-- [Licence](#docs/LICENSE)
+- [License](#docs/LICENSE)
 
 ## The Bits
 - [Github Repository](http://github.com/nwillc/fun-jdbc)
