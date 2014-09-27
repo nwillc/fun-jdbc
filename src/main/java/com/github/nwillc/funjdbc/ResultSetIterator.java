@@ -16,17 +16,9 @@
 
 package com.github.nwillc.funjdbc;
 
-import almost.functional.utils.LogFactory;
-
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Iterator;
-import java.util.Spliterators;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static com.github.nwillc.funjdbc.Utils.Throwables.propagate;
 
@@ -34,33 +26,13 @@ import static com.github.nwillc.funjdbc.Utils.Throwables.propagate;
  * This is an Iterator that traverses a ResultSet, additionally it is AutoCloseable so that it can clean its resources up.
  * @param <T> The type of elements being extracted
  */
-public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
-    private final static Logger LOGGER = LogFactory.getLogger();
+public class ResultSetIterator<T> implements Iterator<T> {
     private final ResultSet resultSet;
-    private final Statement statement;
     private final Extractor<T> extractor;
 
-    static <T> Stream<T> stream(final Connection connection, final String sql, final Extractor<T> extractor) throws SQLException {
-        ResultSetIterator<T> iterator = new ResultSetIterator<>(connection, sql, extractor);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)
-                .onClose(() -> {
-                    try {
-                        iterator.close();
-                    } catch (Exception e) {
-                        LOGGER.info("Exception closing iterator: " + e);
-                    }
-                });
-    }
-
-    public ResultSetIterator(final Connection connection, final String sql, final Extractor<T> extractor) throws SQLException {
+    public ResultSetIterator(final ResultSet resultSet, final Extractor<T> extractor) {
         this.extractor = extractor;
-        statement = connection.createStatement();
-        try {
-            resultSet = statement.executeQuery(sql);
-        } catch (SQLException e) {
-            statement.close();
-            throw e;
-        }
+        this.resultSet = resultSet;
     }
 
     @Override
@@ -79,11 +51,5 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
         } catch (SQLException e) {
             throw propagate(e);
         }
-    }
-
-    @Override
-    public void close() throws SQLException {
-        resultSet.close();
-        statement.close();
     }
 }

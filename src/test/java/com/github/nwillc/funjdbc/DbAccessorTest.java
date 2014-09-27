@@ -19,13 +19,10 @@ package com.github.nwillc.funjdbc;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.github.nwillc.funjdbc.ResultSetIterator.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -70,8 +67,7 @@ public class DbAccessorTest {
     public void testStream() throws Exception {
         final String sql = "SELECT * FROM WORDS";
 
-        try (Connection c = dao.getConnection();
-             Stream<String> stream = stream(c, sql, wordExtractor)) {
+        try (Stream<String> stream = dao.query(sql, wordExtractor)) {
             assertThat(stream.count()).isEqualTo(3);
         }
     }

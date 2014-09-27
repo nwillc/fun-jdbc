@@ -20,14 +20,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static almost.functional.utils.LogFactory.getLogger;
-import static com.github.nwillc.funjdbc.ResultSetIterator.stream;
 
 public interface DbAccessor {
 
@@ -47,14 +45,20 @@ public interface DbAccessor {
      * @throws SQLException if the query or an extraction fails
      */
     default <T> Stream<T> query(final String sql, final Extractor<T> extractor) throws SQLException {
-       final Connection connection = getConnection();
-       return stream(connection,sql,extractor).onClose(() -> {
-           try {
-               connection.close();
-           } catch (SQLException e) {
-               getLogger().info("Exception closing connection: " + e);
-           }
-       });
+        Connection connection = getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)
+                .onClose(() -> {
+                    try {
+                        resultSet.close();
+                        statement.close();
+                        connection.close();
+                    } catch (Exception e) {
+                        getLogger().info("Exception closing iterator: " + e);
+                    }
+                });
     }
 
     /**
