@@ -1,16 +1,11 @@
-## AF
+## FUN JDBC
 - [Home]()
-- [Usage](#docs/usage)
-- [Dependencies](#docs/dependencies)
-- [Example](#docs/example)
 - [Licence](#docs/LICENSE)
 
 ## The Bits
-- [Github Repository](http://github.com/nwillc/almost-functional)
+- [Github Repository](http://github.com/nwillc/fun-jdbc)
 
 ## Links
-- [API docs](./apidocs)
-- [Issue Tracking](https://github.com/nwillc/almost-functional/issues)
+- [Issue Tracking](https://github.com/nwillc/fun-jdbc/issues)
 
-## Projects that using AF
-- [scotty](http://nwillc.github.io/scotty)
+
