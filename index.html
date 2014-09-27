@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+
+    <!-- marked -->
+    <script src="./js/marked.js"></script>
+
+    <!-- ditto -->
+    <script src="./js/ditto.js"></script>
+    <link rel="stylesheet" href="./css/ditto.css">
+</head>
+<body>
+    <!-- essential -->
+    <div id="sidebar"></div>
+    <div id="content"></div>
+
+    <script>
+        // essential settings
+        ditto.index = "README.md",
+        ditto.sidebar_file = "sidebar.md",
+
+        // where the docs are actually stored on github - so you can edit
+        ditto.base_url = "https://github.com/nwillc/fun-jdbc/tree/gh-pages";  
+
+        // run
+        ditto.run();
+    </script>
+</body>
+</html>
