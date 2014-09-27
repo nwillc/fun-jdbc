@@ -69,7 +69,7 @@ nexus {
 
 modifyPom {
     project {
-        name 'Fun JDBC for Java 8'
+        name 'Functional JDBC for Java 8'
         description 'Java 8 functional JDBC utility code, applying some of Java\'s newer features to reduce JDBC boilerplate code.'
         url 'https://github.com/nwillc/fun-jdbc'
         inceptionYear '2014'
