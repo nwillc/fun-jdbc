@@ -19,8 +19,10 @@ package com.github.nwillc.funjdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.nwillc.funjdbc.Utils.Throwables.propagate;
+import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
 /**
  * This is an Iterator that traverses a ResultSet, additionally it is AutoCloseable so that it can clean its resources up.
@@ -44,6 +46,7 @@ public class ResultSetIterator<T> implements Iterator<T> {
         }
     }
 
+    // FIXME: Should not depend on hasNext, and should throw NoSuchElement
     @Override
     public T next() {
         try {

@@ -43,22 +43,38 @@ public class DbAccessorTest {
 
     @Test
     public void testQuery() throws Exception {
-        Stream<String> words = dao.query("SELECT * FROM WORDS", wordExtractor);
+        Stream<String> words = dao.query(wordExtractor, "SELECT * FROM WORDS");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(3);
     }
 
     @Test
+    public void testQueryWithArgs() throws Exception {
+        Stream<String> words  = dao.query(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
+        assertThat(words).isNotNull();
+        assertThat(words.count()).isEqualTo(2);
+    }
+
+    @Test
     public void testFind() throws Exception {
-        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'b'", wordExtractor);
+        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'b'");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get()).isEqualTo("b");
     }
 
     @Test
+    public void testFindWithArgs() throws Exception {
+        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'","b");
+        assertThat(word).isNotNull();
+        assertThat(word.isPresent()).isTrue();
+        assertThat(word.get()).isEqualTo("b");
+    }
+
+
+    @Test
     public void testNotFound() throws Exception {
-        Optional<String> word = dao.find("SELECT * FROM WORDS WHERE WORD = 'c'", wordExtractor);
+        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'c'");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
     }
@@ -67,14 +83,14 @@ public class DbAccessorTest {
     public void testStream() throws Exception {
         final String sql = "SELECT * FROM WORDS";
 
-        try (Stream<String> stream = dao.query(sql, wordExtractor)) {
+        try (Stream<String> stream = dao.query(wordExtractor, sql)) {
             assertThat(stream.count()).isEqualTo(3);
         }
     }
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
-        dao.find("SELECT * FROM WORDS WHERE WORD = 'a'", wordExtractor);
+        dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
     }
 
 }

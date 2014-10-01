@@ -35,7 +35,8 @@ dependencies {
     compile 'com.github.nwillc:almost-functional:1.+'
     testCompile 'junit:junit:4.+',
                 'org.assertj:assertj-core:1.6.+',
-                'com.h2database:h2:1.4.181'
+                'com.h2database:h2:1.4.181',
+                'com.github.nwillc:contracts:1.+'
 }
 
 buildscript {

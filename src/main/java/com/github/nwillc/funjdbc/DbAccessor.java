@@ -25,12 +25,13 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static almost.functional.utils.LogFactory.getLogger;
+import static com.github.nwillc.funjdbc.utils.Closer.close;
 
 public interface DbAccessor {
 
     /**
      * Method by which we return the database connection.
+     *
      * @return A valid database connection
      * @throws SQLException if a connection can not be returned
      */
@@ -38,41 +39,41 @@ public interface DbAccessor {
 
     /**
      * Extract results from a query designed to return multiple results.
-     * @param sql The SQL being used
+     *
      * @param extractor The extractor to process the ResultSet with
-     * @param <T> The type of the elements to extract
+     * @param sql       The SQL being used
+     * @param args      If present, used as arguments in sql = String.format(sql,args)
      * @return a stream of the extracted elements
      * @throws SQLException if the query or an extraction fails
      */
-    default <T> Stream<T> query(final String sql, final Extractor<T> extractor) throws SQLException {
+    default <T> Stream<T> query(final Extractor<T> extractor, final String sql, Object... args) throws SQLException {
+        final String formattedSql = args != null && args.length > 0 ? String.format(sql, args) : sql;
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+        ResultSet resultSet = statement.executeQuery(formattedSql);
         ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)
                 .onClose(() -> {
-                    try {
-                        resultSet.close();
-                        statement.close();
-                        connection.close();
-                    } catch (Exception e) {
-                        getLogger().info("Exception closing iterator: " + e);
-                    }
+                    close(resultSet);
+                    close(statement);
+                    close(connection);
                 });
     }
 
     /**
      * Extract result from a query designed to return at most one result.
-     * @param sql The SQL to execute
+     *
      * @param extractor the extractor to extract teh result
-     * @param <T> the type the extractor will return
+     * @param sql       The SQL to execute
+     * @param args      If present, used as arguments in sql = String.format(sql,args)
      * @return an Optional of the data
      * @throws SQLException if the query or extraction fails, or if multiple rows returned
      */
-    default <T> Optional<T> find(final String sql, final Extractor<T> extractor) throws SQLException {
+    default <T> Optional<T> find(final Extractor<T> extractor, final String sql, final Object... args) throws SQLException {
+        final String formattedSql = args != null && args.length > 0 ? String.format(sql, args) : sql;
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+             ResultSet resultSet = statement.executeQuery(formattedSql)) {
             if (!resultSet.next()) {
                 return Optional.empty();
             }

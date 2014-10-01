@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.funjdbc.Utils;
+package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 
