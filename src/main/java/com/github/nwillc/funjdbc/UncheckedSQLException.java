@@ -19,6 +19,9 @@ package com.github.nwillc.funjdbc;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * An unchecked version of SQLException.
+ */
 public class UncheckedSQLException extends RuntimeException {
 
     public UncheckedSQLException(String message, Throwable cause) {

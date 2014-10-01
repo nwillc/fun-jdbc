@@ -27,6 +27,9 @@ import java.util.stream.StreamSupport;
 
 import static com.github.nwillc.funjdbc.utils.Closer.close;
 
+/**
+ * Interface, with default methods providing JDBC database access functionality.
+ */
 public interface DbAccessor {
 
     /**

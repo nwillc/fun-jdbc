@@ -20,6 +20,9 @@ import com.github.nwillc.funjdbc.UncheckedSQLException;
 
 import java.sql.SQLException;
 
+/**
+ * Utility methods for throwables.
+ */
 public final class Throwables {
     private Throwables() {}
 
