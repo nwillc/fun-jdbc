@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.filter;
 
 
 public class DbAccessorTest {
@@ -86,6 +87,15 @@ public class DbAccessorTest {
         try (Stream<String> stream = dao.query(wordExtractor, sql)) {
             assertThat(stream.count()).isEqualTo(3);
         }
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        final String sql = "UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'";
+        dao.update(sql);
+        Stream<String> words  = dao.query(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
+        assertThat(words).isNotNull();
+        assertThat(words.count()).isEqualTo(2);
     }
 
     @Test(expected = SQLException.class)

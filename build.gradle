@@ -23,7 +23,7 @@ apply plugin: 'release'
 
 group = "com.github.nwillc"
 archivesBaseName = "fun-jdbc"
-version = "0.3"
+version = "0.4"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 

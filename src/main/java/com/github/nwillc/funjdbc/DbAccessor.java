@@ -46,11 +46,12 @@ public interface DbAccessor {
      * @param extractor The extractor to process the ResultSet with
      * @param sql       The SQL being used
      * @param args      If present, used as arguments in sql = String.format(sql,args)
+     * @param <T>       Type extracted and returned in the stream
      * @return a stream of the extracted elements
      * @throws SQLException if the query or an extraction fails
      */
     default <T> Stream<T> query(final Extractor<T> extractor, final String sql, Object... args) throws SQLException {
-        final String formattedSql = args != null && args.length > 0 ? String.format(sql, args) : sql;
+        final String formattedSql = String.format(sql, args);
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedSql);
@@ -69,11 +70,12 @@ public interface DbAccessor {
      * @param extractor the extractor to extract teh result
      * @param sql       The SQL to execute
      * @param args      If present, used as arguments in sql = String.format(sql,args)
+     * @param <T> Type extracted and optionally returned
      * @return an Optional of the data
      * @throws SQLException if the query or extraction fails, or if multiple rows returned
      */
     default <T> Optional<T> find(final Extractor<T> extractor, final String sql, final Object... args) throws SQLException {
-        final String formattedSql = args != null && args.length > 0 ? String.format(sql, args) : sql;
+        final String formattedSql = String.format(sql, args);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(formattedSql)) {
@@ -90,4 +92,20 @@ public interface DbAccessor {
             return Optional.of(result);
         }
     }
+
+    /**
+     * Execute a SQL update or delete.
+     * @param sql The SQL.
+     * @param args any optional arguments
+     * @return the count of rows updated.
+     * @throws SQLException if the update fails
+     */
+    default int update(final String sql, final Object ... args) throws SQLException {
+        final String formattedSql = String.format(sql, args);
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            return statement.executeUpdate(formattedSql);
+        }
+    }
+
 }
