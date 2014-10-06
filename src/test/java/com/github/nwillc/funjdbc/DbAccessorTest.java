@@ -44,21 +44,21 @@ public class DbAccessorTest {
 
     @Test
     public void testQuery() throws Exception {
-        Stream<String> words = dao.query(wordExtractor, "SELECT * FROM WORDS");
+        Stream<String> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(3);
     }
 
     @Test
     public void testQueryWithArgs() throws Exception {
-        Stream<String> words  = dao.query(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
+        Stream<String> words  = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(2);
     }
 
     @Test
     public void testFind() throws Exception {
-        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'b'");
+        Optional<String> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'b'");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get()).isEqualTo("b");
@@ -66,7 +66,7 @@ public class DbAccessorTest {
 
     @Test
     public void testFindWithArgs() throws Exception {
-        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'","b");
+        Optional<String> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'","b");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get()).isEqualTo("b");
@@ -75,7 +75,7 @@ public class DbAccessorTest {
 
     @Test
     public void testNotFound() throws Exception {
-        Optional<String> word = dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'c'");
+        Optional<String> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'c'");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
     }
@@ -84,7 +84,7 @@ public class DbAccessorTest {
     public void testStream() throws Exception {
         final String sql = "SELECT * FROM WORDS";
 
-        try (Stream<String> stream = dao.query(wordExtractor, sql)) {
+        try (Stream<String> stream = dao.dbQuery(wordExtractor, sql)) {
             assertThat(stream.count()).isEqualTo(3);
         }
     }
@@ -92,15 +92,15 @@ public class DbAccessorTest {
     @Test
     public void testUpdate() throws Exception {
         final String sql = "UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'";
-        dao.update(sql);
-        Stream<String> words  = dao.query(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
+        dao.dbUpdate(sql);
+        Stream<String> words  = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(2);
     }
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
-        dao.find(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
+        dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
     }
 
 }

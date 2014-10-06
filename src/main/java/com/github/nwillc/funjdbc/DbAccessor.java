@@ -50,7 +50,7 @@ public interface DbAccessor {
      * @return a stream of the extracted elements
      * @throws SQLException if the query or an extraction fails
      */
-    default <T> Stream<T> query(final Extractor<T> extractor, final String sql, Object... args) throws SQLException {
+    default <T> Stream<T> dbQuery(final Extractor<T> extractor, final String sql, Object... args) throws SQLException {
         final String formattedSql = String.format(sql, args);
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
@@ -74,7 +74,7 @@ public interface DbAccessor {
      * @return an Optional of the data
      * @throws SQLException if the query or extraction fails, or if multiple rows returned
      */
-    default <T> Optional<T> find(final Extractor<T> extractor, final String sql, final Object... args) throws SQLException {
+    default <T> Optional<T> dbFind(final Extractor<T> extractor, final String sql, final Object... args) throws SQLException {
         final String formattedSql = String.format(sql, args);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
@@ -100,7 +100,7 @@ public interface DbAccessor {
      * @return the count of rows updated.
      * @throws SQLException if the update fails
      */
-    default int update(final String sql, final Object ... args) throws SQLException {
+    default int dbUpdate(final String sql, final Object ... args) throws SQLException {
         final String formattedSql = String.format(sql, args);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
