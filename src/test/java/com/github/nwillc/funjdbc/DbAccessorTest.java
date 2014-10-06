@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.filter;
 
 
 public class DbAccessorTest {
@@ -51,7 +50,7 @@ public class DbAccessorTest {
 
     @Test
     public void testQueryWithArgs() throws Exception {
-        Stream<String> words  = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
+        Stream<String> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(2);
     }
@@ -66,7 +65,7 @@ public class DbAccessorTest {
 
     @Test
     public void testFindWithArgs() throws Exception {
-        Optional<String> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'","b");
+        Optional<String> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "b");
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get()).isEqualTo("b");
@@ -93,7 +92,7 @@ public class DbAccessorTest {
     public void testUpdate() throws Exception {
         final String sql = "UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'";
         dao.dbUpdate(sql);
-        Stream<String> words  = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
+        Stream<String> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
         assertThat(words).isNotNull();
         assertThat(words.count()).isEqualTo(2);
     }

@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 /**
  * A functional interface designed to extract a given type from a single row of a ResultSet.
+ *
  * @param <T> type to extract
  */
 @FunctionalInterface

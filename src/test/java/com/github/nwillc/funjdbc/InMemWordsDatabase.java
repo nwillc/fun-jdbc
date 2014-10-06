@@ -30,7 +30,7 @@ public class InMemWordsDatabase implements DbAccessor {
 
     public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER);
-        name = String.format("db%04d",instanceId++);
+        name = String.format("db%04d", instanceId++);
         connection = getConnection();
     }
 
@@ -51,7 +51,7 @@ public class InMemWordsDatabase implements DbAccessor {
 
     public void drop() throws SQLException {
         try (Connection c = getConnection();
-            Statement statement = c.createStatement()) {
+             Statement statement = c.createStatement()) {
             statement.execute("DROP TABLE WORDS");
             connection.close();
         }
