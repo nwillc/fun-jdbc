@@ -20,17 +20,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
 /**
- * This is an Iterator that traverses a ResultSet, additionally it is AutoCloseable so that it can clean its resources up.
+ * This is an Iterator that traverses a ResultSet.
  * @param <T> The type of elements being extracted
  */
 public class ResultSetIterator<T> implements Iterator<T> {
     private final ResultSet resultSet;
     private final Extractor<T> extractor;
+    private Optional<Boolean> nextAvailable = Optional.empty();
 
     public ResultSetIterator(final ResultSet resultSet, final Extractor<T> extractor) {
         this.extractor = extractor;
@@ -39,19 +41,31 @@ public class ResultSetIterator<T> implements Iterator<T> {
 
     @Override
     public boolean hasNext() {
+        if (nextAvailable.isPresent()) {
+            return nextAvailable.get();
+        }
         try {
-            return resultSet.next();
+            nextAvailable = Optional.of(resultSet.next());
+            return nextAvailable.get();
         } catch (Exception e) {
+            nextAvailable = Optional.of(false);
             throw propagate(e);
         }
     }
 
-    // FIXME: Should not depend on hasNext, and should throw NoSuchElement
     @Override
     public T next() {
+        hasNext();
+        if (!nextAvailable.get()) {
+            throw new NoSuchElementException();
+        }
+
         try {
-            return extractor.extract(resultSet);
+            T result = extractor.extract(resultSet);
+            nextAvailable = Optional.empty();
+            return result;
         } catch (SQLException e) {
+            nextAvailable = Optional.of(false);
             throw propagate(e);
         }
     }
