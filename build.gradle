@@ -98,3 +98,10 @@ modifyPom {
         }
     }
 }
+
+task listJars << {
+    println "Compile:"
+    configurations.compile.each { File file -> println "\t" + file.name }
+    println "Test:"
+    configurations.testCompile.each { File file -> println "\t" + file.name }
+}

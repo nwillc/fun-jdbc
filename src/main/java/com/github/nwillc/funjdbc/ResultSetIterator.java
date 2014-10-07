@@ -73,6 +73,11 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
         }
     }
 
+    /**
+     * Add a Runnable to be invoked when this instance is closed. Runnables will be invoked in the order they are added.
+     * @param runnable a runnable
+     * @return this instance
+     */
     public ResultSetIterator<T> onClose(final Runnable runnable) {
         closers.add(runnable);
         return this;
