@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 /**
- * An unchecked version of SQLException.
+ * An unchecked version of SQLException. Maintains the errorCode and sqlState of the SQLException.
  */
 public class UncheckedSQLException extends RuntimeException {
 

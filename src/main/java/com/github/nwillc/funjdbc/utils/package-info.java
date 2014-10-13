@@ -14,23 +14,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.funjdbc;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
- * A functional interface designed to extract a given type from a single row of a ResultSet.
- *
- * @param <T> type to extract
+ * Utility classes to support java 8 features in JDBC.
+ * @since 0.4
  */
-@FunctionalInterface
-public interface Extractor<T> {
-    /**
-     * Extract type T from the current position in the ResultSet.
-     * @param rs the ResultSet to extract from
-     * @return the type T extracted
-     * @throws SQLException should the extraction fail
-     */
-    T extract(ResultSet rs) throws SQLException;
-}
+package com.github.nwillc.funjdbc.utils;

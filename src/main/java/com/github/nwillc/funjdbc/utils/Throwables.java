@@ -29,7 +29,8 @@ public final class Throwables {
 
     /**
      * Propagate a Throwable as a RuntimeException. The Runtime exception bases it's message not the message of the Throwable,
-     * and the Throwable is set as it's cause. This can be used to deal with exceptions in lambdas etc.
+     * and the Throwable is set as it's cause. This can be used to deal with exceptions in lambdas etc. Special logic for SQLException, to
+     * throw an {@link UncheckedSQLException}.
      *
      * @param throwable the throwable to repropagate.
      * @return a RuntimeException

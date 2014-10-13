@@ -33,7 +33,7 @@ import static com.github.nwillc.funjdbc.utils.Closer.close;
 public interface DbAccessor {
 
     /**
-     * Method by which we return the database connection.
+     * Get a JDBC database connection.
      *
      * @return A valid database connection
      * @throws SQLException if a connection can not be returned
@@ -41,7 +41,8 @@ public interface DbAccessor {
     Connection getConnection() throws SQLException;
 
     /**
-     * Extract results from a query designed to return multiple results.
+     * Extract results from a SQL query designed to return multiple results. The SQL, and it's optional args
+     * are formatted with String.format(String, Object ...) method.
      *
      * @param extractor The extractor to process the ResultSet with
      * @param sql       The SQL being used
@@ -65,7 +66,8 @@ public interface DbAccessor {
     }
 
     /**
-     * Extract result from a query designed to return at most one result.
+     * Extract the result from a SQL query which returns at most one result. The SQL, and it's optional args
+     * are formatted with String.format(String, Object ...) method.
      *
      * @param extractor the extractor to extract teh result
      * @param sql       The SQL to execute
@@ -94,7 +96,8 @@ public interface DbAccessor {
     }
 
     /**
-     * Execute a SQL update or delete.
+     * Execute a SQL update or delete. The SQL, and it's optional args
+     * are formatted with String.format(String, Object ...) method.
      *
      * @param sql  The SQL.
      * @param args any optional arguments

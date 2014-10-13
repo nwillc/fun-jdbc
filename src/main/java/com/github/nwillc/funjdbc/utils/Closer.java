@@ -30,7 +30,7 @@ public final class Closer {
     }
 
     /**
-     * Close an AutoCloseable.
+     * Close an AutoCloseable without exception.
      *
      * @param autoCloseable resource to close.
      */
