@@ -97,9 +97,24 @@ public class DbAccessorTest {
         assertThat(words.count()).isEqualTo(2);
     }
 
+    @Test
+    public void testName() throws Exception {
+        dao.dbQuery(rs -> new Pair(rs.getString("WORD"), 0), "SELECT * FROM WORDS").forEach(p -> System.out.println(p.word + ": " + p.count));
+
+    }
+
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
         dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
     }
 
+    private class Pair {
+        final String word;
+        final int count;
+
+        private Pair(String word, int count) {
+            this.word = word;
+            this.count = count;
+        }
+    }
 }
