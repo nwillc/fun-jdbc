@@ -29,13 +29,16 @@ You're writing a Java data access object (DAO) to allow you to do some basic wor
 The above gets you most of the basics in one go. With that Dao you can do things like:
 
     void printAllWords(Dao dao) {
-       dao.dbQuery(rs -> rs.getString("WORD"), "SELECT WORD FROM WORDS").forEach(w -> System.out.println(w));
+       dao.dbQuery(rs -> rs.getString("WORD"), "SELECT WORD FROM WORDS")
+           .forEach(w -> System.out.println(w));
     }
     
 Or to see if a given word appears:
 
     void boolean hasWord(Dao dao, String word) {
-      return dao.dbFind(rs -> rs.getString("WORD"), "SELECT * FROM WORDS WHERE WORD = '%s'", word).isPresent();
+      return dao.dbFind(rs -> rs.getString("WORD"), 
+            "SELECT * FROM WORDS WHERE WORD = '%s'", word)
+            .isPresent();
     }
     
 And of course your Extractor can be more complex:
