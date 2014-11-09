@@ -19,7 +19,7 @@
 apply plugin: 'java'
 apply plugin: 'nexus'
 apply plugin: 'release'
-
+apply plugin: 'com.github.nwillc.vplugin'
 
 group = "com.github.nwillc"
 archivesBaseName = "fun-jdbc"
@@ -42,6 +42,7 @@ dependencies {
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
         maven {
               url 'http://maven.tmatesoft.com/content/repositories/releases/'
@@ -51,7 +52,8 @@ buildscript {
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
                   'org.tmatesoft.sqljet:sqljet:1.1.9',
-                  'au.com.ish.gradle:release:2.2.2'
+                  'au.com.ish.gradle:release:2.2.2',
+                'com.github.nwillc:vplugin:1.+'
     }
 }
 
@@ -95,48 +97,6 @@ modifyPom {
                 id 'nwillc'
                 name 'N Christopher'
                 email 'nwillc@gmail.com'
-            }
-        }
-    }
-}
-
-task listJars << {
-    println "Compile:"
-    configurations.compile.each { File file -> println "\t" + file.name }
-    println "Test:"
-    configurations.testCompile.each { File file -> println "\t" + file.name }
-}
-
-// Find any 3rd party libraries which have released new versions
-// to the central Maven repo since we last upgraded.
-task checkLibVersions << {
-    def checked = [:]
-    allprojects {
-        configurations.each { configuration ->
-            configuration.allDependencies.each { dependency ->
-                def version = dependency.version
-                if(!version.contains('SNAPSHOT') && !checked[dependency]) {
-                    def group = dependency.group
-                    def path = group.replace('.', '/')
-                    def name = dependency.name
-                    def url = "http://repo1.maven.org/maven2/$path/$name/maven-metadata.xml"
-                    try {
-                        def metadata = new XmlSlurper().parseText(url.toURL().text)
-                        def versions = metadata.versioning.versions.version.collect { it.text() }
-                        versions.removeAll { it.toLowerCase().contains('alpha') }
-                        versions.removeAll { it.toLowerCase().contains('beta') }
-                        versions.removeAll { it.toLowerCase().contains('rc') }
-                        def newest = versions.last()
-                        if(version != newest) {
-                            println "$group:$name $version -> $newest"
-                        }
-                    } catch(FileNotFoundException e) {
-                        logger.debug "Unable to download $url: $e.message"
-                    } catch(org.xml.sax.SAXParseException e) {
-                        logger.debug "Unable to parse $url: $e.message"
-                    }
-                    checked[dependency] = true
-                }
             }
         }
     }
