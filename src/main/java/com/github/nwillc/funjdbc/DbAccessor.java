@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014,  nwillc@gmail.com
+ * Copyright (c) 2014, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,15 +30,7 @@ import static com.github.nwillc.funjdbc.utils.Closer.close;
 /**
  * Interface, with default methods providing JDBC database access functionality.
  */
-public interface DbAccessor {
-
-    /**
-     * Get a JDBC database connection.
-     *
-     * @return A valid database connection
-     * @throws SQLException if a connection can not be returned
-     */
-    Connection getConnection() throws SQLException;
+public interface DbAccessor extends ConnectionProvider {
 
     /**
      * Extract results from a SQL query designed to return multiple results. The SQL, and it's optional args
@@ -56,13 +48,16 @@ public interface DbAccessor {
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedSql);
+        return stream(extractor, resultSet).onClose( () -> {
+            close(statement);
+            close(connection);
+        });
+    }
+
+    default <T> Stream<T> stream(final Extractor<T> extractor, final ResultSet resultSet) {
         ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)
-                .onClose(() -> {
-                    close(resultSet);
-                    close(statement);
-                    close(connection);
-                });
+                .onClose(() -> close(resultSet));
     }
 
     /**

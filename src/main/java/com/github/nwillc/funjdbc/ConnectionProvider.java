@@ -14,8 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Java 8 support in JDBC. Support for streams, lambdas and unchecked exceptions.
- * @since 0.4
- */
 package com.github.nwillc.funjdbc;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public interface ConnectionProvider {
+    /**
+     * Get a JDBC database connection.
+     *
+     * @return A valid database connection
+     * @throws SQLException if a connection can not be returned
+     */
+    Connection getConnection() throws SQLException;
+}

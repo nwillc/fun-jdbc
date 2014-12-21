@@ -15,7 +15,7 @@
  */
 
 /**
- * Java 8 support in JDBC. Support for streams, lambdas and unchecked exceptions.
- * @since 0.4
+ * MVP support for performing scheme migrations.
+ * @since 1.9
  */
-package com.github.nwillc.funjdbc;
+package com.github.nwillc.funjdbc.migrate;

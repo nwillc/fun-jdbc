@@ -14,8 +14,14 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Java 8 support in JDBC. Support for streams, lambdas and unchecked exceptions.
- * @since 0.4
- */
-package com.github.nwillc.funjdbc;
+package com.github.nwillc.funjdbc.migrate;
+
+
+import com.github.nwillc.funjdbc.DbAccessor;
+
+public interface Migration extends DbAccessor {
+    String getDescription();
+    String getIdentifier();
+    boolean runAlways();
+    boolean perform();
+}
