@@ -32,6 +32,10 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The migration Manager. This singleton manages a set of Migrations, performing them as needed and persisting the
+ * status of each.
+ */
 public class Manager implements DbAccessor {
     private static final Logger LOGGER = LogFactory.getLogger();
     private static final Manager INSTANCE = new Manager();
@@ -43,6 +47,11 @@ public class Manager implements DbAccessor {
     private Set<Migration> migrations = new TreeSet<>(new MigrationComparator());
     private ConnectionProvider connectionProvider;
 
+    /**
+     * Gets the singleton instance.
+     *
+     * @return the instance
+     */
     public static Manager getInstance() {
         return INSTANCE;
     }
@@ -50,10 +59,20 @@ public class Manager implements DbAccessor {
     private Manager() {
     }
 
+    /**
+     * Gets connection provider.
+     *
+     * @return the connection provider
+     */
     public ConnectionProvider getConnectionProvider() {
         return connectionProvider;
     }
 
+    /**
+     * Sets connection provider.
+     *
+     * @param connectionProvider the connection provider
+     */
     public void setConnectionProvider(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
     }
@@ -66,8 +85,14 @@ public class Manager implements DbAccessor {
         return connectionProvider.getConnection();
     }
 
-    // TODO: Test for single no arg constructor
-    void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
+    /**
+     * Add a Migration to the set.
+     *
+     * @param aMigration the a migration
+     * @throws IllegalArgumentException the illegal argument exception
+     */
+// TODO: Test for single no arg constructor
+    public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
         try {
             migrations.add(aMigration.newInstance());
         } catch (InstantiationException | IllegalAccessException e) {
@@ -76,18 +101,36 @@ public class Manager implements DbAccessor {
         }
     }
 
-    void add(Migration migration) {
+    /**
+     * Add a Migration to the set..
+     *
+     * @param migration the migration
+     */
+    public void add(Migration migration) {
         migrations.add(migration);
     }
 
+    /**
+     * Gets the set of Migrations.
+     *
+     * @return the migrations
+     */
     public Set<Migration> getMigrations() {
         return migrations;
     }
 
+    /**
+     * Clear the set of migrations.
+     */
     public void clear() {
         migrations.clear();
     }
 
+    /**
+     * Is migration management enabled in the database.
+     *
+     * @return the boolean
+     */
     public boolean migrationsEnabled() {
         try (Connection connection = getConnection()) {
             ResultSet resultSet = connection.getMetaData().getTables(null, null, "MIGRATIONS", null);
@@ -98,6 +141,9 @@ public class Manager implements DbAccessor {
         return false;
     }
 
+    /**
+     * Enable migration management in the database.
+     */
     public void enableMigrations() {
         try (Connection c = getConnection();
              Statement statement = c.createStatement()) {
@@ -107,6 +153,12 @@ public class Manager implements DbAccessor {
         }
     }
 
+    /**
+     * Check if a migration has been performed.
+     *
+     * @param first the first
+     * @return the boolean
+     */
     public boolean migrated(String first) {
         try {
             return dbFind(rs -> rs.getString(1), FIND, first).isPresent();
@@ -116,6 +168,9 @@ public class Manager implements DbAccessor {
         return false;
     }
 
+    /**
+     * Do migrations as needed. Perform any Migration that hasn't been completed or is designated runAlways.
+     */
     public void doMigrations() {
        migrations.stream().forEach(migration -> {
            if ((!migrated(migration.getIdentifier()) || migration.runAlways())

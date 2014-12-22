@@ -19,7 +19,12 @@ package com.github.nwillc.funjdbc.migrate;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
+/**
+ * A basic Migration base class.
+ */
 public abstract class MigrationBase implements Migration {
+    private Manager manager = Manager.getInstance();
 
     @Override
     public boolean runAlways() {
@@ -28,7 +33,12 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public Connection getConnection() throws SQLException {
-       return Manager.getInstance().getConnection();
+       return manager.getConnection();
+    }
+
+    @Override
+    public boolean completed() {
+        return manager.migrated(getIdentifier());
     }
 
     @Override

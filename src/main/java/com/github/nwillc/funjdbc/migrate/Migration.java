@@ -19,9 +19,42 @@ package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.funjdbc.DbAccessor;
 
+/**
+ * The interface for Migrations.
+ */
 public interface Migration extends DbAccessor {
+    /**
+     * Gets the migration description.
+     *
+     * @return the description
+     */
     String getDescription();
+
+    /**
+     * Gets the migration identifier.
+     *
+     * @return the identifier
+     */
     String getIdentifier();
+
+    /**
+     * Run this migration every time the Manager does migrations.
+     *
+     * @return the boolean
+     */
     boolean runAlways();
+
+    /**
+     * Has this migration been successfully completed.
+     *
+     * @return the boolean
+     */
+    boolean completed();
+
+    /**
+     * Perform this migration.
+     *
+     * @return the status of the migration. true indicates success.
+     */
     boolean perform();
 }

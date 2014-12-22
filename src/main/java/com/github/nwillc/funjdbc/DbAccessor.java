@@ -48,12 +48,20 @@ public interface DbAccessor extends ConnectionProvider {
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedSql);
-        return stream(extractor, resultSet).onClose( () -> {
+        return stream(extractor, resultSet).onClose(() -> {
             close(statement);
             close(connection);
         });
     }
 
+    /**
+     * Given an Extractor and ResultSet return a Stream of results.
+     *
+     * @param <T>  the type parameter
+     * @param extractor the extractor
+     * @param resultSet the result set
+     * @return the stream
+     */
     default <T> Stream<T> stream(final Extractor<T> extractor, final ResultSet resultSet) {
         ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)

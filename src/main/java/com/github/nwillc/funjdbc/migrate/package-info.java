@@ -15,7 +15,10 @@
  */
 
 /**
- * MVP support for performing scheme migrations.
- * @since 1.9
+ * Basic support for performing scheme migrations. Ideas loosely taken from Liquabase. The premise is
+ * to create a MIGRATION table in the database and persist the status of Migrations provided in code. Migrations are
+ * are coded up, and added to a Manager, which will, will requested, traverse them in identifier order, and perform
+ * any that are not completed, or designated to run always.
+ * @since 0.7
  */
 package com.github.nwillc.funjdbc.migrate;
