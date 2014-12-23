@@ -33,11 +33,11 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nwillc:almost-functional:1.+'
-    testCompile 'junit:junit:4.+',
-                'org.assertj:assertj-core:1.+',
-                'com.h2database:h2:1.4.+',
-                'com.github.nwillc:contracts:1.+'
+    compile 'com.github.nwillc:almost-functional:1.7.9'
+    testCompile 'junit:junit:4.11',
+                'org.assertj:assertj-core:1.7.0',
+                'com.h2database:h2:1.4.182',
+                'com.github.nwillc:contracts:1.6.3'
 }
 
 buildscript {
