@@ -38,7 +38,7 @@ public interface Migration extends DbAccessor {
     String getIdentifier();
 
     /**
-     * Run this migration every time the Manager does migrations.
+     * Run this migration every time the Manager does migrations, even if previously performed.
      *
      * @return the boolean
      */
@@ -52,7 +52,7 @@ public interface Migration extends DbAccessor {
     boolean completed();
 
     /**
-     * Perform this migration.
+     * Perform this migration. This method should contain the code, using JDBC, to alter the database as desired.
      *
      * @return the status of the migration. true indicates success.
      */

@@ -19,6 +19,9 @@ package com.github.nwillc.funjdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * An interface to indicate that an object can provide JDBC connections.
+ */
 public interface ConnectionProvider {
     /**
      * Get a JDBC database connection.
