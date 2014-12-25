@@ -25,7 +25,6 @@ import com.github.nwillc.funjdbc.DbAccessor;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -144,13 +143,8 @@ public class Manager implements DbAccessor {
     /**
      * Enable migration management in the database.
      */
-    public void enableMigrations() {
-        try (Connection c = getConnection();
-             Statement statement = c.createStatement()) {
-             statement.execute(CREATE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void enableMigrations() throws SQLException {
+        dbUpdate(CREATE);
     }
 
     /**

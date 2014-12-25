@@ -43,7 +43,7 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer(getClass().getSimpleName()).append('{');
+        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('{');
         sb.append("identifier: ").append(getIdentifier()).append(", ");
         sb.append("description: ").append(getDescription()).append(", ");
         sb.append("performed: ").append(Manager.getInstance().migrated(getIdentifier()));
