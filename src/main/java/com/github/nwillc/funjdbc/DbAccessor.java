@@ -34,7 +34,8 @@ public interface DbAccessor extends ConnectionProvider {
 
     /**
      * Extract results from a SQL query designed to return multiple results. The SQL, and it's optional args
-     * are formatted with String.format(String, Object ...) method.
+     * are formatted with String.format(String, Object ...) method. Note, Streams are Closeable, and the
+     * resultant Stream should be closed when completed to insure database resources involved in the stream are freed.
      *
      * @param extractor The extractor to process the ResultSet with
      * @param sql       The SQL being used
@@ -55,7 +56,8 @@ public interface DbAccessor extends ConnectionProvider {
     }
 
     /**
-     * Given an Extractor and ResultSet return a Stream of results.
+     * Given an Extractor and ResultSet return a Stream of results. Note, Streams are Closeable, and the
+     * resultant Stream should be closed when completed to insure database resources involved in the stream are freed.
      *
      * @param <T>  the type parameter
      * @param extractor the extractor
