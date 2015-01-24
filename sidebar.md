@@ -11,5 +11,8 @@
 - [Issue Tracking](https://github.com/nwillc/fun-jdbc/issues)
 - [Blog Post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
 
+-------
+*Travis Build Status:* 
+   
 
-
+[![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
