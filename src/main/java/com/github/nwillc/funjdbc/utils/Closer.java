@@ -42,7 +42,7 @@ public final class Closer {
         try {
             autoCloseable.close();
         } catch (Exception e) {
-            LOGGER.info("Failed to close autoclosable: " + e.getMessage());
+            LOGGER.info("Failed to close autoclosable " + e.getClass().getCanonicalName() + ": " + e.getMessage());
         }
     }
 }

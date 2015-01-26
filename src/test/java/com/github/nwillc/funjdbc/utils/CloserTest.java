@@ -17,6 +17,7 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import org.junit.Test;
 
 public class CloserTest extends UtilityClassContract {
 
@@ -25,5 +26,18 @@ public class CloserTest extends UtilityClassContract {
         return Closer.class;
     }
 
+    @Test
+    public void testHandlesNull() throws Exception {
+        Closer.close(null);
+    }
 
+    @Test
+    public void testHandlesThrownException() throws Exception {
+        Closer.close(new AutoCloseable() {
+            @Override
+            public void close() throws Exception {
+                throw new Exception();
+            }
+        });
+    }
 }
