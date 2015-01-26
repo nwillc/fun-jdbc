@@ -53,4 +53,23 @@ public class UncheckedSQLExceptionTest {
         assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
         assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
     }
+
+    @Test
+    public void testWhereCauseIsUncheckedSqlException() throws Exception {
+
+        final String msg = "foo";
+        final String sqlState = "bar";
+        final int errorCode = 42;
+        final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
+
+        final UncheckedSQLException innerException = new UncheckedSQLException("Inner message", sqlException);
+        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, innerException);
+
+        assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
+        assertThat(uncheckedSQLException.getCause()).isEqualTo(innerException);
+        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isTrue();
+        assertThat(uncheckedSQLException.getErrorCode().get()).isEqualTo(errorCode);
+        assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
+        assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
+    }
 }
