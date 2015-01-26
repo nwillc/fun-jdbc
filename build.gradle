@@ -20,6 +20,9 @@ apply plugin: 'java'
 apply plugin: 'nexus'
 apply plugin: 'release'
 apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
 
 group = "com.github.nwillc"
 archivesBaseName = "fun-jdbc"
@@ -54,7 +57,15 @@ buildscript {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
                     'org.tmatesoft.sqljet:sqljet:1.1.9',
                     'au.com.ish.gradle:release:2.2.2',
-                    'com.github.nwillc:vplugin:1.+'
+                    'com.github.nwillc:vplugin:1.+',
+                    'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
     }
 }
 
