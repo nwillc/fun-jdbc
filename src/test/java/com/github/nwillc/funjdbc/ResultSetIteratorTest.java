@@ -17,46 +17,87 @@
 package com.github.nwillc.funjdbc;
 
 import com.github.nwillc.contracts.IteratorContract;
+import com.github.nwillc.funjdbc.utils.Closer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.nwillc.funjdbc.utils.Closer.close;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 public class ResultSetIteratorTest extends IteratorContract {
     private InMemWordsDatabase dao;
     private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
-    private ResultSet resultSet;
+    private List<ResultSetIterator<String>> iterators;
 
     @Before
     public void setUp() throws Exception {
         dao = new InMemWordsDatabase();
         dao.create();
+        iterators = new ArrayList<>();
     }
 
     @After
     public void tearDown() throws Exception {
-        close(resultSet);
+        iterators.stream().forEach(Closer::close);
+        iterators = null;
     }
 
     @Override
     protected Iterator getNonEmptyIterator() {
-        close(resultSet);
         try {
             Connection connection = dao.getConnection();
             Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM WORDS");
-            return new ResultSetIterator<>(resultSet, wordExtractor).onClose(() -> {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
+            ResultSetIterator<String> iterator = new ResultSetIterator<>(resultSet, wordExtractor).onClose(() -> {
                 close(statement);
                 close(connection);
             });
+            iterators.add(iterator);
+            return iterator;
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testValidConstructorArgs() throws Exception {
+        try {
+            new ResultSetIterator(null, wordExtractor);
+            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException e) {}
+
+        try (Connection connection = dao.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
+            new ResultSetIterator(resultSet, null);
+            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException e) {}
+    }
+
+    @Test
+    public void testOnClose() throws Exception {
+        final AtomicBoolean tattleTale = new AtomicBoolean(false);
+
+        try (Connection connection = dao.getConnection();
+             Statement statement = connection.createStatement()) {
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
+             ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> {
+                 tattleTale.set(true);
+             });
+            resultSetIterator.close();
+        }
+        assertThat(tattleTale.get()).isTrue();
     }
 }
