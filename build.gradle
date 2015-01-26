@@ -37,8 +37,8 @@ repositories {
 
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.7.9'
-    testCompile 'junit:junit:4.11',
-                'org.assertj:assertj-core:1.7.0',
+    testCompile 'junit:junit:4.12',
+                'org.assertj:assertj-core:1.7.1',
                 'com.h2database:h2:1.4.182',
                 'com.github.nwillc:contracts:1.6.3'
 }
@@ -57,8 +57,16 @@ buildscript {
                     'org.tmatesoft.sqljet:sqljet:1.1.9',
                     'au.com.ish.gradle:release:2.2.2',
                     'com.github.nwillc:vplugin:1.+',
-                    'net.saliman:gradle-cobertura-plugin:2.0.0',
+                    'net.saliman:gradle-cobertura-plugin:2.2.4',
                     'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        // Cobertura includes an ASM version that can't handle Java 8, ASM 5.0.3 handles Java8
+        force 'org.ow2.asm:asm:5.0.3'
+        forcedModules = [ 'org.ow2.asm:asm:5.0.3' ]
     }
 }
 
