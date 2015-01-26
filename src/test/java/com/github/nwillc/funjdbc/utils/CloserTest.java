@@ -16,12 +16,12 @@
 
 package com.github.nwillc.funjdbc.utils;
 
-import com.github.nwillc.contracts.PrivateConstructorContract;
+import com.github.nwillc.contracts.UtilityClassContract;
 
-public class CloserTest extends PrivateConstructorContract {
+public class CloserTest extends UtilityClassContract {
 
     @Override
-    protected Class<?> getUtilityClass() {
+    protected Class<?> getClassToTest() {
         return Closer.class;
     }
 

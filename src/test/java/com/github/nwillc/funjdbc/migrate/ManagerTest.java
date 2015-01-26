@@ -17,6 +17,7 @@
 package com.github.nwillc.funjdbc.migrate;
 
 
+import com.github.nwillc.contracts.SingletonContract;
 import com.github.nwillc.funjdbc.InMemWordsDatabase;
 import org.junit.After;
 import org.junit.Before;
@@ -24,9 +25,14 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ManagerTest {
+public class ManagerTest extends SingletonContract {
     private Manager manager;
     private InMemWordsDatabase dao;
+
+    @Override
+    protected Class<?> getClassToTest() {
+        return Manager.class;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -82,8 +88,6 @@ public class ManagerTest {
         assertThat(manager.migrated("first")).isFalse();
         manager.doMigrations();
         assertThat(manager.migrated("first")).isTrue();
-
-        manager.getMigrations().stream().forEach(System.out::println);
     }
 
     public static class DummyMigration extends MigrationBase {

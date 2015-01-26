@@ -16,7 +16,7 @@
 
 package com.github.nwillc.funjdbc.utils;
 
-import com.github.nwillc.contracts.PrivateConstructorContract;
+import com.github.nwillc.contracts.UtilityClassContract;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import org.junit.Test;
 
@@ -25,10 +25,10 @@ import java.util.zip.DataFormatException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ThrowablesTest extends PrivateConstructorContract {
+public class ThrowablesTest extends UtilityClassContract {
 
     @Override
-    protected Class<?> getUtilityClass() {
+    protected Class<?> getClassToTest() {
         return Throwables.class;
     }
 
