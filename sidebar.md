@@ -13,7 +13,10 @@
 
 -------
 *Travis Build Status:* 
+
    [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
+
 *Coveralls Code Coverage:*
+
    [![Coverage Status](https://coveralls.io/repos/nwillc/fun-jdbc/badge.svg?branch=master)](https://coveralls.io/r/nwillc/fun-jdbc?branch=master)
 
