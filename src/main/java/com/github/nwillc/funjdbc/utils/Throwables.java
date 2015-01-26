@@ -32,13 +32,18 @@ public final class Throwables {
      * and the Throwable is set as it's cause. This can be used to deal with exceptions in lambdas etc. Special logic for SQLException, to
      * throw an {@link UncheckedSQLException}.
      *
-     * @param throwable the throwable to repropagate.
+     * @param exception the Exception to repropagate as a RuntimeException.
      * @return a RuntimeException
      */
-    public static RuntimeException propagate(final Throwable throwable) {
-        if (throwable instanceof SQLException) {
-            return new UncheckedSQLException("Repropagated " + throwable.getMessage(), throwable);  //NOPMD
+    public static RuntimeException propagate(final Exception exception) {
+        if (RuntimeException.class.isAssignableFrom(exception.getClass())) {
+            return (RuntimeException) exception;
         }
-        return new RuntimeException("Repropagated " + throwable.getMessage(), throwable);  //NOPMD
+
+        if (SQLException.class.isAssignableFrom(exception.getClass())) {
+            return new UncheckedSQLException("Repropagated " + exception.getMessage(), exception);  //NOPMD
+        }
+
+        return new RuntimeException("Repropagated " + exception.getMessage(), exception);  //NOPMD
     }
 }
