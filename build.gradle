@@ -20,15 +20,12 @@ apply plugin: 'java'
 apply plugin: 'nexus'
 apply plugin: 'release'
 apply plugin: 'com.github.nwillc.vplugin'
-apply plugin: 'cobertura'
-apply plugin: 'com.github.kt3k.coveralls'
 
 group = "com.github.nwillc"
 archivesBaseName = "fun-jdbc"
 version = "0.7"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
-cobertura.coverageFormats = ['html', 'xml']
 
 repositories {
     mavenLocal()
@@ -46,6 +43,7 @@ dependencies {
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         jcenter()
         maven {
               url 'http://maven.tmatesoft.com/content/repositories/releases/'
@@ -56,17 +54,7 @@ buildscript {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
                     'org.tmatesoft.sqljet:sqljet:1.1.9',
                     'au.com.ish.gradle:release:2.2.2',
-                    'com.github.nwillc:vplugin:1.+',
-                    'net.saliman:gradle-cobertura-plugin:2.2.4',
-                    'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        // Cobertura includes an ASM version that can't handle Java 8, ASM 5.0.3 handles Java8
-        force 'org.ow2.asm:asm:5.0.3'
-        forcedModules = [ 'org.ow2.asm:asm:5.0.3' ]
+                    'com.github.nwillc:vplugin:1.+'
     }
 }
 
