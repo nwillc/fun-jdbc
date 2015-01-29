@@ -12,11 +12,10 @@
 - [Blog Post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
 
 -------
-*Travis Build Status:* 
 
    [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 
-*Coveralls Code Coverage:*
-
    [![Coverage Status](https://coveralls.io/repos/nwillc/fun-jdbc/badge.svg?branch=master)](https://coveralls.io/r/nwillc/fun-jdbc?branch=master)
 
+   [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nwillc/fun-jdbc)
+  
