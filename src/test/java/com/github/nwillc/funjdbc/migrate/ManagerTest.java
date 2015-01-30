@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 public class ManagerTest extends SingletonContract {
     private Manager manager;
@@ -50,6 +51,15 @@ public class ManagerTest extends SingletonContract {
     }
 
     @Test
+    public void testNoConnectionProvider() throws Exception {
+        manager.setConnectionProvider(null);
+        try {
+            manager.getConnection();
+            failBecauseExceptionWasNotThrown(IllegalStateException.class);
+        } catch (IllegalStateException e) {}
+    }
+
+    @Test
     public void testRegisterClass() throws Exception {
         manager.add(DummyMigration.class);
         assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
@@ -59,6 +69,14 @@ public class ManagerTest extends SingletonContract {
     public void testRegisterInstance() throws Exception {
         manager.add(new DummyMigration());
         assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
+    }
+
+    @Test
+    public void testBadMigrationClass() throws Exception {
+        try {
+            manager.add(MigrationWithConstructor.class);
+            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException e) {}
     }
 
     @Test
@@ -115,5 +133,9 @@ public class ManagerTest extends SingletonContract {
         public boolean perform() {
             return true;
         }
+    }
+
+    public static class MigrationWithConstructor extends DummyMigration {
+        MigrationWithConstructor(String arg) {}
     }
 }

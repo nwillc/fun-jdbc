@@ -90,12 +90,11 @@ public class Manager implements DbAccessor {
      * @param aMigration the a migration
      * @throws IllegalArgumentException the illegal argument exception
      */
-    // TODO: Test for single no arg constructor
     public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
         try {
             migrations.add(aMigration.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.log(Level.SEVERE, "Unable to add " + aMigration.getName(), e);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Unable to add " + aMigration.getSimpleName() + " because " + e);
             throw new IllegalArgumentException(e);
         }
     }
@@ -135,7 +134,7 @@ public class Manager implements DbAccessor {
             ResultSet resultSet = connection.getMetaData().getTables(null, null, "MIGRATIONS", null);
             return stream(rs -> rs.getString(3), resultSet).count() == 1;
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.toString());
         }
         return false;
     }
@@ -158,7 +157,7 @@ public class Manager implements DbAccessor {
         try {
             return dbFind(rs -> rs.getString(1), FIND, first).isPresent();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.toString());
         }
         return false;
     }
