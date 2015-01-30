@@ -90,7 +90,7 @@ public class Manager implements DbAccessor {
      * @param aMigration the a migration
      * @throws IllegalArgumentException the illegal argument exception
      */
-// TODO: Test for single no arg constructor
+    // TODO: Test for single no arg constructor
     public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
         try {
             migrations.add(aMigration.newInstance());
