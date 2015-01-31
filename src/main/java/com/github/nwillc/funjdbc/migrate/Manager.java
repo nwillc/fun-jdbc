@@ -178,7 +178,7 @@ public class Manager implements DbAccessor {
        });
     }
 
-    private static class MigrationComparator implements Comparator<Migration> {
+    public static class MigrationComparator implements Comparator<Migration> {
         @Override
         public int compare(Migration o1, Migration o2) {
             Preconditions.checkNotNull(o1, "Can not compare null Migration instance");
