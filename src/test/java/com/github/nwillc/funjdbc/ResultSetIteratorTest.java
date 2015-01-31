@@ -34,6 +34,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.github.nwillc.funjdbc.utils.Closer.close;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ResultSetIteratorTest extends IteratorContract {
     private InMemWordsDatabase dao;
@@ -84,6 +86,19 @@ public class ResultSetIteratorTest extends IteratorContract {
             new ResultSetIterator(resultSet, null);
             failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
         } catch (IllegalArgumentException e) {}
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shouldHandleResultSetExceptions() throws Exception {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        when(mockResultSet.next()).thenThrow(SQLException.class);
+        ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, wordExtractor);
+
+        try {
+            resultSetIterator.hasNext();
+            failBecauseExceptionWasNotThrown(RuntimeException.class);
+        } catch (RuntimeException e) {}
     }
 
     @Test
