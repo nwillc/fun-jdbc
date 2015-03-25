@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * A basic Migration base class.
  */
 public abstract class MigrationBase implements Migration {
-    private Manager manager = Manager.getInstance();
+    private final Manager manager = Manager.getInstance();
 
     @Override
     public boolean runAlways() {

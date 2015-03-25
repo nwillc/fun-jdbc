@@ -43,7 +43,7 @@ public class Manager implements DbAccessor {
     private static final String INSERT = "INSERT INTO MIGRATIONS (IDENTIFIER, DESCRIPTION) VALUES('%s', '%s')";
     private static final String FIND = "SELECT * FROM MIGRATIONS WHERE IDENTIFIER = '%s'";
 
-    private Set<Migration> migrations = new TreeSet<>(new MigrationComparator());
+    private final Set<Migration> migrations = new TreeSet<>(new MigrationComparator());
     private ConnectionProvider connectionProvider;
 
     /**

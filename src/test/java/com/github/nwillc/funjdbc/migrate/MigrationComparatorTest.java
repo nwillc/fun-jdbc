@@ -1,6 +1,7 @@
 package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.contracts.ComparatorContract;
+import org.junit.Before;
 
 import java.util.Comparator;
 
@@ -8,6 +9,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MigrationComparatorTest extends ComparatorContract<Migration> {
+
+    @Before
+    public void setUp() throws Exception {
+        setNulls(Nulls.NULLS_FIRST);
+    }
 
     @Override
     protected Comparator<Migration> getComparator() {
