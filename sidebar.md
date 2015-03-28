@@ -1,7 +1,7 @@
 ## FUN JDBC
 - [Home]()
 - [Example](#docs/example)
-- [Javadoc](http://www.javadoc.io/com.github.nwillc/fun-jdbc)
+- [Javadoc](http://www.javadoc.io/doc/com.github.nwillc/fun-jdbc)
 - [License](#docs/LICENSE)
 
 ## The Bits
