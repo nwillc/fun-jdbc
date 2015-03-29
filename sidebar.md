@@ -12,6 +12,8 @@
 - [Blog Post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
 
 -------
+[![ISC License](https://img.shields.io/badge/license-ISC-green.svg?style=flat)](https://tldrlegal.com/license/-isc-license)
+<br/>
 [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 <br/>
 [![Coverage Status](https://coveralls.io/repos/nwillc/fun-jdbc/badge.svg?branch=master)](https://coveralls.io/r/nwillc/fun-jdbc?branch=master)
