@@ -31,7 +31,7 @@ public class ManagerTest extends SingletonContract {
     private InMemWordsDatabase dao;
 
     @Override
-    protected Class<?> getClassToTest() {
+    public Class<?> getClassToTest() {
         return Manager.class;
     }
 

@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ThrowablesTest extends UtilityClassContract {
 
     @Override
-    protected Class<?> getClassToTest() {
+    public Class<?> getClassToTest() {
         return Throwables.class;
     }
 

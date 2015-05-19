@@ -22,7 +22,7 @@ import org.junit.Test;
 public class CloserTest extends UtilityClassContract {
 
     @Override
-    protected Class<?> getClassToTest() {
+    public Class<?> getClassToTest() {
         return Closer.class;
     }
 

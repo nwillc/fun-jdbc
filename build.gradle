@@ -26,7 +26,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 group = "com.github.nwillc"
 archivesBaseName = "fun-jdbc"
-version = "0.7"
+version = "0.7.2"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 
@@ -38,10 +38,10 @@ repositories {
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.7.9'
     testCompile 'junit:junit:4.12',
-                'org.assertj:assertj-core:1.7.1',
-                'com.h2database:h2:1.4.182',
-                'com.github.nwillc:contracts:1.6.6',
-                'org.mockito:mockito-core:1.10.19'
+                'org.assertj:assertj-core:3.0.0',
+                'com.h2database:h2:1.4.187',
+                'com.github.nwillc:contracts:1.6.7',
+                'org.mockito:mockito-core:2.0.8-beta'
 }
 
 buildscript {
