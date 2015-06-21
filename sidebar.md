@@ -18,4 +18,4 @@
 <br/>
 [![Coverage Status](https://coveralls.io/repos/nwillc/fun-jdbc/badge.svg?branch=master)](https://coveralls.io/r/nwillc/fun-jdbc?branch=master)
 <br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.nwillc/fun-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.nwillc/fun-jdbc)
+[![Maven Central](https://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](https://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
