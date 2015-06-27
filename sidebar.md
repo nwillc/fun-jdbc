@@ -17,4 +17,4 @@
 <br/>
 [![Maven Central](http://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
 <br/>
-[![Github](http://repo-redirect.herokuapp.com/shield/github)](http://repo-redirect.herokuapp.com/homepage/github?path=github/nwillc&package=fun-jdbc)
+[![Github](http://repo-redirect.herokuapp.com/shield/github)](http://repo-redirect.herokuapp.com/homepage/github?path=nwillc&package=fun-jdbc)
