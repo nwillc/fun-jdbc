@@ -72,4 +72,13 @@ public class UncheckedSQLExceptionTest {
         assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
         assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
     }
+
+    @Test
+    public void testWithoutCause() throws Exception {
+        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException("Test", null);
+
+        assertThat(uncheckedSQLException).isNotNull();
+        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isFalse();
+        assertThat(uncheckedSQLException.getSqlState().isPresent()).isFalse();
+    }
 }
