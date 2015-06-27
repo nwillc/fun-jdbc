@@ -16,6 +16,6 @@
 <br/>
 [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 <br/>
-[![Coverage Status](https://coveralls.io/repos/nwillc/fun-jdbc/badge.svg?branch=master)](https://coveralls.io/r/nwillc/fun-jdbc?branch=master)
+[![Coverage Status](http://repo-redirect.herokuapp.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
 <br/>
-[![Maven Central](https://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](https://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
+[![Maven Central](http://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
