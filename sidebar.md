@@ -4,9 +4,6 @@
 - [Javadoc](http://www.javadoc.io/doc/com.github.nwillc/fun-jdbc)
 - [License](#docs/LICENSE)
 
-## The Bits
-- [Github Repository](http://github.com/nwillc/fun-jdbc)
-
 ## Links
 - [Issue Tracking](https://github.com/nwillc/fun-jdbc/issues)
 - [Blog Post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
@@ -19,3 +16,5 @@
 [![Coverage Status](http://repo-redirect.herokuapp.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
 <br/>
 [![Maven Central](http://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
+<br/>
+[![Github](http://repo-redirect.herokuapp.com/shield/github)](http://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
