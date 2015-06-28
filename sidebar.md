@@ -13,8 +13,8 @@
 <br/>
 [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 <br/>
-[![Coverage Status](http://repo-redirect.herokuapp.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
+[![Coverage Status](http://shields-nwillc.rhcloud.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
 <br/>
-[![Maven Central](http://repo-redirect.herokuapp.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://repo-redirect.herokuapp.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
+[![Maven Central](http://shields-nwillc.rhcloud.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
 <br/>
-[![Github](http://repo-redirect.herokuapp.com/shield/github)](http://repo-redirect.herokuapp.com/homepage/github?path=nwillc&package=fun-jdbc)
+[![Github](http://shields-nwillc.rhcloud.com/shield/github)](http://shields-nwillc.rhcloud.com/homepage/github?path=nwillc&package=fun-jdbc)
