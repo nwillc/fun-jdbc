@@ -18,13 +18,19 @@ package com.github.nwillc.funjdbc.migrate;
 
 
 import com.github.nwillc.contracts.SingletonContract;
+import com.github.nwillc.funjdbc.ConnectionProvider;
 import com.github.nwillc.funjdbc.InMemWordsDatabase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.SQLException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class ManagerTest extends SingletonContract {
     private Manager manager;
@@ -48,6 +54,27 @@ public class ManagerTest extends SingletonContract {
     public void tearDown() throws Exception {
         manager.clear();
         dao.drop();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testMigrationsEnabledException() throws Exception {
+        Manager managerSpy = spy(manager);
+        when(managerSpy.getConnection()).thenThrow(SQLException.class);
+        assertThat(managerSpy.migrationsEnabled()).isFalse();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testMigratedException() throws Exception {
+        Manager managerSpy = spy(manager);
+        when(managerSpy.getConnection()).thenThrow(SQLException.class);
+        assertThat(managerSpy.migrated("foo")).isFalse();
+    }
+
+    @Test
+    public void testGetConnection() throws Exception {
+        assertThat(manager.getConnectionProvider()).isEqualTo(dao);
     }
 
     @Test

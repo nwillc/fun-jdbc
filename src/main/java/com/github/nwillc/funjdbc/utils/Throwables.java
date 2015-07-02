@@ -43,6 +43,6 @@ public final class Throwables {
             return new UncheckedSQLException("Repropagated " + exception.getMessage(), exception);
         }
 
-        return new RuntimeException("Repropagated " + exception.getMessage(), exception); 
+        return new RuntimeException("Repropagated " + exception.getMessage(), exception);
     }
 }
