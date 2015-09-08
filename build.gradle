@@ -34,7 +34,7 @@ buildscript {
 plugins {
     id "java"
     id "com.github.kt3k.coveralls" version "2.0.1"
-    id "com.github.nwillc.vplugin" version "1.2.3"
+    id "com.github.nwillc.vplugin" version "1.2.4"
 }
 
 repositories {
@@ -45,10 +45,10 @@ repositories {
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.8'
     testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:3.0.0',
-            'com.h2database:h2:1.4.187',
+            'org.assertj:assertj-core:3.1.0',
+            'com.h2database:h2:1.4.188',
             'com.github.nwillc:contracts:1.6.7',
-            'org.mockito:mockito-core:2.0.9-beta'
+            'org.mockito:mockito-core:2.0.31-beta'
 }
 
 apply plugin: 'nexus'
