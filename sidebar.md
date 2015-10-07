@@ -9,7 +9,7 @@
 - [Blog Post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
 
 -------
-[![ISC License](https://img.shields.io/badge/license-ISC-green.svg?style=flat)](https://tldrlegal.com/license/-isc-license)
+[![ISC License](http://shields-nwillc.rhcloud.com/shield/tldrlegal?package=ISC)](http://shields-nwillc.rhcloud.com/homepage/tldrlegal?package=ISC)
 <br/>
 [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 <br/>
