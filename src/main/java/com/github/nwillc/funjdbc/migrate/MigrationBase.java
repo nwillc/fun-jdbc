@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -43,11 +43,11 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('{');
-        sb.append("identifier: ").append(getIdentifier()).append(", ");
-        sb.append("description: ").append(getDescription()).append(", ");
-        sb.append("performed: ").append(Manager.getInstance().migrated(getIdentifier()));
-        sb.append('}');
-        return sb.toString();
+        String sb = getClass().getSimpleName() + '{' +
+                "identifier: " + getIdentifier() + ", " +
+                "description: " + getDescription() + ", " +
+                "performed: " + Manager.getInstance().migrated(getIdentifier()) +
+                '}';
+        return sb;
     }
 }

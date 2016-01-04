@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,49 +17,54 @@
 buildscript {
     repositories {
         mavenLocal()
-        mavenCentral()
-        jcenter()
+        jcenter {
+            url 'http://jcenter.bintray.com'
+        }
         maven {
-              url 'http://maven.tmatesoft.com/content/repositories/releases/'
-            }
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
 
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
-                    'org.tmatesoft.sqljet:sqljet:1.1.9',
-                    'au.com.ish.gradle:release:2.2.2'
+                'org.tmatesoft.sqljet:sqljet:1.1.9',
+                'au.com.ish.gradle:release:2.2.2',
+                'gradle.plugin.com.github.nwillc:vplugin:1.2.4',
+                'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
     }
 }
 
 plugins {
-    id "java"
-    id "com.github.kt3k.coveralls" version "2.0.1"
-    id "com.github.nwillc.vplugin" version "1.2.4"
+    id 'java'
 }
 
 repositories {
     mavenLocal()
-    mavenCentral()
+    jcenter {
+        url 'http://jcenter.bintray.com'
+    }
 }
 
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.8'
     testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:3.1.0',
-            'com.h2database:h2:1.4.188',
-            'com.github.nwillc:contracts:1.6.7',
-            'org.mockito:mockito-core:2.0.31-beta'
+            'org.assertj:assertj-core:3.2.0',
+            'com.h2database:h2:1.4.190',
+            'com.github.nwillc:contracts:1.7.1',
+            'org.mockito:mockito-core:2.0.36-beta'
 }
 
+apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'nexus'
 apply plugin: 'release'
 apply plugin: 'jacoco'
 
-group = "com.github.nwillc"
-archivesBaseName = "fun-jdbc"
-version = "0.7.3"
-targetCompatibility = "1.8"
-sourceCompatibility = "1.8"
+group = 'com.github.nwillc'
+archivesBaseName = 'fun-jdbc'
+version = '0.7.4'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
 
 jacocoTestReport {
     reports {
@@ -87,10 +92,10 @@ test {
 }
 
 release {
-  failOnSnapshotDependencies = true
-  allowLocalModifications = true
-  releaseDryRun = false
-  scm = 'git'
+    failOnSnapshotDependencies = true
+    allowLocalModifications = true
+    releaseDryRun = false
+    scm = 'git'
 }
 
 nexus {

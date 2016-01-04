@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, nwillc@gmail.com
+ * Copyright (c) 2016, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,6 @@ package com.github.nwillc.funjdbc.migrate;
 
 
 import com.github.nwillc.contracts.SingletonContract;
-import com.github.nwillc.funjdbc.ConnectionProvider;
 import com.github.nwillc.funjdbc.InMemWordsDatabase;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +27,6 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
