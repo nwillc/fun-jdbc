@@ -6,3 +6,4 @@ env:
 after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
+  - ./gradlew clean jar bintray -x test

@@ -23,10 +23,13 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
+        maven {
+            url 'http://maven.tmatesoft.com/content/repositories/releases/'
+        }
     }
 
     dependencies {
-        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4',
                 'org.tmatesoft.sqljet:sqljet:1.1.9',
                 'au.com.ish.gradle:release:2.2.2',
                 'gradle.plugin.com.github.nwillc:vplugin:1.2.4',
@@ -34,9 +37,14 @@ buildscript {
     }
 }
 
-plugins {
-    id 'java'
-}
+apply plugin: 'release'
+apply plugin: 'java'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'com.github.kt3k.coveralls'
 
 repositories {
     mavenLocal()
@@ -54,15 +62,9 @@ dependencies {
             'org.mockito:mockito-core:2.0.36-beta'
 }
 
-apply plugin: 'com.github.nwillc.vplugin'
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'nexus'
-apply plugin: 'release'
-apply plugin: 'jacoco'
-
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.7.4'
+version = '0.7.5'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
@@ -98,40 +100,22 @@ release {
     scm = 'git'
 }
 
-nexus {
-    attachSources = true
-    attachTests = false
-    attachJavadoc = true
-    sign = true
-}
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_API_KEY')
 
-modifyPom {
-    project {
-        name 'Functional JDBC for Java 8'
-        description 'Java 8 functional JDBC utility code, applying some of Java\'s newer features to reduce JDBC boilerplate code.'
-        url 'https://github.com/nwillc/fun-jdbc'
-        inceptionYear '2014'
-
-        scm {
-            url 'https://github.com/nwillc/fun-jdbc'
-            connection 'scm:https://nwillc@github.com:nwillc/fun-jdbc.git'
-            developerConnection 'scm:git:git@github.com:nwillc/fun-jdbc.git'
-        }
-
-        licenses {
-            license {
-                name 'ISC'
-                url 'http://www.isc.org/downloads/software-support-policy/isc-license/'
-                distribution 'repo'
-            }
-        }
-
-        developers {
-            developer {
-                id 'nwillc'
-                name 'N Christopher'
-                email 'nwillc@gmail.com'
-            }
-        }
+    dryRun = false
+    publish = true
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        name = project.name
+        desc = 'Java 8 functional JDBC utility code, applying some of Java\'s newer features to reduce JDBC boilerplate code.'
+        websiteUrl = 'https://github.com/nwillc/fun-jdbc'
+        issueTrackerUrl = 'https://github.com/nwillc/fun-jdbc/issues'
+        vcsUrl = 'https://github.com/nwillc/fun-jdbc.git'
+        licenses = ['ISC']
+        labels = ['jdk8', 'jdbc']
+        publicDownloadNumbers = true
     }
 }
