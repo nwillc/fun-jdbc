@@ -139,3 +139,5 @@ bintray {
         publicDownloadNumbers = true
     }
 }
+
+bintrayUpload.onlyIf { !project.version.toString().endsWith('SNAPSHOT') }
