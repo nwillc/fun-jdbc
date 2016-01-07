@@ -28,6 +28,10 @@ public class UncheckedSQLException extends RuntimeException {
         super(message, cause);
     }
 
+    /**
+     * If the underlying cause provides an error code, provides it.
+     * @return an optional error code, empty if none available.
+     */
     public Optional<Integer> getErrorCode() {
         final Throwable cause = getCause();
         if (cause != null) {
@@ -42,11 +46,16 @@ public class UncheckedSQLException extends RuntimeException {
         return Optional.empty();
     }
 
+
+    /**
+     * If underlying cause provides a SQL state, provide it.
+     * @return an optional SQL state, empty if none available.
+     */
     public Optional<String> getSqlState() {
         final Throwable cause = getCause();
         if (cause != null) {
             if (cause instanceof SQLException) {
-                return Optional.of(((SQLException) cause).getSQLState());
+                return Optional.ofNullable(((SQLException) cause).getSQLState());
             }
             if (cause instanceof UncheckedSQLException) {
                 return ((UncheckedSQLException) cause).getSqlState();
