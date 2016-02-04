@@ -35,6 +35,11 @@ public class InMemWordsDatabase implements DbAccessor {
     }
 
     @Override
+    public boolean logSql() {
+        return true;
+    }
+
+    @Override
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL + name);
     }

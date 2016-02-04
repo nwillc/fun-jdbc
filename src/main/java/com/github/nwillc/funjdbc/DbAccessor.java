@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 import java.util.Spliterators;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -31,6 +32,15 @@ import static com.github.nwillc.funjdbc.utils.Closer.close;
  * Interface, with default methods providing JDBC database access functionality.
  */
 public interface DbAccessor extends ConnectionProvider {
+    Logger LOGGER = Logger.getLogger(DbAccessor.class.getName());
+
+
+    /**
+     * Indicate if the formatted SQL should be logged. Your implementer can override this
+     * to turn on logging.
+     * @return false - do not log.
+     */
+    default boolean logSql() { return false; }
 
     /**
      * Extract results from a SQL query designed to return multiple results. The SQL, and it's optional args
@@ -45,7 +55,7 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException if the query or an extraction fails
      */
     default <T> Stream<T> dbQuery(final Extractor<T> extractor, final String sql, Object... args) throws SQLException {
-        final String formattedSql = String.format(sql, args);
+        final String formattedSql = formatSql(sql, args);
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(formattedSql);
@@ -82,7 +92,7 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException if the query or extraction fails, or if multiple rows returned
      */
     default <T> Optional<T> dbFind(final Extractor<T> extractor, final String sql, final Object... args) throws SQLException {
-        final String formattedSql = String.format(sql, args);
+        final String formattedSql = formatSql(sql, args);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(formattedSql)) {
@@ -110,11 +120,25 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException if the update fails
      */
     default int dbUpdate(final String sql, final Object... args) throws SQLException {
-        final String formattedSql = String.format(sql, args);
+        final String formattedSql = formatSql(sql, args);
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             return statement.executeUpdate(formattedSql);
         }
+    }
+
+    /**
+     * Format the a SQL statement using String.format(). Will log the results based on logSql().
+     * @param sql The string
+     * @param args the args
+     * @return the formatted sql.
+     */
+    default String formatSql(final String sql, final Object ... args) {
+        final String formattedSql = String.format(sql, args);
+        if (logSql()) {
+            LOGGER.info(formattedSql);
+        }
+        return formattedSql;
     }
 
 }
