@@ -56,15 +56,15 @@ repositories {
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.8'
     testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:3.2.0',
-            'com.h2database:h2:1.4.190',
+            'org.assertj:assertj-core:3.3.0',
+            'com.h2database:h2:1.4.191',
             'com.github.nwillc:contracts:1.7.1',
             'org.mockito:mockito-core:2.0.36-beta'
 }
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.7.6'
+version = '0.8.0-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
