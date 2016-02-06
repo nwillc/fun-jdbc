@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.github.nwillc.funjdbc.utils.Closer.close;
-import static javafx.scene.input.KeyCode.T;
 
 /**
  * Interface, with default methods providing JDBC database access functionality.
@@ -70,9 +69,20 @@ public interface DbAccessor extends ConnectionProvider {
     default <K,V> void dbEnrich(Map<K,V> map,
 								final Extractor<K> keyExtractor, final Enricher<V> enricher,
 								final String sql, Object... args) throws SQLException {
-		// invoke query to get detail records
-		// traverse detail records, usind keyExtractor to get key, then pull entity from map,
-		// then pass the detail record to the enricher with the entity
+		final String formattedSql = formatSql(sql, args);
+		try (Connection connection = getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(formattedSql)) {
+			while (resultSet.next()) {
+				K key = keyExtractor.extract(resultSet);
+				if (key != null) {
+					V value = map.get(key);
+					if (value != null) {
+						enricher.enrich(value, resultSet);
+					}
+				}
+			}
+		}
 	}
     /**
      * Given an Extractor and ResultSet return a Stream of results. Note, Streams are Closeable, and the

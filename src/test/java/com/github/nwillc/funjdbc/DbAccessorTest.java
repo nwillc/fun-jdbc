@@ -117,7 +117,7 @@ public class DbAccessorTest {
 		dao.dbEnrich(counts,rs -> rs.getString(1), (e,rs) -> e.count = rs.getInt(2),
 				"SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
 		assertThat(counts.get("b").count).isEqualTo(1);
-	//	assertThat(counts.get("a").count).isEqualTo(2);
+		assertThat(counts.get("a").count).isEqualTo(2);
     }
 
     private static class WordCount {
