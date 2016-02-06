@@ -66,7 +66,19 @@ public interface DbAccessor extends ConnectionProvider {
         });
     }
 
-    default <K,V> void dbEnrich(Map<K,V> map,
+	/**
+	 * Given a map of entities, and a query that extracts details about them, then execute that query
+	 * and enrich the entities with the results.
+	 * @param map  A map of entities the enrich
+	 * @param keyExtractor an Extractor to get the entity key from the detail records
+	 * @param enricher  a function to enrich an entity from the detail record
+	 * @param sql the SQL to generate details - each row must contain an entity key
+	 * @param args the SQL arguements to sql
+	 * @param <K>  the key type
+	 * @param <V>  the entity type
+	 * @throws SQLException
+	 */
+	default <K,V> void dbEnrich(Map<K,V> map,
 								final Extractor<K> keyExtractor, final Enricher<V> enricher,
 								final String sql, Object... args) throws SQLException {
 		final String formattedSql = formatSql(sql, args);
@@ -86,6 +98,7 @@ public interface DbAccessor extends ConnectionProvider {
 			}
 		}
 	}
+
     /**
      * Given an Extractor and ResultSet return a Stream of results. Note, Streams are Closeable, and the
      * resultant Stream should be closed when completed to insure database resources involved in the stream are freed.
