@@ -73,12 +73,14 @@ public interface DbAccessor extends ConnectionProvider {
 		try (Connection connection = getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(formattedSql)) {
-			while (resultSet.next()) {
-				K key = keyExtractor.extract(resultSet);
-				if (key != null) {
-					V value = map.get(key);
-					if (value != null) {
-						enricher.enrich(value, resultSet);
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					K key = keyExtractor.extract(resultSet);
+					if (key != null) {
+						V value = map.get(key);
+						if (value != null) {
+							enricher.enrich(value, resultSet);
+						}
 					}
 				}
 			}
