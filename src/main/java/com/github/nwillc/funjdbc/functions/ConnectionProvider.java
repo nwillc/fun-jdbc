@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.funjdbc;
+package com.github.nwillc.funjdbc.functions;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,6 +22,7 @@ import java.sql.SQLException;
 /**
  * An interface to indicate that an object can provide JDBC connections.
  */
+@FunctionalInterface
 public interface ConnectionProvider {
     /**
      * Get a JDBC database connection.

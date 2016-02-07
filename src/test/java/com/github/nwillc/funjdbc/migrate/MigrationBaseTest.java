@@ -16,7 +16,7 @@
 
 package com.github.nwillc.funjdbc.migrate;
 
-import com.github.nwillc.funjdbc.ConnectionProvider;
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import org.junit.Before;
 import org.junit.Test;
 

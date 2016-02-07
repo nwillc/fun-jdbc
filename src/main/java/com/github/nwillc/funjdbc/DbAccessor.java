@@ -16,6 +16,10 @@
 
 package com.github.nwillc.funjdbc;
 
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
+import com.github.nwillc.funjdbc.functions.Enricher;
+import com.github.nwillc.funjdbc.functions.Extractor;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

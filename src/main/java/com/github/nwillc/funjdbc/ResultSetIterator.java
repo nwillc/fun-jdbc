@@ -17,6 +17,7 @@
 package com.github.nwillc.funjdbc;
 
 import almost.functional.utils.Preconditions;
+import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -17,6 +17,7 @@
 package com.github.nwillc.funjdbc;
 
 import com.github.nwillc.contracts.IteratorContract;
+import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.Closer;
 import org.junit.After;
 import org.junit.Before;

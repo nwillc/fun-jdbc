@@ -16,6 +16,7 @@
 
 package com.github.nwillc.funjdbc;
 
+import com.github.nwillc.funjdbc.functions.Extractor;
 import org.junit.Before;
 import org.junit.Test;
 

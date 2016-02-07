@@ -19,7 +19,7 @@ package com.github.nwillc.funjdbc.migrate;
 
 import almost.functional.utils.LogFactory;
 import almost.functional.utils.Preconditions;
-import com.github.nwillc.funjdbc.ConnectionProvider;
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.DbAccessor;
 
 import java.sql.Connection;

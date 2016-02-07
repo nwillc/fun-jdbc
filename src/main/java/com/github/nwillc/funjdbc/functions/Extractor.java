@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.github.nwillc.funjdbc;
+package com.github.nwillc.funjdbc.functions;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
