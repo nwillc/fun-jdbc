@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nwillc:almost-functional:1.9.0'
+    compile 'com.github.nwillc:almost-functional:1.9.1'
     testCompile 'junit:junit:4.12',
             'org.assertj:assertj-core:2.3.0',
             'com.h2database:h2:1.4.191',

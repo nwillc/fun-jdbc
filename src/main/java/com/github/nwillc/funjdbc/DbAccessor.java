@@ -120,7 +120,7 @@ public abstract class DbAccessor implements ConnectionProvider {
      */
     public <T> Stream<T> stream(final Extractor<T> extractor, final ResultSet resultSet) {
         ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
-        return new Stream<>(iterator).onClose(new Runnable() {
+        return Stream.of(iterator).onClose(new Runnable() {
             @Override
             public void run() {
                 close(resultSet);
