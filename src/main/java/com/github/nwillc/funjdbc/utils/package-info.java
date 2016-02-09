@@ -16,6 +16,7 @@
 
 /**
  * Utility classes to support java 8 features in JDBC.
+ *
  * @since 0.4
  */
 package com.github.nwillc.funjdbc.utils;

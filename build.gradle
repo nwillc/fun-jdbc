@@ -54,19 +54,19 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nwillc:almost-functional:1.8'
+    compile 'com.github.nwillc:almost-functional:1.9.0'
     testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:3.3.0',
+            'org.assertj:assertj-core:2.3.0',
             'com.h2database:h2:1.4.191',
             'com.github.nwillc:contracts:1.7.1',
             'org.mockito:mockito-core:2.0.36-beta'
 }
 
 group = 'com.github.nwillc'
-archivesBaseName = 'fun-jdbc'
+archivesBaseName = 'fun-jdbc-7'
 version = '0.8.1'
-targetCompatibility = '1.8'
-sourceCompatibility = '1.8'
+targetCompatibility = '1.7'
+sourceCompatibility = '1.7'
 
 jacocoTestReport {
     reports {

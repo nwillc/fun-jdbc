@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class MigrationBaseTest {
-    private Migration migration;
+    private MigrationBase migration;
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +36,7 @@ public class MigrationBaseTest {
 
     @Test
     public void testRunAlwaysDefaultsFalse() throws Exception {
-       assertThat(migration.runAlways()).isFalse();
+        assertThat(migration.runAlways()).isFalse();
     }
 
     @Test

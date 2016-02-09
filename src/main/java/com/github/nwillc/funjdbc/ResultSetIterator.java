@@ -16,6 +16,7 @@
 
 package com.github.nwillc.funjdbc;
 
+import almost.functional.Optional;
 import almost.functional.utils.Preconditions;
 import com.github.nwillc.funjdbc.functions.Extractor;
 
@@ -25,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
+
 
 /**
  * This is an Iterator that traverses a ResultSet. Additionally this implements Autocloseable, and support for adding other onClose Runnables.
@@ -80,6 +81,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
 
     /**
      * Add a Runnable to be invoked when this instance is closed. Runnables will be invoked in the order they are added.
+     *
      * @param runnable a runnable
      * @return this instance
      */
@@ -91,6 +93,13 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     @Override
     public void close() throws Exception {
         resultSet.close();
-        closers.stream().forEach(Runnable::run);
+        for (Runnable runnable : closers) {
+            runnable.run();
+        }
+    }
+
+    @Override
+    public void remove() {
+        throw new NoSuchMethodError("remove not implemented");
     }
 }

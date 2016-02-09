@@ -16,6 +16,7 @@
 
 /**
  * Java 8 support in JDBC. Support for streams, lambdas and unchecked exceptions.
+ *
  * @since 0.4
  */
 package com.github.nwillc.funjdbc;

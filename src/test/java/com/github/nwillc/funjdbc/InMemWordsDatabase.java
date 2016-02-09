@@ -21,7 +21,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class InMemWordsDatabase implements DbAccessor {
+public class InMemWordsDatabase extends DbAccessor {
     private final static String DRIVER = "org.h2.Driver";
     private final static String URL = "jdbc:h2:mem:";
     private static long instanceId = 0;

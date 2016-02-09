@@ -81,7 +81,8 @@ public class ManagerTest extends SingletonContract {
         try {
             manager.getConnection();
             failBecauseExceptionWasNotThrown(IllegalStateException.class);
-        } catch (IllegalStateException e) {}
+        } catch (IllegalStateException e) {
+        }
     }
 
     @Test
@@ -101,7 +102,8 @@ public class ManagerTest extends SingletonContract {
         try {
             manager.add(MigrationWithConstructor.class);
             failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException e) {}
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     @Test
@@ -161,6 +163,7 @@ public class ManagerTest extends SingletonContract {
     }
 
     public static class MigrationWithConstructor extends DummyMigration {
-        MigrationWithConstructor(String arg) {}
+        MigrationWithConstructor(String arg) {
+        }
     }
 }

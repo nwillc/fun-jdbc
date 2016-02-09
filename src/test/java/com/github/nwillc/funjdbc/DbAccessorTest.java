@@ -16,23 +16,36 @@
 
 package com.github.nwillc.funjdbc;
 
+import almost.functional.Consumer;
+import almost.functional.Optional;
+import almost.functional.utils.Stream;
+import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class DbAccessorTest {
     private InMemWordsDatabase dao;
-    private final static Extractor<String> WORD_EXTRACTOR = rs -> rs.getString(1);
-	private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
+    private final static Extractor<String> WORD_EXTRACTOR = new Extractor<String>() {
+        @Override
+        public String extract(ResultSet rs) throws SQLException {
+            return rs.getString(1);
+        }
+    };
+    private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = new Extractor<WordCount>() {
+        @Override
+        public WordCount extract(ResultSet rs) throws SQLException {
+            return new WordCount(rs.getString(1));
+        }
+    };
 
     @Before
     public void setUp() throws Exception {
@@ -105,30 +118,45 @@ public class DbAccessorTest {
 
     @Test
     public void shouldLogSql() throws Exception {
-		assertThat(dao.logSql()).isTrue();
+        assertThat(dao.logSql()).isTrue();
     }
 
     @Test
     public void shouldDbEnrich() throws Exception {
-		Map<String,WordCount> counts = new HashMap<>();
+        final Map<String, WordCount> counts = new HashMap<>();
 
-		dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
-
-		assertThat(counts.size()).isEqualTo(2);
-		dao.dbEnrich(counts,
-				rs -> rs.getString(1), (e,rs) -> e.count = rs.getInt(2),
-				"SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
-		assertThat(counts.get("b").count).isEqualTo(1);
-		assertThat(counts.get("a").count).isEqualTo(2);
+        dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(new Consumer<WordCount>() {
+            @Override
+            public void accept(WordCount wordCount) {
+                counts.put(wordCount.word, wordCount);
+            }
+        });
+        assertThat(counts.size()).isEqualTo(2);
+        dao.dbEnrich(counts,
+                new Extractor<String>() {
+                    @Override
+                    public String extract(ResultSet rs) throws SQLException {
+                        return rs.getString(1);
+                    }
+                },
+                new Enricher<WordCount>() {
+                    @Override
+                    public void enrich(WordCount entity, ResultSet rs) throws SQLException {
+                        entity.count = rs.getInt(2);
+                    }
+                },
+                "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
+        assertThat(counts.get("b").count).isEqualTo(1);
+        assertThat(counts.get("a").count).isEqualTo(2);
     }
 
     private static class WordCount {
         final String word;
-		int count;
+        int count;
 
         private WordCount(String word) {
             this.word = word;
             this.count = 1;
         }
-	}
+    }
 }

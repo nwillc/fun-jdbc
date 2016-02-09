@@ -17,10 +17,13 @@
 package com.github.nwillc.funjdbc.migrate;
 
 
+import almost.functional.Consumer;
 import almost.functional.utils.LogFactory;
 import almost.functional.utils.Preconditions;
-import com.github.nwillc.funjdbc.functions.ConnectionProvider;
+import almost.functional.utils.Stream;
 import com.github.nwillc.funjdbc.DbAccessor;
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
+import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -35,7 +38,7 @@ import java.util.logging.Logger;
  * The migration Manager. This singleton manages a set of Migrations, performing them as needed and persisting the
  * status of each.
  */
-public class Manager implements DbAccessor {
+public class Manager extends DbAccessor {
     private static final Logger LOGGER = LogFactory.getLogger();
     private static final Manager INSTANCE = new Manager();
 
@@ -132,7 +135,12 @@ public class Manager implements DbAccessor {
     public boolean migrationsEnabled() {
         try (Connection connection = getConnection()) {
             ResultSet resultSet = connection.getMetaData().getTables(null, null, "MIGRATIONS", null);
-            return stream(rs -> rs.getString(3), resultSet).count() == 1;
+            return stream(new Extractor<String>() {
+                @Override
+                public String extract(ResultSet rs) throws SQLException {
+                    return rs.getString(3);
+                }
+            }, resultSet).count() == 1;
         } catch (SQLException e) {
             LOGGER.warning(e.toString());
         }
@@ -141,6 +149,7 @@ public class Manager implements DbAccessor {
 
     /**
      * Enable migration management in the database.
+     *
      * @throws java.sql.SQLException if the migration table can not be added to the database.
      */
     public void enableMigrations() throws SQLException {
@@ -155,7 +164,12 @@ public class Manager implements DbAccessor {
      */
     public boolean migrated(String first) {
         try {
-            return dbFind(rs -> rs.getString(1), FIND, first).isPresent();
+            return dbFind(new Extractor<String>() {
+                @Override
+                public String extract(ResultSet rs) throws SQLException {
+                    return rs.getString(1);
+                }
+            }, FIND, first).isPresent();
         } catch (SQLException e) {
             LOGGER.warning(e.toString());
         }
@@ -166,16 +180,19 @@ public class Manager implements DbAccessor {
      * Do migrations as needed. Perform any Migration that hasn't been completed or is designated runAlways.
      */
     public void doMigrations() {
-       migrations.stream().forEach(migration -> {
-           if ((!migrated(migration.getIdentifier()) || migration.runAlways())
-            && migration.perform()) {
-               try {
-                   dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
-               } catch (SQLException e) {
-                   e.printStackTrace();
-               }
-           }
-       });
+        Stream.of(migrations).forEach(new Consumer<Migration>() {
+            @Override
+            public void accept(Migration migration) {
+                if ((!migrated(migration.getIdentifier()) || migration.runAlways())
+                        && migration.perform()) {
+                    try {
+                        dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     public static class MigrationComparator implements Comparator<Migration> {

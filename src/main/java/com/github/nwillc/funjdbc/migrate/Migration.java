@@ -17,12 +17,10 @@
 package com.github.nwillc.funjdbc.migrate;
 
 
-import com.github.nwillc.funjdbc.DbAccessor;
-
 /**
  * The interface for Migrations.
  */
-public interface Migration extends DbAccessor {
+public interface Migration {
     /**
      * Gets the migration description.
      *

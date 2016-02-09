@@ -22,7 +22,6 @@ import java.sql.SQLException;
 /**
  * An interface to indicate that an object can provide JDBC connections.
  */
-@FunctionalInterface
 public interface ConnectionProvider {
     /**
      * Get a JDBC database connection.

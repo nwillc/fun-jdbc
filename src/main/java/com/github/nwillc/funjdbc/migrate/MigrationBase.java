@@ -16,6 +16,8 @@
 
 package com.github.nwillc.funjdbc.migrate;
 
+import com.github.nwillc.funjdbc.DbAccessor;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -23,7 +25,7 @@ import java.sql.SQLException;
 /**
  * A basic Migration base class.
  */
-public abstract class MigrationBase implements Migration {
+public abstract class MigrationBase extends DbAccessor implements Migration {
     private final Manager manager = Manager.getInstance();
 
     @Override
@@ -33,7 +35,7 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public Connection getConnection() throws SQLException {
-       return manager.getConnection();
+        return manager.getConnection();
     }
 
     @Override
