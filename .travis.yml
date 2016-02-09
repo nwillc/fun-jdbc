@@ -7,3 +7,5 @@ branches:
   only:
     - master
     - jdk7
+after_success:
+  - ./gradlew clean jar bintray -x test

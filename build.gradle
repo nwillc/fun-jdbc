@@ -48,6 +48,9 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 repositories {
     mavenLocal()
+    maven {
+        url  "http://dl.bintray.com/nwillc/maven"
+    }
     jcenter {
         url 'http://jcenter.bintray.com'
     }
@@ -130,12 +133,12 @@ bintray {
     pkg {
         repo = 'maven'
         name = project.name
-        desc = 'Java 8 functional JDBC utility code, applying some of Java\'s newer features to reduce JDBC boilerplate code.'
+        desc = 'Java functional JDBC utility code to reduce JDBC boilerplate code.'
         websiteUrl = 'https://github.com/nwillc/fun-jdbc'
         issueTrackerUrl = 'https://github.com/nwillc/fun-jdbc/issues'
         vcsUrl = 'https://github.com/nwillc/fun-jdbc.git'
         licenses = ['ISC']
-        labels = ['jdk8', 'jdbc']
+        labels = ['jdk7', 'jdbc']
         publicDownloadNumbers = true
     }
 }
