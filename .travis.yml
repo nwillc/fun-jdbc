@@ -3,4 +3,7 @@ jdk:
   - oraclejdk7
 env:
   - TERM=dumb
-
+branches:
+  only:
+    - master
+    - jdk7
