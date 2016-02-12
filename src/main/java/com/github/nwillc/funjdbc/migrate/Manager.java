@@ -19,8 +19,8 @@ package com.github.nwillc.funjdbc.migrate;
 
 import almost.functional.utils.LogFactory;
 import almost.functional.utils.Preconditions;
-import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.DbAccessor;
+import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -141,6 +141,7 @@ public class Manager implements DbAccessor {
 
     /**
      * Enable migration management in the database.
+     *
      * @throws java.sql.SQLException if the migration table can not be added to the database.
      */
     public void enableMigrations() throws SQLException {
@@ -166,16 +167,16 @@ public class Manager implements DbAccessor {
      * Do migrations as needed. Perform any Migration that hasn't been completed or is designated runAlways.
      */
     public void doMigrations() {
-       migrations.stream().forEach(migration -> {
-           if ((!migrated(migration.getIdentifier()) || migration.runAlways())
-            && migration.perform()) {
-               try {
-                   dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
-               } catch (SQLException e) {
-                   e.printStackTrace();
-               }
-           }
-       });
+        migrations.stream().forEach(migration -> {
+            if ((!migrated(migration.getIdentifier()) || migration.runAlways())
+                    && migration.perform()) {
+                try {
+                    dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static class MigrationComparator implements Comparator<Migration> {

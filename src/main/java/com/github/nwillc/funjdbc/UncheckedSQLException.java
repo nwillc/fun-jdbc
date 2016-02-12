@@ -30,6 +30,7 @@ public class UncheckedSQLException extends RuntimeException {
 
     /**
      * If the underlying cause provides an error code, provides it.
+     *
      * @return an optional error code, empty if none available.
      */
     public Optional<Integer> getErrorCode() {
@@ -49,6 +50,7 @@ public class UncheckedSQLException extends RuntimeException {
 
     /**
      * If underlying cause provides a SQL state, provide it.
+     *
      * @return an optional SQL state, empty if none available.
      */
     public Optional<String> getSqlState() {

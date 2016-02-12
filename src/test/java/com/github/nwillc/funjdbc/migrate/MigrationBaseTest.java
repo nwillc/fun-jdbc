@@ -36,7 +36,7 @@ public class MigrationBaseTest {
 
     @Test
     public void testRunAlwaysDefaultsFalse() throws Exception {
-       assertThat(migration.runAlways()).isFalse();
+        assertThat(migration.runAlways()).isFalse();
     }
 
     @Test

@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DbAccessorTest {
     private InMemWordsDatabase dao;
     private final static Extractor<String> WORD_EXTRACTOR = rs -> rs.getString(1);
-	private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
+    private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
 
     @Before
     public void setUp() throws Exception {
@@ -105,30 +105,30 @@ public class DbAccessorTest {
 
     @Test
     public void shouldLogSql() throws Exception {
-		assertThat(dao.logSql()).isTrue();
+        assertThat(dao.logSql()).isTrue();
     }
 
     @Test
     public void shouldDbEnrich() throws Exception {
-		Map<String,WordCount> counts = new HashMap<>();
+        Map<String, WordCount> counts = new HashMap<>();
 
-		dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
+        dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
 
-		assertThat(counts.size()).isEqualTo(2);
-		dao.dbEnrich(counts,
-				rs -> rs.getString(1), (e,rs) -> e.count = rs.getInt(2),
-				"SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
-		assertThat(counts.get("b").count).isEqualTo(1);
-		assertThat(counts.get("a").count).isEqualTo(2);
+        assertThat(counts.size()).isEqualTo(2);
+        dao.dbEnrich(counts,
+                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
+                "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
+        assertThat(counts.get("b").count).isEqualTo(1);
+        assertThat(counts.get("a").count).isEqualTo(2);
     }
 
     private static class WordCount {
         final String word;
-		int count;
+        int count;
 
         private WordCount(String word) {
             this.word = word;
             this.count = 1;
         }
-	}
+    }
 }

@@ -33,7 +33,7 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public Connection getConnection() throws SQLException {
-       return manager.getConnection();
+        return manager.getConnection();
     }
 
     @Override

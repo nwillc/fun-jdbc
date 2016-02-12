@@ -80,14 +80,16 @@ public class ResultSetIteratorTest extends IteratorContract {
         try {
             new ResultSetIterator(null, wordExtractor);
             failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         try (Connection connection = dao.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
             new ResultSetIterator(resultSet, null);
             failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +104,8 @@ public class ResultSetIteratorTest extends IteratorContract {
         try {
             resultSetIterator.next();
             failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ignored) {}
+        } catch (RuntimeException ignored) {
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -115,7 +118,8 @@ public class ResultSetIteratorTest extends IteratorContract {
         try {
             resultSetIterator.hasNext();
             failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ignored) {}
+        } catch (RuntimeException ignored) {
+        }
     }
 
     @Test
@@ -124,8 +128,8 @@ public class ResultSetIteratorTest extends IteratorContract {
 
         try (Connection connection = dao.getConnection();
              Statement statement = connection.createStatement()) {
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
-             @SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
+            @SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
             resultSetIterator.close();
         }
         assertThat(tattleTale.get()).isTrue();

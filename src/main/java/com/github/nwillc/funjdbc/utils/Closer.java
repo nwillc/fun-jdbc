@@ -26,7 +26,8 @@ import java.util.logging.Logger;
 public final class Closer {
     private static final Logger LOGGER = LogFactory.getLogger();
 
-    private Closer() {}
+    private Closer() {
+    }
 
     /**
      * Close an AutoCloseable without exception.

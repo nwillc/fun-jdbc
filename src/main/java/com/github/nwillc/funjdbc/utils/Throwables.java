@@ -24,7 +24,8 @@ import java.sql.SQLException;
  * Utility methods for throwables.
  */
 public final class Throwables {
-    private Throwables() {}
+    private Throwables() {
+    }
 
     /**
      * Propagate a Throwable as a RuntimeException. The Runtime exception bases it's message on the message of the Throwable,

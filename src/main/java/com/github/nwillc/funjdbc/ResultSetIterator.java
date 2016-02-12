@@ -21,11 +21,7 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
@@ -80,6 +76,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
 
     /**
      * Add a Runnable to be invoked when this instance is closed. Runnables will be invoked in the order they are added.
+     *
      * @param runnable a runnable
      * @return this instance
      */
