@@ -43,11 +43,10 @@ public abstract class MigrationBase implements Migration {
 
     @Override
     public String toString() {
-        String sb = getClass().getSimpleName() + '{' +
+        return getClass().getSimpleName() + '{' +
                 "identifier: " + getIdentifier() + ", " +
                 "description: " + getDescription() + ", " +
                 "performed: " + Manager.getInstance().migrated(getIdentifier()) +
                 '}';
-        return sb;
     }
 }

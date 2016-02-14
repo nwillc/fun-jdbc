@@ -18,7 +18,8 @@ public class CascadeEnricher<E> implements Enricher<E> {
      *
      * @param enrichers the enrichers to cascade through
      */
-    public CascadeEnricher(Enricher<E>... enrichers) {
+    @SafeVarargs
+	public CascadeEnricher(Enricher<E>... enrichers) {
         this.enrichers = enrichers;
     }
 
