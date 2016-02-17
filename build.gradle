@@ -57,7 +57,8 @@ dependencies {
             'org.assertj:assertj-core:3.3.0',
             'com.h2database:h2:1.4.191',
             'com.github.nwillc:contracts:1.7.1',
-            'org.mockito:mockito-core:2.0.42-beta'
+            'org.mockito:mockito-core:2.0.42-beta',
+            'org.apache.commons:commons-dbcp2:2.1.1'
 }
 
 group = 'com.github.nwillc'

@@ -16,6 +16,15 @@
 
 package com.github.nwillc.funjdbc;
 
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.ObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,12 +34,13 @@ public class InMemWordsDatabase implements DbAccessor {
     private final static String DRIVER = "org.h2.Driver";
     private final static String URL = "jdbc:h2:mem:";
     private static long instanceId = 0;
-    private final String name;
     private final Connection connection;
+	private final DataSource dataSource;
 
     public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER);
-        name = String.format("db%04d", instanceId++);
+        String name = String.format("db%04d", instanceId++);
+		dataSource = setupDataSource(URL + name);
         connection = getConnection();
     }
 
@@ -41,7 +51,7 @@ public class InMemWordsDatabase implements DbAccessor {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL + name);
+		return dataSource.getConnection();
     }
 
     public void create() throws SQLException {
@@ -61,4 +71,13 @@ public class InMemWordsDatabase implements DbAccessor {
             connection.close();
         }
     }
+
+    private static DataSource setupDataSource(String connectURI) {
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,null);
+        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+		ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+		poolableConnectionFactory.setPool(connectionPool);
+		return new PoolingDataSource<>(connectionPool);
+    }
+
 }
