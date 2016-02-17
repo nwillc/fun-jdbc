@@ -32,8 +32,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4',
                 'org.tmatesoft.sqljet:sqljet:1.1.9',
                 'au.com.ish.gradle:release:2.2.2',
-                'gradle.plugin.com.github.nwillc:vplugin:1.2.4',
-                'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0x'
+                'gradle.plugin.com.github.nwillc:vplugin:1.2.4'
     }
 }
 
@@ -44,7 +43,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'com.github.nwillc.vplugin'
-apply plugin: 'com.github.kt3k.coveralls'
 
 repositories {
     mavenLocal()
@@ -70,7 +68,7 @@ sourceCompatibility = '1.8'
 
 jacocoTestReport {
     reports {
-        xml.enabled = true // coveralls plugin depends on xml format report
+        xml.enabled = true
         html.enabled = true
     }
 }
