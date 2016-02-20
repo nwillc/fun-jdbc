@@ -8,7 +8,7 @@ Fun JDBC's [landing page](http://nwillc.github.io/fun-jdbc/) is the best place t
 [![ISC License](http://shields-nwillc.rhcloud.com/shield/tldrlegal?package=ISC)](http://shields-nwillc.rhcloud.com/homepage/tldrlegal?package=ISC)
 [![Build Status](https://travis-ci.org/nwillc/fun-jdbc.svg?branch=master)](https://travis-ci.org/nwillc/fun-jdbc)
 [![Coverage Status](http://shields-nwillc.rhcloud.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
-[![Download](http://shields-nwillc.rhcloud.com/shield/jcenter?path=nwillc&package=fun-jdbc)](https://bintray.com/nwillc/maven/fun-jdbc/_latestVersion)
+[![Download](http://shields-nwillc.rhcloud.com/shield/jcenter?path=nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/jcenter?path=nwillc&package=fun-jdbc)
 
 
 
