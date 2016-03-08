@@ -15,6 +15,6 @@
 <br/>
 [![Coverage Status](http://shields-nwillc.rhcloud.com/shield/codecov?path=github/nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/codecov?path=github/nwillc&package=fun-jdbc)
 <br/>
-[![Maven Central](http://shields-nwillc.rhcloud.com/shield/maven_central?group=com.github.nwillc&package=fun-jdbc)](http://shields-nwillc.rhcloud.com/homepage/maven_central?group=com.github.nwillc&package=fun-jdbc)
+[![JCenter](http://shields-nwillc.rhcloud.com/shield/jcenter?package=fun-jdbc&path=nwillc)](http://shields-nwillc.rhcloud.com/homepage/jcenter?package=fun-jdbc&path=nwillc)
 <br/>
 [![Github](http://shields-nwillc.rhcloud.com/shield/github)](http://shields-nwillc.rhcloud.com/homepage/github?path=nwillc&package=fun-jdbc)
