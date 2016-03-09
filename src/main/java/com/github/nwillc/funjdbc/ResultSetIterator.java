@@ -60,7 +60,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     @Override
     public T next() {
         hasNext();
-        if (!nextAvailable.get()) {
+        if (!(nextAvailable.isPresent() && nextAvailable.get())) {
             throw new NoSuchElementException();
         }
 
