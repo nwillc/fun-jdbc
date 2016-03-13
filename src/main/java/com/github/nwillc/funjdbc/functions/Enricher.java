@@ -16,7 +16,7 @@ public interface Enricher<E> {
      *
      * @param entity the entity to enrich
      * @param rs     the result set, at the current row
-     * @throws SQLException
+     * @throws SQLException may result from database operations in the enrichement
      */
     void enrich(E entity, ResultSet rs) throws SQLException;
 }

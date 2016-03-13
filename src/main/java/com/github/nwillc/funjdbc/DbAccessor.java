@@ -84,7 +84,7 @@ public interface DbAccessor extends ConnectionProvider {
 	 * @param args         the SQL arguements to sql
 	 * @param <K>          the key type
 	 * @param <V>          the entity type
-	 * @throws SQLException
+	 * @throws SQLException may result from the query or enrichments
 	 */
 	default <K, V> void dbEnrich(Map<K, V> map,
 								 final Extractor<K> keyExtractor, final Enricher<V> enricher,
