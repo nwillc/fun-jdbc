@@ -2,11 +2,10 @@ package com.github.nwillc.funjdbc.utils;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +17,8 @@ public class CopierTest {
 
 	@Test
 	public void shouldPrint() throws Exception {
-		Copier.multi(integer -> strings.get(integer), 0, 3);
+		BiFunction<List<String>, Integer, String> accessor = List::get;
+		System.out.println(accessor.apply(strings,0));
 	}
 
 	@Test
@@ -28,9 +28,17 @@ public class CopierTest {
 		assertThat(bean.str).isEqualTo(strings.get(1));
 	}
 
+	@Test
+	public void shouldCopy2() throws Exception {
+		Bean bean = new Bean();
+		Copier.copy2(strings, bean, Bean::setStr, List::get, 0);
+		assertThat(bean.str).isEqualTo(strings.get(0));
+	}
+
 	private void wrap(Bean b, List<String> l) {
 		Copier.copy(b::setStr, l::get, 1);
 	}
+
 
 	private class Bean {
 		String str;
