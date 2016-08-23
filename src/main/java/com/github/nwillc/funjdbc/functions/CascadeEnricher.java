@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * An Enricher that cascdes through a set of provided Enrichers, allowing for
+ * An Enricher that cascades through a set of provided Enrichers, allowing for
  * an entity to be enriched in multiple ways.
  *
  * @param <E> the entity type
