@@ -21,6 +21,7 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Supplier;
 
 /**
  *
@@ -28,10 +29,20 @@ import java.sql.SQLException;
 public final class ExtractorFactory {
     private ExtractorFactory() {}
 
-    private class GeneratedExtractor<T> implements Extractor<T> {
+    public static <T> Extractor<T> create(Supplier<T> factory) {
+        return new GeneratedExtractor<>(factory);
+    }
+
+    private static class GeneratedExtractor<T> implements Extractor<T> {
+        private final Supplier<T> factory;
+
+        public GeneratedExtractor(Supplier<T> factory) {
+            this.factory = factory;
+        }
+
         @Override
         public T extract(ResultSet rs) throws SQLException {
-            return null;
+            return factory.get();
         }
     }
 }

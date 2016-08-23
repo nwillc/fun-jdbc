@@ -18,11 +18,28 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import com.github.nwillc.funjdbc.functions.Extractor;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ExtractorFactoryTest extends UtilityClassContract {
     @Override
     public Class<?> getClassToTest() {
         return ExtractorFactory.class;
+    }
+
+    @Test
+    public void testConstructor() throws Exception {
+        final Extractor<Bean> extractor = ExtractorFactory.create(Bean::new);
+        assertThat(extractor).isNotNull();
+        final Bean bean = extractor.extract(null);
+        assertThat(bean).isInstanceOf(Bean.class);
+    }
+
+    private static class Bean {
+        public Bean() {
+        }
     }
 }
