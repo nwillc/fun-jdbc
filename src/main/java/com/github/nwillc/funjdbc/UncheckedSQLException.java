@@ -23,7 +23,7 @@ import java.util.Optional;
  * An unchecked version of SQLException. Maintains the errorCode and sqlState of the SQLException.
  */
 public class UncheckedSQLException extends RuntimeException {
-
+    static final long serialVersionUID = 1L;
     public UncheckedSQLException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -2,7 +2,6 @@ package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import org.junit.Test;
-import org.mockito.internal.matchers.Any;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +35,7 @@ public class CopierTest {
 				throw new UncheckedSQLException("", e);
 			}
 		};
-		Copier.copy2(bean, Bean::setStr, rs, function, 0);
+		Copier.copy(bean, Bean::setStr, rs, function, 0);
 		assertThat(bean.str).isEqualTo(strings.get(0));
 	}
 

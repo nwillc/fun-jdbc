@@ -86,8 +86,8 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        resultSet.close();
-        closers.stream().forEach(Runnable::run);
+    public void close() throws SQLException {
+            resultSet.close();
+            closers.forEach(Runnable::run);
     }
 }

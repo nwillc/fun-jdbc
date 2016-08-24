@@ -21,28 +21,59 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
- *
+ * Create a simple extractor.
  */
-public final class ExtractorFactory {
-    private ExtractorFactory() {}
+public final class ExtractorFactory<B> {
+    private List<Extraction<B,Object>> extractions = new ArrayList<>();
 
-    public static <T> Extractor<T> create(Supplier<T> factory) {
-        return new GeneratedExtractor<>(factory);
+    public Extractor<B> create(Supplier<B> factory) {
+        return new GeneratedExtractor<>(factory, extractions);
     }
 
-    private static class GeneratedExtractor<T> implements Extractor<T> {
-        private final Supplier<T> factory;
+    public ExtractorFactory<B> add(BiConsumer<B,Object> setter, BiFunction<ResultSet, Integer, Object> getter, Integer index) {
+        extractions.add(new Extraction<B,Object>(setter, getter, index));
+        return this;
+    }
 
-        public GeneratedExtractor(Supplier<T> factory) {
+    private static class GeneratedExtractor<B> implements Extractor<B> {
+        private final Supplier<B> factory;
+        private final List<Extraction<B,Object>> extractions;
+
+        public GeneratedExtractor(Supplier<B> factory, List<Extraction<B, Object>> extractions) {
             this.factory = factory;
+            this.extractions = extractions;
         }
 
         @Override
-        public T extract(ResultSet rs) throws SQLException {
-            return factory.get();
+        public B extract(ResultSet rs) throws SQLException {
+            final B bean = factory.get();
+            extractions.forEach(e -> {
+                Copier.copy(bean, e.setter, rs, e.getter, e.index);
+            });
+            return bean;
+        }
+    }
+
+    private static class Extraction<B,T> {
+        BiConsumer<B,T> setter;
+        BiFunction<ResultSet, Integer, T> getter;
+        Integer index;
+
+        public Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+            this.setter = setter;
+            this.getter = getter;
+            this.index = index;
         }
     }
 }

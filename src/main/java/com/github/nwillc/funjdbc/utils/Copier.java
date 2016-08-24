@@ -6,7 +6,7 @@ import java.util.function.BiFunction;
 
 public class Copier {
 
-	public static <T, B> void copy2(B bean, BiConsumer<B, T> setter, ResultSet rs, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+	public static <B,T> void copy(B bean, BiConsumer<B, T> setter, ResultSet rs, BiFunction<ResultSet, Integer, T> getter, Integer index) {
 		setter.accept(bean, getter.apply(rs, index));
 	}
 }
