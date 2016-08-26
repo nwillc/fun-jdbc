@@ -21,7 +21,12 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -97,22 +102,73 @@ public class ExtractorFactoryTest {
     }
 
     @Test
+    public void testFloat() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, Extractors.FLOAT, 1).create(Bean::new);
+
+        when(resultSet.getFloat(1)).thenReturn(3.142f);
+
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.six).isEqualTo(3.142f);
+    }
+
+    @Test
+    public void testBigDecimal() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, Extractors.BIG_DECIMAL, 1).create(Bean::new);
+
+        when(resultSet.getBigDecimal(1)).thenReturn(BigDecimal.TEN);
+
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.seven).isEqualTo(BigDecimal.TEN);
+    }
+
+    @Test
+    public void testTime() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIME, 1).create(Bean::new);
+
+        final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
+        when(resultSet.getTime(1)).thenReturn(new Time(time));
+
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(time);
+    }
+
+    @Test
+    public void testDate() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.DATE, 1).create(Bean::new);
+
+        final long date = TimeUnit.DAYS.toMillis(40);
+        when(resultSet.getDate(1)).thenReturn(new java.sql.Date(date));
+
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(date);
+    }
+
+    @Test
+    public void testTimestamp() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIMESTAMP, 1).create(Bean::new);
+
+        final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
+        when(resultSet.getTimestamp(1)).thenReturn(new Timestamp(timestamp));
+
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(timestamp);
+    }
+
+
+    @Test
     public void testMultiple() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1)
                 .add(Bean::setOne, Extractors.INTEGER, 2)
-                .add(Bean::setThree, Extractors.BOOLEAN, 3)
                 .add(Bean::setFour, Extractors.LONG, 4)
                 .create(Bean::new);
 
         when(resultSet.getString(1)).thenReturn("two");
         when(resultSet.getInt(2)).thenReturn(1);
-        when(resultSet.getBoolean(3)).thenReturn(true);
         when(resultSet.getLong(4)).thenReturn(20L);
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.one).isEqualTo(1);
         assertThat(bean.two).isEqualTo("two");
-        assertThat(bean.three).isTrue();
         assertThat(bean.four).isEqualTo(20L);
     }
 
@@ -123,10 +179,9 @@ public class ExtractorFactoryTest {
         boolean three;
         long four;
         double five;
-
-        public void setFive(double five) {
-            this.five = five;
-        }
+        float six;
+        BigDecimal seven;
+        Date eight;
 
         void setOne(int one) {
             this.one = one;
@@ -142,6 +197,22 @@ public class ExtractorFactoryTest {
 
         void setFour(long four) {
             this.four = four;
+        }
+
+        void setFive(double five) {
+            this.five = five;
+        }
+
+        void setSix(float six) {
+            this.six = six;
+        }
+
+        void setSeven(BigDecimal seven) {
+            this.seven = seven;
+        }
+
+        void setEight(Date eight) {
+            this.eight = eight;
         }
     }
 }

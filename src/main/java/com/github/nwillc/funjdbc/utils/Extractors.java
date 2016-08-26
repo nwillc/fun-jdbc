@@ -19,8 +19,12 @@ package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.function.BiFunction;
 
 /**
@@ -63,10 +67,39 @@ public class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
-    // TIME
-    // DATE
-    // timestamp
-    // BIGDECIMAL
-    // float
-    // double
+    public static final BiFunction<ResultSet, Integer, Float> FLOAT = (r, i) -> {
+        try {
+            return r.getFloat(i);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
+    public static final BiFunction<ResultSet, Integer, BigDecimal> BIG_DECIMAL = (r, i) -> {
+        try {
+            return r.getBigDecimal(i);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
+    public static final BiFunction<ResultSet, Integer, Time> TIME = (r, i) -> {
+        try {
+            return r.getTime(i);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
+    public static final BiFunction<ResultSet, Integer, Date> DATE = (r, i) -> {
+        try {
+            return r.getDate(i);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
+    public static final BiFunction<ResultSet, Integer, Timestamp> TIMESTAMP = (r, i) -> {
+        try {
+            return r.getTimestamp(i);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
 }

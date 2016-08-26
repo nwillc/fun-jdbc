@@ -22,14 +22,10 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * Create a simple extractor.
@@ -43,14 +39,15 @@ public final class ExtractorFactory<B> {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ExtractorFactory<B> add(BiConsumer<B,T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
-        extractions.add(new Extraction<>(setter, getter, index));
+    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+        final Extraction<B, T> extraction = new Extraction<>(setter, getter, index);
+        extractions.add(extraction);
         return this;
     }
 
     private static class GeneratedExtractor<B> implements Extractor<B> {
         private final Supplier<B> factory;
-        private final List<Extraction<B,Object>> extractions;
+        private final List<Extraction<B, Object>> extractions;
 
         GeneratedExtractor(Supplier<B> factory, List<Extraction<B, Object>> extractions) {
             this.factory = factory;
@@ -60,20 +57,25 @@ public final class ExtractorFactory<B> {
         @Override
         public B extract(ResultSet rs) throws SQLException {
             final B bean = factory.get();
-            extractions.forEach(e -> Copier.copy(bean, e.setter, rs, e.getter, e.index));
+            extractions.forEach(e -> e.copy(bean, rs));
             return bean;
         }
     }
 
-    private static class Extraction<B,T> {
-        BiConsumer<B,T> setter;
-        BiFunction<ResultSet, Integer, T> getter;
-        Integer index;
+    private static class Extraction<B, T> {
+        final BiConsumer<B, T> setter;
+        final BiFunction<ResultSet, Integer, T> getter;
+        final Integer index;
 
         Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
             this.setter = setter;
             this.getter = getter;
             this.index = index;
         }
+
+        void copy(B bean, ResultSet rs) {
+            setter.accept(bean, getter.apply(rs, index));
+        }
     }
+
 }
