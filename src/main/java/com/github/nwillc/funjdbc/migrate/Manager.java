@@ -167,7 +167,7 @@ public class Manager implements DbAccessor {
      * Do migrations as needed. Perform any Migration that hasn't been completed or is designated runAlways.
      */
     public void doMigrations() {
-        migrations.stream().forEach(migration -> {
+        migrations.forEach(migration -> {
             if ((!migrated(migration.getIdentifier()) || migration.runAlways())
                     && migration.perform()) {
                 try {

@@ -24,6 +24,8 @@ import java.util.Optional;
  */
 public class UncheckedSQLException extends RuntimeException {
     static final long serialVersionUID = 1L;
+
+    public UncheckedSQLException(Throwable cause) { super(cause.getMessage(), cause);}
     public UncheckedSQLException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -35,14 +35,16 @@ import java.util.stream.Stream;
  * Create a simple extractor.
  */
 public final class ExtractorFactory<B> {
-    private List<Extraction<B,Object>> extractions = new ArrayList<>();
+    private List extractions = new ArrayList<>();
 
+    @SuppressWarnings("unchecked")
     public Extractor<B> create(Supplier<B> factory) {
         return new GeneratedExtractor<>(factory, extractions);
     }
 
-    public ExtractorFactory<B> add(BiConsumer<B,Object> setter, BiFunction<ResultSet, Integer, Object> getter, Integer index) {
-        extractions.add(new Extraction<B,Object>(setter, getter, index));
+    @SuppressWarnings("unchecked")
+    public <T> ExtractorFactory<B> add(BiConsumer<B,T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+        extractions.add(new Extraction<>(setter, getter, index));
         return this;
     }
 
@@ -50,7 +52,7 @@ public final class ExtractorFactory<B> {
         private final Supplier<B> factory;
         private final List<Extraction<B,Object>> extractions;
 
-        public GeneratedExtractor(Supplier<B> factory, List<Extraction<B, Object>> extractions) {
+        GeneratedExtractor(Supplier<B> factory, List<Extraction<B, Object>> extractions) {
             this.factory = factory;
             this.extractions = extractions;
         }
@@ -58,9 +60,7 @@ public final class ExtractorFactory<B> {
         @Override
         public B extract(ResultSet rs) throws SQLException {
             final B bean = factory.get();
-            extractions.forEach(e -> {
-                Copier.copy(bean, e.setter, rs, e.getter, e.index);
-            });
+            extractions.forEach(e -> Copier.copy(bean, e.setter, rs, e.getter, e.index));
             return bean;
         }
     }
@@ -70,7 +70,7 @@ public final class ExtractorFactory<B> {
         BiFunction<ResultSet, Integer, T> getter;
         Integer index;
 
-        public Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+        Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
             this.setter = setter;
             this.getter = getter;
             this.index = index;

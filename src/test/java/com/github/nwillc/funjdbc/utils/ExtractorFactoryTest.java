@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,47 +50,37 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testExtraction() throws Exception {
-        BiConsumer<Bean, Object> setter = Bean::setOne;
-        BiFunction<ResultSet, Integer, Object> function = (r, index) -> {
-            try {
-                return (Integer) r.getInt(index);
-            } catch (SQLException e) {
-                throw new UncheckedSQLException("", e);
-            }
-        };
-        factory.add(setter, function, 1);
-
-        BiConsumer<Bean, Object> setter2 = Bean::setTwo;
-        BiFunction<ResultSet, Integer, Object> function2 = (r, index) -> {
-            try {
-                return r.getString(index);
-            } catch (SQLException e) {
-                throw new UncheckedSQLException("", e);
-            }
-        };
-        factory.add(setter2, function2, 1);
-
-        final Extractor<Bean> extractor = factory.create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1)
+                .add(Bean::setOne, Extractors.INTEGER, 2)
+                .add(Bean::setThree, Extractors.BOOLEAN, 2)
+                .create(Bean::new);
 
         ResultSet rs = mock(ResultSet.class);
-        when(rs.getInt(anyInt())).thenReturn(1);
-        when(rs.getString(anyInt())).thenReturn("two");
+        when(rs.getString(1)).thenReturn("two");
+        when(rs.getInt(2)).thenReturn(1);
+        when(rs.getBoolean(2)).thenReturn(true);
 
         final Bean bean = extractor.extract(rs);
         assertThat(bean.one).isEqualTo(1);
         assertThat(bean.two).isEqualTo("two");
+        assertThat(bean.three).isTrue();
     }
 
     private static class Bean {
-        Integer one;
+        int one;
         String two;
+        boolean three;
 
-        public void setOne(Object one) {
-            this.one = (Integer)one;
+        void setOne(int one) {
+            this.one = one;
         }
 
-        public void setTwo(Object two) {
-            this.two = two.toString();
+        void setTwo(String two) {
+            this.two = two;
+        }
+
+        public void setThree(boolean three) {
+            this.three = three;
         }
     }
 }
