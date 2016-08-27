@@ -45,7 +45,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testConstructor() throws Exception {
-        final Extractor<Bean> extractor = factory.create(Bean::new);
+        final Extractor<Bean> extractor = factory.factory(Bean::new).getExtractor();
         assertThat(extractor).isNotNull();
         final Bean bean = extractor.extract(null);
         assertThat(bean).isInstanceOf(Bean.class);
@@ -53,7 +53,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testInteger() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setOne, Extractors.INTEGER, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setOne, Extractors.INTEGER, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getInt(1)).thenReturn(5);
 
@@ -63,7 +63,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testString() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getString(1)).thenReturn("two");
 
@@ -73,7 +73,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testBoolean() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setThree, Extractors.BOOLEAN, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setThree, Extractors.BOOLEAN, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getBoolean(1)).thenReturn(true);
 
@@ -83,7 +83,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testLong() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFour, Extractors.LONG, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setFour, Extractors.LONG, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getLong(1)).thenReturn(42L);
 
@@ -93,7 +93,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testDouble() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFive, Extractors.DOUBLE, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, Extractors.DOUBLE, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getDouble(1)).thenReturn(3.142);
 
@@ -103,7 +103,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testFloat() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSix, Extractors.FLOAT, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, Extractors.FLOAT, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getFloat(1)).thenReturn(3.142f);
 
@@ -113,7 +113,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testBigDecimal() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSeven, Extractors.BIG_DECIMAL, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, Extractors.BIG_DECIMAL, 1).factory(Bean::new).getExtractor();
 
         when(resultSet.getBigDecimal(1)).thenReturn(BigDecimal.TEN);
 
@@ -123,7 +123,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testTime() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIME, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIME, 1).factory(Bean::new).getExtractor();
 
         final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
         when(resultSet.getTime(1)).thenReturn(new Time(time));
@@ -134,7 +134,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testDate() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.DATE, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.DATE, 1).factory(Bean::new).getExtractor();
 
         final long date = TimeUnit.DAYS.toMillis(40);
         when(resultSet.getDate(1)).thenReturn(new java.sql.Date(date));
@@ -145,7 +145,7 @@ public class ExtractorFactoryTest {
 
     @Test
     public void testTimestamp() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIMESTAMP, 1).create(Bean::new);
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, Extractors.TIMESTAMP, 1).factory(Bean::new).getExtractor();
 
         final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
         when(resultSet.getTimestamp(1)).thenReturn(new Timestamp(timestamp));
@@ -160,7 +160,8 @@ public class ExtractorFactoryTest {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1)
                 .add(Bean::setOne, Extractors.INTEGER, 2)
                 .add(Bean::setFour, Extractors.LONG, 4)
-                .create(Bean::new);
+                .factory(Bean::new)
+                .getExtractor();
 
         when(resultSet.getString(1)).thenReturn("two");
         when(resultSet.getInt(2)).thenReturn(1);

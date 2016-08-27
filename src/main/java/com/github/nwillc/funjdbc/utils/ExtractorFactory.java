@@ -21,49 +21,51 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Create a simple extractor.
+ * Create a simple extractor from a series of getter/setter/index tuples.
  */
 public final class ExtractorFactory<B> {
-    private List extractions = new ArrayList<>();
+    private Consumer<Variant<B>> consumer = v -> {};
+    private Supplier<B> factory;
 
-    @SuppressWarnings("unchecked")
-    public Extractor<B> create(Supplier<B> factory) {
-        return new GeneratedExtractor<>(factory, extractions);
+    public ExtractorFactory<B> factory(Supplier<B> factory) {
+        this.factory = factory;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
         final Extraction<B, T> extraction = new Extraction<>(setter, getter, index);
-        extractions.add(extraction);
+        consumer = consumer.andThen(extraction);
         return this;
+    }
+
+    public Extractor<B> getExtractor() {
+        return new GeneratedExtractor<>(factory, consumer);
     }
 
     private static class GeneratedExtractor<B> implements Extractor<B> {
         private final Supplier<B> factory;
-        private final List<Extraction<B, Object>> extractions;
+        private final Consumer<Variant<B>> consumer;
 
-        GeneratedExtractor(Supplier<B> factory, List<Extraction<B, Object>> extractions) {
+        GeneratedExtractor(Supplier<B> factory, Consumer<Variant<B>> consumer) {
             this.factory = factory;
-            this.extractions = extractions;
+            this.consumer = consumer;
         }
 
         @Override
         public B extract(ResultSet rs) throws SQLException {
-            final B bean = factory.get();
-            extractions.forEach(e -> e.copy(bean, rs));
-            return bean;
+            final Variant<B> variant = new Variant<>(factory.get(), rs);
+            consumer.accept(variant);
+            return variant.bean;
         }
     }
 
-    // TODO: use a consumer andThen to chain extractions rather then loop
-    private static class Extraction<B, T> {
+    private static class Extraction<B, T> implements Consumer<Variant<B>> {
         final BiConsumer<B, T> setter;
         final BiFunction<ResultSet, Integer, T> getter;
         final Integer index;
@@ -74,8 +76,19 @@ public final class ExtractorFactory<B> {
             this.index = index;
         }
 
-        void copy(B bean, ResultSet rs) {
-            setter.accept(bean, getter.apply(rs, index));
+        @Override
+        public void accept(Variant<B> variant) {
+            setter.accept(variant.bean, getter.apply(variant.resultSet, index));
+        }
+    }
+
+    private static class Variant<B> {
+        final B bean;
+        final ResultSet resultSet;
+
+        public Variant(B bean, ResultSet resultSet) {
+            this.bean = bean;
+            this.resultSet = resultSet;
         }
     }
 
