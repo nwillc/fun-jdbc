@@ -27,7 +27,9 @@ import java.util.function.BiFunction;
  * These extractors should roughly parallel the SQLType enum, if we didn't want specific type information for each
  * a EnumMap would have been a better solution.
  */
-public class Extractors {
+public final class Extractors {
+    private Extractors() {};
+
     public static final BiFunction<ResultSet, Integer, String> STRING = (r, i) -> {
         try {
             return r.getString(i);
