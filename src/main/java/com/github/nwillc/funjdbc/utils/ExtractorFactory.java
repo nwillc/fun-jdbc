@@ -31,8 +31,7 @@ import java.util.function.Supplier;
  * @since 0.8.3+
  */
 public final class ExtractorFactory<B> {
-    private BiConsumer<B, ResultSet> consumer = (b, r) -> {
-    };
+    private BiConsumer<B, ResultSet> consumer = (b, r) -> {};
     private Supplier<B> factory;
 
     /**
@@ -51,11 +50,11 @@ public final class ExtractorFactory<B> {
      * Add an extraction used by the Extractor. An extraction pulls a know type from the ResultSet and calls a setter
      * with it.
      *
-     * @param setter
-     * @param getter
-     * @param index
-     * @param <T>
-     * @return
+     * @param setter a BiConsumer that will set the value extracted
+     * @param getter a BiFunction that will extract the value from the ResultSet
+     * @param index  the column index
+     * @param <T>    the type
+     * @return the factory
      */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
         final Extraction<B, T> extraction = new Extraction<>(setter, getter, index);
@@ -63,6 +62,10 @@ public final class ExtractorFactory<B> {
         return this;
     }
 
+    /**
+     * Create the Extractor based on the factory and extractions added.
+     * @return the generated extractor
+     */
     public Extractor<B> getExtractor() {
         return new GeneratedExtractor<>(factory, consumer);
     }
