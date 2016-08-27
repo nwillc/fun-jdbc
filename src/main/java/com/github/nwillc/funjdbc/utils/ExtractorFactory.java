@@ -27,17 +27,33 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Create a simple extractor from a series of getter/setter/index tuples.
+ * Create a basic Extractor from a series of setter/getter/index tuple.
+ * @since 0.8.3+
  */
 public final class ExtractorFactory<B> {
     private Consumer<Variant<B>> consumer = v -> {};
     private Supplier<B> factory;
 
+    /**
+     * Provide a factor this Extractor will use to create the object it will extract data
+     * from the result set into.
+     * @param factory a factory instance
+     * @return the extractor factory.
+     */
     public ExtractorFactory<B> factory(Supplier<B> factory) {
         this.factory = factory;
         return this;
     }
 
+    /**
+     * Add an extraction used by the Extractor. An extraction pulls a know type from the ResultSet and calls a setter
+     * with it.
+     * @param setter
+     * @param getter
+     * @param index
+     * @param <T>
+     * @return
+     */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
         final Extraction<B, T> extraction = new Extraction<>(setter, getter, index);
         consumer = consumer.andThen(extraction);
@@ -86,7 +102,7 @@ public final class ExtractorFactory<B> {
         final B bean;
         final ResultSet resultSet;
 
-        public Variant(B bean, ResultSet resultSet) {
+        Variant(B bean, ResultSet resultSet) {
             this.bean = bean;
             this.resultSet = resultSet;
         }
