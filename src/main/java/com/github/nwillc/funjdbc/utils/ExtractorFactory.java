@@ -23,20 +23,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * Create a basic Extractor from a series of setter/getter/index tuple.
+ *
  * @since 0.8.3+
  */
 public final class ExtractorFactory<B> {
-    private Consumer<Variant<B>> consumer = v -> {};
+    private BiConsumer<B, ResultSet> consumer = (b, r) -> {
+    };
     private Supplier<B> factory;
 
     /**
      * Provide a factor this Extractor will use to create the object it will extract data
      * from the result set into.
+     *
      * @param factory a factory instance
      * @return the extractor factory.
      */
@@ -48,6 +50,7 @@ public final class ExtractorFactory<B> {
     /**
      * Add an extraction used by the Extractor. An extraction pulls a know type from the ResultSet and calls a setter
      * with it.
+     *
      * @param setter
      * @param getter
      * @param index
@@ -66,22 +69,22 @@ public final class ExtractorFactory<B> {
 
     private static class GeneratedExtractor<B> implements Extractor<B> {
         private final Supplier<B> factory;
-        private final Consumer<Variant<B>> consumer;
+        private final BiConsumer<B, ResultSet> consumer;
 
-        GeneratedExtractor(Supplier<B> factory, Consumer<Variant<B>> consumer) {
+        GeneratedExtractor(Supplier<B> factory, BiConsumer<B, ResultSet> consumer) {
             this.factory = factory;
             this.consumer = consumer;
         }
 
         @Override
         public B extract(ResultSet rs) throws SQLException {
-            final Variant<B> variant = new Variant<>(factory.get(), rs);
-            consumer.accept(variant);
-            return variant.bean;
+            final B bean = factory.get();
+            consumer.accept(bean, rs);
+            return bean;
         }
     }
 
-    private static class Extraction<B, T> implements Consumer<Variant<B>> {
+    private static class Extraction<B, T> implements BiConsumer<B, ResultSet> {
         final BiConsumer<B, T> setter;
         final BiFunction<ResultSet, Integer, T> getter;
         final Integer index;
@@ -93,18 +96,8 @@ public final class ExtractorFactory<B> {
         }
 
         @Override
-        public void accept(Variant<B> variant) {
-            setter.accept(variant.bean, getter.apply(variant.resultSet, index));
-        }
-    }
-
-    private static class Variant<B> {
-        final B bean;
-        final ResultSet resultSet;
-
-        Variant(B bean, ResultSet resultSet) {
-            this.bean = bean;
-            this.resultSet = resultSet;
+        public void accept(B bean, ResultSet resultSet) {
+            setter.accept(bean, getter.apply(resultSet, index));
         }
     }
 
