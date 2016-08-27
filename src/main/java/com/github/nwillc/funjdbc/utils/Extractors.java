@@ -20,11 +20,7 @@ package com.github.nwillc.funjdbc.utils;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.sql.Date;
+import java.sql.*;
 import java.util.function.BiFunction;
 
 /**
