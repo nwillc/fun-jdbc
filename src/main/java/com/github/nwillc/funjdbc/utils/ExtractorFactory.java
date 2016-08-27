@@ -62,6 +62,7 @@ public final class ExtractorFactory<B> {
         }
     }
 
+    // TODO: use a consumer andThen to chain extractions rather then loop
     private static class Extraction<B, T> {
         final BiConsumer<B, T> setter;
         final BiFunction<ResultSet, Integer, T> getter;
