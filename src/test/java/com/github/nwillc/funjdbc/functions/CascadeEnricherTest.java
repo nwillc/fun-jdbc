@@ -34,6 +34,12 @@ public class CascadeEnricherTest {
 	}
 
 	@Test
+	public void testNoEnrichers() throws Exception {
+		CascadeEnricher<AtomicBoolean> instance = new CascadeEnricher<>();
+		instance.enrich(null, null);
+	}
+
+	@Test
 	public void shouldEnrich() throws Exception {
 		FlagEnricher one = new FlagEnricher();
 		FlagEnricher two = new FlagEnricher();
