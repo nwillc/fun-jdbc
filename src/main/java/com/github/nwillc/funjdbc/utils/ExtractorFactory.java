@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * Create a basic Extractor from a series of setter/getter/index tuple.
+ * Create a basic Extractor from a series of setter/getter/index tuples.
  *
  * @since 0.8.3+
  */

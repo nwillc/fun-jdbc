@@ -28,8 +28,11 @@ import java.util.function.BiFunction;
  * a EnumMap would have been a better solution.
  */
 public final class Extractors {
-    private Extractors() {};
+    private Extractors() {}
 
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getString(int)}.
+     */
     public static final BiFunction<ResultSet, Integer, String> STRING = (r, i) -> {
         try {
             return r.getString(i);
@@ -37,6 +40,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getInt(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Integer> INTEGER = (r, i) -> {
         try {
             return r.getInt(i);
@@ -44,6 +50,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getBoolean(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Boolean> BOOLEAN = (r, i) -> {
         try {
             return r.getBoolean(i);
@@ -51,6 +60,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getLong(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Long> LONG = (r, i) -> {
         try {
             return r.getLong(i);
@@ -58,6 +70,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getDouble(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Double> DOUBLE = (r, i) -> {
         try {
             return r.getDouble(i);
@@ -65,6 +80,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getFloat(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Float> FLOAT = (r, i) -> {
         try {
             return r.getFloat(i);
@@ -72,6 +90,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getBigDecimal(int)}
+     */
     public static final BiFunction<ResultSet, Integer, BigDecimal> BIG_DECIMAL = (r, i) -> {
         try {
             return r.getBigDecimal(i);
@@ -79,6 +100,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getTime(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Time> TIME = (r, i) -> {
         try {
             return r.getTime(i);
@@ -86,6 +110,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getDate(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Date> DATE = (r, i) -> {
         try {
             return r.getDate(i);
@@ -93,6 +120,9 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+    /**
+     * An extractor based on {@link java.sql.ResultSet#getTimestamp(int)}
+     */
     public static final BiFunction<ResultSet, Integer, Timestamp> TIMESTAMP = (r, i) -> {
         try {
             return r.getTimestamp(i);
