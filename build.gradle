@@ -32,7 +32,8 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4',
                 'org.tmatesoft.sqljet:sqljet:1.1.9',
                 'au.com.ish.gradle:release:2.2.2',
-                'gradle.plugin.com.github.nwillc:vplugin:1.2.4'
+                'gradle.plugin.com.github.nwillc:vplugin:1.2.4',
+                'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.9'
     }
 }
 
@@ -43,6 +44,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'info.solidsoft.pitest'
 
 repositories {
     mavenLocal()
@@ -140,3 +142,8 @@ bintray {
 }
 
 bintrayUpload.onlyIf { !project.version.toString().endsWith('SNAPSHOT') }
+
+pitest {
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+}
