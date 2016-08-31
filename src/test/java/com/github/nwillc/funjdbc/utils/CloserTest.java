@@ -19,6 +19,9 @@ package com.github.nwillc.funjdbc.utils;
 import com.github.nwillc.contracts.UtilityClassContract;
 import org.junit.Test;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 public class CloserTest extends UtilityClassContract {
 
     @Override
@@ -29,6 +32,13 @@ public class CloserTest extends UtilityClassContract {
     @Test
     public void testHandlesNull() throws Exception {
         Closer.close(null);
+    }
+
+    @Test
+    public void shouldClose() throws Exception {
+        AutoCloseable autoCloseable = mock(AutoCloseable.class);
+        Closer.close(autoCloseable);
+        verify(autoCloseable).close();
     }
 
     @Test

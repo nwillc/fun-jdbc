@@ -125,13 +125,15 @@ public class ResultSetIteratorTest extends IteratorContract {
     @Test
     public void testOnClose() throws Exception {
         final AtomicBoolean tattleTale = new AtomicBoolean(false);
-
+        ResultSet resultSet;
         try (Connection connection = dao.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
+            resultSet = statement.executeQuery("SELECT * FROM WORDS");
             @SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
             resultSetIterator.close();
+            assertThat(tattleTale.get()).isTrue();
+            assertThat(resultSet.isClosed()).isTrue();
         }
-        assertThat(tattleTale.get()).isTrue();
+
     }
 }
