@@ -139,6 +139,15 @@ public class ExtractorFactoryTest {
         assertThat(bean.five).isEqualTo(3.142);
     }
 
+    @Test(expected = UncheckedSQLException.class)
+    public void testDoubleException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, Extractors.DOUBLE, 1).factory(Bean::new).getExtractor();
+
+        when(resultSet.getDouble(1)).thenThrow(SQLException.class);
+
+        extractor.extract(resultSet);
+    }
+
     @Test
     public void testFloat() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setSix, Extractors.FLOAT, 1).factory(Bean::new).getExtractor();

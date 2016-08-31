@@ -23,12 +23,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.model.Statement;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
 public class DbAccessorTest {
@@ -112,10 +117,12 @@ public class DbAccessorTest {
 
     @Test
     public void testUpdate() throws Exception {
+        final int count = 2;
         final String sql = "UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'";
-        dao.dbUpdate(sql);
+        final int dbUpdated = dao.dbUpdate(sql);
+        assertThat(dbUpdated).isEqualTo(count);
         Stream<Word> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
-        assertThat(words.count()).isEqualTo(2);
+        assertThat(words.count()).isEqualTo(count);
     }
 
     @Test(expected = SQLException.class)
@@ -140,6 +147,31 @@ public class DbAccessorTest {
                 "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
         assertThat(counts.get("b").count).isEqualTo(1);
         assertThat(counts.get("a").count).isEqualTo(2);
+    }
+
+    @Test
+    public void testAutoclose() throws Exception {
+        try (Connection connection = dao.getConnection();
+             java.sql.Statement statement = connection.createStatement()
+        ) {
+            ResultSet resultSet = statement.executeQuery("SELECT DISTINCT WORD FROM WORDS");
+            final Stream<WordCount> stream = dao.stream(WORD_COUNT_EXTRACTOR, resultSet);
+            assertThat(resultSet.isClosed()).isFalse();
+            stream.close();
+            assertThat(resultSet.isClosed()).isTrue();
+        }
+    }
+
+    @Test
+    public void testDefaultLogging() throws Exception {
+        DbAccessor dbAccessor = new DbAccessor() {
+            @Override
+            public Connection getConnection() throws SQLException {
+                return null;
+            }
+        };
+
+        assertThat(dbAccessor.logSql()).isFalse();
     }
 
     private static class Word {

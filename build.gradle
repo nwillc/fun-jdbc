@@ -58,7 +58,7 @@ dependencies {
     testCompile 'junit:junit:4.12',
             'org.assertj:assertj-core:3.5.2',
             'com.h2database:h2:1.4.192',
-            'com.github.nwillc:contracts:1.7.1',
+            'com.github.nwillc:jdk_contract_tests:1.7.6',
             'org.mockito:mockito-core:2.0.111-beta',
             'org.apache.commons:commons-dbcp2:2.1.1'
 }
