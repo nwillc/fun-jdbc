@@ -18,51 +18,56 @@ package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import java.sql.Connection;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class MigrationBaseTest {
-    private Migration migration;
+	private Migration migration;
+	@Mock
+	ConnectionProvider connectionProvider;
 
-    @Before
-    public void setUp() throws Exception {
-        migration = new DummyMigration();
-    }
+	@Rule
+	public MockitoRule rule = MockitoJUnit.rule();
 
-    @Test
-    public void testRunAlwaysDefaultsFalse() throws Exception {
-        assertThat(migration.runAlways()).isFalse();
-    }
+	@Before
+	public void setUp() throws Exception {
+		migration = new DummyMigration();
+	}
 
-    @Test
-    public void testShouldProvideConnection() throws Exception {
-        ConnectionProvider connectionProvider = mock(ConnectionProvider.class);
-        Manager manager = Manager.getInstance();
+	@Test
+	public void testRunAlwaysDefaultsFalse() throws Exception {
+		assertThat(migration.runAlways()).isFalse();
+	}
 
-        manager.setConnectionProvider(connectionProvider);
-        Connection connection = migration.getConnection();
-        verify(connectionProvider).getConnection();
-    }
+	@Test
+	public void testShouldProvideConnection() throws Exception {
+		Manager manager = Manager.getInstance();
 
-    private static class DummyMigration extends MigrationBase {
-        @Override
-        public String getDescription() {
-            return null;
-        }
+		manager.setConnectionProvider(connectionProvider);
+		migration.getConnection();
+		verify(connectionProvider).getConnection();
+	}
 
-        @Override
-        public String getIdentifier() {
-            return null;
-        }
+	private static class DummyMigration extends MigrationBase {
+		@Override
+		public String getDescription() {
+			return null;
+		}
 
-        @Override
-        public boolean perform() {
-            return false;
-        }
-    }
+		@Override
+		public String getIdentifier() {
+			return null;
+		}
+
+		@Override
+		public boolean perform() {
+			return false;
+		}
+	}
 }

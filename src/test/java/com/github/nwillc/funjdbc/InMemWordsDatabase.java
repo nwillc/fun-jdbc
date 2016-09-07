@@ -30,53 +30,53 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class InMemWordsDatabase implements DbAccessor {
-    private final static String DRIVER = "org.h2.Driver";
-    private final static String URL = "jdbc:h2:mem:";
-    private static long instanceId = 0;
-    private final Connection connection;
+	private final static String DRIVER = "org.h2.Driver";
+	private final static String URL = "jdbc:h2:mem:";
+	private static long instanceId = 0;
+	private final Connection connection;
 	private final DataSource dataSource;
 
-    public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
-        Class.forName(DRIVER);
-        String name = String.format("db%04d", instanceId++);
+	public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
+		Class.forName(DRIVER);
+		String name = String.format("db%04d", instanceId++);
 		dataSource = setupDataSource(URL + name);
-        connection = getConnection();
-    }
+		connection = getConnection();
+	}
 
-    @Override
-    public boolean logSql() {
-        return true;
-    }
+	@Override
+	public boolean logSql() {
+		return true;
+	}
 
-    @Override
-    public Connection getConnection() throws SQLException {
+	@Override
+	public Connection getConnection() throws SQLException {
 		return dataSource.getConnection();
-    }
+	}
 
-    public void create() throws SQLException {
-        try (Connection c = getConnection();
-             Statement statement = c.createStatement()) {
-            statement.execute("CREATE TABLE WORDS ( WORD CHAR(20) )");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('b')");
-        }
-    }
+	public void create() throws SQLException {
+		try (Connection c = getConnection();
+			 Statement statement = c.createStatement()) {
+			statement.execute("CREATE TABLE WORDS ( WORD CHAR(20) )");
+			statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
+			statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
+			statement.execute("INSERT INTO WORDS (WORD) VALUES ('b')");
+		}
+	}
 
-    public void drop() throws SQLException {
-        try (Connection c = getConnection();
-             Statement statement = c.createStatement()) {
-            statement.execute("DROP TABLE WORDS");
-            connection.close();
-        }
-    }
+	public void drop() throws SQLException {
+		try (Connection c = getConnection();
+			 Statement statement = c.createStatement()) {
+			statement.execute("DROP TABLE WORDS");
+			connection.close();
+		}
+	}
 
-    private static DataSource setupDataSource(String connectURI) {
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,null);
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+	private static DataSource setupDataSource(String connectURI) {
+		ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI, null);
+		PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
 		ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
 		poolableConnectionFactory.setPool(connectionPool);
 		return new PoolingDataSource<>(connectionPool);
-    }
+	}
 
 }

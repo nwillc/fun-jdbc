@@ -24,61 +24,61 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UncheckedSQLExceptionTest {
 
-    @Test
-    public void testConstructorForGeneralThrowable() throws Exception {
-        final String msg = "foo";
-        final NullPointerException nullPointerException = new NullPointerException();
+	@Test
+	public void testConstructorForGeneralThrowable() throws Exception {
+		final String msg = "foo";
+		final NullPointerException nullPointerException = new NullPointerException();
 
-        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, nullPointerException);
+		final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, nullPointerException);
 
-        assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
-        assertThat(uncheckedSQLException.getCause()).isEqualTo(nullPointerException);
-        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isFalse();
-        assertThat(uncheckedSQLException.getSqlState().isPresent()).isFalse();
-    }
+		assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
+		assertThat(uncheckedSQLException.getCause()).isEqualTo(nullPointerException);
+		assertThat(uncheckedSQLException.getErrorCode().isPresent()).isFalse();
+		assertThat(uncheckedSQLException.getSqlState().isPresent()).isFalse();
+	}
 
-    @Test
-    public void testConstructorForSQLException() throws Exception {
-        final String msg = "foo";
-        final String sqlState = "bar";
-        final int errorCode = 42;
-        final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
+	@Test
+	public void testConstructorForSQLException() throws Exception {
+		final String msg = "foo";
+		final String sqlState = "bar";
+		final int errorCode = 42;
+		final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
 
-        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, sqlException);
+		final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, sqlException);
 
-        assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
-        assertThat(uncheckedSQLException.getCause()).isEqualTo(sqlException);
-        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isTrue();
-        assertThat(uncheckedSQLException.getErrorCode().get()).isEqualTo(errorCode);
-        assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
-        assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
-    }
+		assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
+		assertThat(uncheckedSQLException.getCause()).isEqualTo(sqlException);
+		assertThat(uncheckedSQLException.getErrorCode().isPresent()).isTrue();
+		assertThat(uncheckedSQLException.getErrorCode().get()).isEqualTo(errorCode);
+		assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
+		assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
+	}
 
-    @Test
-    public void testWhereCauseIsUncheckedSqlException() throws Exception {
+	@Test
+	public void testWhereCauseIsUncheckedSqlException() throws Exception {
 
-        final String msg = "foo";
-        final String sqlState = "bar";
-        final int errorCode = 42;
-        final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
+		final String msg = "foo";
+		final String sqlState = "bar";
+		final int errorCode = 42;
+		final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
 
-        final UncheckedSQLException innerException = new UncheckedSQLException("Inner message", sqlException);
-        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, innerException);
+		final UncheckedSQLException innerException = new UncheckedSQLException("Inner message", sqlException);
+		final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException(msg, innerException);
 
-        assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
-        assertThat(uncheckedSQLException.getCause()).isEqualTo(innerException);
-        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isTrue();
-        assertThat(uncheckedSQLException.getErrorCode().get()).isEqualTo(errorCode);
-        assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
-        assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
-    }
+		assertThat(uncheckedSQLException.getMessage()).isEqualTo(msg);
+		assertThat(uncheckedSQLException.getCause()).isEqualTo(innerException);
+		assertThat(uncheckedSQLException.getErrorCode().isPresent()).isTrue();
+		assertThat(uncheckedSQLException.getErrorCode().get()).isEqualTo(errorCode);
+		assertThat(uncheckedSQLException.getSqlState().isPresent()).isTrue();
+		assertThat(uncheckedSQLException.getSqlState().get()).isEqualTo(sqlState);
+	}
 
-    @Test
-    public void testWithoutCause() throws Exception {
-        final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException("Test", null);
+	@Test
+	public void testWithoutCause() throws Exception {
+		final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException("Test", null);
 
-        assertThat(uncheckedSQLException).isNotNull();
-        assertThat(uncheckedSQLException.getErrorCode().isPresent()).isFalse();
-        assertThat(uncheckedSQLException.getSqlState().isPresent()).isFalse();
-    }
+		assertThat(uncheckedSQLException).isNotNull();
+		assertThat(uncheckedSQLException.getErrorCode().isPresent()).isFalse();
+		assertThat(uncheckedSQLException.getSqlState().isPresent()).isFalse();
+	}
 }

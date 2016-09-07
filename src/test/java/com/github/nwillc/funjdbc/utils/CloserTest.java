@@ -17,34 +17,41 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.contracts.UtilityClassContract;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class CloserTest extends UtilityClassContract {
+	@Mock
+	AutoCloseable autoCloseable;
+	@Rule
+	public MockitoRule rule = MockitoJUnit.rule();
 
-    @Override
-    public Class<?> getClassToTest() {
-        return Closer.class;
-    }
 
-    @Test
-    public void testHandlesNull() throws Exception {
-        Closer.close(null);
-    }
+	@Override
+	public Class<?> getClassToTest() {
+		return Closer.class;
+	}
 
-    @Test
-    public void shouldClose() throws Exception {
-        AutoCloseable autoCloseable = mock(AutoCloseable.class);
-        Closer.close(autoCloseable);
-        verify(autoCloseable).close();
-    }
+	@Test
+	public void testHandlesNull() throws Exception {
+		Closer.close(null);
+	}
 
-    @Test
-    public void testHandlesThrownException() throws Exception {
-        Closer.close(() -> {
-            throw new Exception();
-        });
-    }
+	@Test
+	public void shouldClose() throws Exception {
+		Closer.close(autoCloseable);
+		verify(autoCloseable).close();
+	}
+
+	@Test
+	public void testHandlesThrownException() throws Exception {
+		Closer.close(() -> {
+			throw new Exception();
+		});
+	}
 }

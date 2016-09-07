@@ -21,7 +21,11 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.Closer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -36,104 +40,107 @@ import static com.github.nwillc.funjdbc.utils.Closer.close;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ResultSetIteratorTest extends IteratorContract {
-    private InMemWordsDatabase dao;
-    private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
-    private List<ResultSetIterator<String>> iterators;
+	private InMemWordsDatabase dao;
+	private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
+	private List<ResultSetIterator<String>> iterators;
+	@Mock
+	ResultSet mockResultSet;
+	@Mock
+	Extractor mockExtractor;
+	@Rule
+	public MockitoRule rule = MockitoJUnit.rule();
 
-    @Before
-    public void setUp() throws Exception {
-        dao = new InMemWordsDatabase();
-        dao.create();
-        iterators = new ArrayList<>();
-    }
 
-    @After
-    public void tearDown() throws Exception {
-        iterators.stream().forEach(Closer::close);
-        iterators = null;
-    }
+	@Before
+	public void setUp() throws Exception {
+		dao = new InMemWordsDatabase();
+		dao.create();
+		iterators = new ArrayList<>();
+	}
 
-    @Override
-    protected Iterator getNonEmptyIterator() {
-        try {
-            Connection connection = dao.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
-            ResultSetIterator<String> iterator = new ResultSetIterator<>(resultSet, wordExtractor).onClose(() -> {
-                close(statement);
-                close(connection);
-            });
-            iterators.add(iterator);
-            return iterator;
-        } catch (SQLException e) {
-            return null;
-        }
-    }
+	@After
+	public void tearDown() throws Exception {
+		iterators.stream().forEach(Closer::close);
+		iterators = null;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testValidConstructorArgs() throws Exception {
-        try {
-            new ResultSetIterator(null, wordExtractor);
-            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException ignored) {
-        }
+	@Override
+	protected Iterator getNonEmptyIterator() {
+		try {
+			Connection connection = dao.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
+			ResultSetIterator<String> iterator = new ResultSetIterator<>(resultSet, wordExtractor).onClose(() -> {
+				close(statement);
+				close(connection);
+			});
+			iterators.add(iterator);
+			return iterator;
+		} catch (SQLException e) {
+			return null;
+		}
+	}
 
-        try (Connection connection = dao.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
-            new ResultSetIterator(resultSet, null);
-            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException ignored) {
-        }
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testValidConstructorArgs() throws Exception {
+		try {
+			new ResultSetIterator(null, wordExtractor);
+			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+		} catch (IllegalArgumentException ignored) {
+		}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testExtractorSQLException() throws Exception {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenReturn(true);
-        Extractor mockExtractor = mock(Extractor.class);
-        when(mockExtractor.extract(any(ResultSet.class))).thenThrow(SQLException.class);
+		try (Connection connection = dao.getConnection();
+			 Statement statement = connection.createStatement();
+			 ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
+			new ResultSetIterator(resultSet, null);
+			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+		} catch (IllegalArgumentException ignored) {
+		}
+	}
 
-        ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, mockExtractor);
-        try {
-            resultSetIterator.next();
-            failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ignored) {
-        }
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testExtractorSQLException() throws Exception {
+		when(mockResultSet.next()).thenReturn(true);
+		when(mockExtractor.extract(any(ResultSet.class))).thenThrow(SQLException.class);
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void shouldHandleResultSetExceptions() throws Exception {
-        ResultSet mockResultSet = mock(ResultSet.class);
-        when(mockResultSet.next()).thenThrow(SQLException.class);
-        ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, wordExtractor);
+		ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, mockExtractor);
+		try {
+			resultSetIterator.next();
+			failBecauseExceptionWasNotThrown(RuntimeException.class);
+		} catch (RuntimeException ignored) {
+		}
+	}
 
-        try {
-            resultSetIterator.hasNext();
-            failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (RuntimeException ignored) {
-        }
-    }
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldHandleResultSetExceptions() throws Exception {
+		when(mockResultSet.next()).thenThrow(SQLException.class);
+		ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, wordExtractor);
 
-    @Test
-    public void testOnClose() throws Exception {
-        final AtomicBoolean tattleTale = new AtomicBoolean(false);
-        ResultSet resultSet;
-        try (Connection connection = dao.getConnection();
-             Statement statement = connection.createStatement()) {
-            resultSet = statement.executeQuery("SELECT * FROM WORDS");
-            @SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
-            resultSetIterator.close();
-            assertThat(tattleTale.get()).isTrue();
-            assertThat(resultSet.isClosed()).isTrue();
-        }
+		try {
+			resultSetIterator.hasNext();
+			failBecauseExceptionWasNotThrown(RuntimeException.class);
+		} catch (RuntimeException ignored) {
+		}
+	}
 
-    }
+	@Test
+	public void testOnClose() throws Exception {
+		final AtomicBoolean tattleTale = new AtomicBoolean(false);
+		ResultSet resultSet;
+		try (Connection connection = dao.getConnection();
+			 Statement statement = connection.createStatement()) {
+			resultSet = statement.executeQuery("SELECT * FROM WORDS");
+			@SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
+			resultSetIterator.close();
+			assertThat(tattleTale.get()).isTrue();
+			assertThat(resultSet.isClosed()).isTrue();
+		}
+
+	}
 }

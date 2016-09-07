@@ -20,8 +20,8 @@ package com.github.nwillc.funjdbc.utils;
 import com.github.nwillc.contracts.UtilityClassContract;
 
 public class ExtractorsTest extends UtilityClassContract {
-    @Override
-    public Class<?> getClassToTest() {
-        return Extractors.class;
-    }
+	@Override
+	public Class<?> getClassToTest() {
+		return Extractors.class;
+	}
 }
