@@ -166,13 +166,7 @@ public class DbAccessorTest {
 
 	@Test
 	public void testDefaultLogging() throws Exception {
-		DbAccessor dbAccessor = new DbAccessor() {
-			@Override
-			public Connection getConnection() throws SQLException {
-				return null;
-			}
-		};
-
+		DbAccessor dbAccessor = () -> null;
 		assertThat(dbAccessor.logSql()).isFalse();
 	}
 
