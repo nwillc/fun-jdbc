@@ -43,19 +43,40 @@ Or to see if a given word appears:
     
 And of course your Extractor can be more complex:
 
-    private class Pair {
-           final String word;
-           final int count;
+    public class Pair {
+           String word;
+           int count;
 
-           private Pair(String word, int count) {
+           public Pair() {};
+           
+           public Pair(String word, int count) {
                this.word = word;
                this.count = count;
+           }
+           
+           public void setWord(String str) {
+                word = str;
+           }
+           
+           public void setCount(int c) {
+                count = c;
            }
     }
     
     void printCounts(Dao dao) {
-      dao.dbQuery(rs -> new Pair(rs.getString("WORD"), rs.getInt("COUNT")), "SELECT * FROM WORDS")
+      dao.dbQuery(rs -> new Pair(rs.getString("WORD"), rs.getInt("COUNT")), "SELECT WORD, COUNT FROM WORDS")
           .forEach(p -> System.out.println(p.word + ": " + p.count));
     }
     
-To read more about the thinking behind this code read my [blog post](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc) on the topic.
+Or you could use the ExtractorFactory to create an extractor:
+
+   void printCounts(Dao dao) {
+        ExtractorFactory<Pair> factory = new ExtractorFactory<>();
+        Extractor<Pair> extractor = factory
+                                    .add(Pair::setWord, Extractors.STRING, 1)
+                                    .add(Pair::setCount, Extractors.INTEGER, 2)
+                                    .factory(Pair::new)
+                                    .getExtractor();
+         dao.dbQuery(extractor, "SELECT WORD, COUNT FROM WORDS")
+                  .forEach(p -> System.out.println(p.word + ": " + p.count));
+   }
