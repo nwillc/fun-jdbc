@@ -63,7 +63,7 @@ public class ResultSetIteratorTest extends IteratorContract {
 
 	@After
 	public void tearDown() throws Exception {
-		iterators.stream().forEach(Closer::close);
+		iterators.forEach(Closer::close);
 		iterators = null;
 	}
 

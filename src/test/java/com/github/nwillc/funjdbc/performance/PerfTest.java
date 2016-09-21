@@ -38,9 +38,9 @@ public class PerfTest {
 
 		ExtractorFactory<Bean> factory = new ExtractorFactory<>();
 		generatedBeanExtractor = factory
-				.add(Bean::setDoubleValue, Extractors.DOUBLE, 1)
-				.add(Bean::setIntegerValue, Extractors.INTEGER, 2)
-				.add(Bean::setStringValue, Extractors.STRING, 3)
+				.add(Bean::setDoubleValue, Extractors.DOUBLE_I, 1)
+				.add(Bean::setIntegerValue, Extractors.INTEGER_I, 2)
+				.add(Bean::setStringValue, Extractors.STRING_I, 3)
 				.factory(Bean::new)
 				.getExtractor();
 	}

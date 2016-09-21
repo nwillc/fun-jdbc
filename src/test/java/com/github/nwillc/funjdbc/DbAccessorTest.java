@@ -55,7 +55,7 @@ public class DbAccessorTest {
 
 		extractors.add(new Extractor[]{rs -> new Word(rs.getString(1))});
 		final Extractor<Word> extractor = new ExtractorFactory<Word>().factory(Word::new)
-				.add(Word::setWord, Extractors.STRING, 1)
+				.add(Word::setWord, Extractors.STRING_I, 1)
 				.getExtractor();
 		extractors.add(new Extractor[]{extractor});
 		return extractors;
