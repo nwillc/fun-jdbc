@@ -18,6 +18,7 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
+import com.github.nwillc.funjdbc.functions.ThrowingBiFunction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,13 +57,13 @@ public final class ExtractorFactory<B> {
      * @param <T>    the type
      * @return the factory
      */
-    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
         final Extraction<B, T, Integer> extraction = new Extraction<>(setter, getter, index);
         consumer = consumer.andThen(extraction);
         return this;
     }
 
-    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, String, T> getter, String column) {
+    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
         final Extraction<B, T, String> extraction = new Extraction<>(setter, getter, column);
         consumer = consumer.andThen(extraction);
         return this;

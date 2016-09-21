@@ -2,7 +2,6 @@ package com.github.nwillc.funjdbc.performance;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.ExtractorFactory;
-import com.github.nwillc.funjdbc.utils.Extractors;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,9 +37,9 @@ public class PerfTest {
 
 		ExtractorFactory<Bean> factory = new ExtractorFactory<>();
 		generatedBeanExtractor = factory
-				.add(Bean::setDoubleValue, Extractors.DOUBLE_I, 1)
-				.add(Bean::setIntegerValue, Extractors.INTEGER_I, 2)
-				.add(Bean::setStringValue, Extractors.STRING_I, 3)
+				.add(Bean::setDoubleValue, ResultSet::getDouble, 1)
+				.add(Bean::setIntegerValue, ResultSet::getInt, 2)
+				.add(Bean::setStringValue, ResultSet::getString, 3)
 				.factory(Bean::new)
 				.getExtractor();
 	}

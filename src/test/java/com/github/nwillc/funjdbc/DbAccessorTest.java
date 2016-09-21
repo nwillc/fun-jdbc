@@ -18,7 +18,6 @@ package com.github.nwillc.funjdbc;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.ExtractorFactory;
-import com.github.nwillc.funjdbc.utils.Extractors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +54,7 @@ public class DbAccessorTest {
 
 		extractors.add(new Extractor[]{rs -> new Word(rs.getString(1))});
 		final Extractor<Word> extractor = new ExtractorFactory<Word>().factory(Word::new)
-				.add(Word::setWord, Extractors.STRING_I, 1)
+				.add(Word::setWord, ResultSet::getString, 1)
 				.getExtractor();
 		extractors.add(new Extractor[]{extractor});
 		return extractors;
