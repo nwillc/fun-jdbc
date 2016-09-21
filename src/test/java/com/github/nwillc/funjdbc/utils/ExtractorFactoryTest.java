@@ -87,6 +87,16 @@ public class ExtractorFactoryTest {
 		assertThat(bean.two).isEqualTo("two");
 	}
 
+	@Test
+	public void testStringColumn() throws Exception {
+		final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING_S, "word").factory(Bean::new).getExtractor();
+
+		when(resultSet.getString("word")).thenReturn("two");
+
+		final Bean bean = extractor.extract(resultSet);
+		assertThat(bean.two).isEqualTo("two");
+	}
+
 	@Test(expected = UncheckedSQLException.class)
 	public void testStringException() throws Exception {
 		final Extractor<Bean> extractor = factory.add(Bean::setTwo, Extractors.STRING, 1).factory(Bean::new).getExtractor();

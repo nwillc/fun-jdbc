@@ -40,6 +40,15 @@ public final class Extractors {
             throw new UncheckedSQLException(e);
         }
     };
+
+    public static final BiFunction<ResultSet, String, String> STRING_S = (r, c) -> {
+        try {
+            return r.getString(c);
+        } catch (SQLException e) {
+            throw new UncheckedSQLException(e);
+        }
+    };
+
     /**
      * An extractor based on {@link java.sql.ResultSet#getInt(int)}
      */

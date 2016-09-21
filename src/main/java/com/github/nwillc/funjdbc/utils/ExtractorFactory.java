@@ -57,7 +57,13 @@ public final class ExtractorFactory<B> {
      * @return the factory
      */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
-        final Extraction<B, T> extraction = new Extraction<>(setter, getter, index);
+        final Extraction<B, T, Integer> extraction = new Extraction<>(setter, getter, index);
+        consumer = consumer.andThen(extraction);
+        return this;
+    }
+
+    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, BiFunction<ResultSet, String, T> getter, String column) {
+        final Extraction<B, T, String> extraction = new Extraction<>(setter, getter, column);
         consumer = consumer.andThen(extraction);
         return this;
     }
@@ -87,20 +93,20 @@ public final class ExtractorFactory<B> {
         }
     }
 
-    private static class Extraction<B, T> implements BiConsumer<B, ResultSet> {
+    private static class Extraction<B, T, C> implements BiConsumer<B, ResultSet> {
         final BiConsumer<B, T> setter;
-        final BiFunction<ResultSet, Integer, T> getter;
-        final Integer index;
+        final BiFunction<ResultSet, C, T> getter;
+        final C column;
 
-        Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, Integer, T> getter, Integer index) {
+        Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, C, T> getter, C column) {
             this.setter = setter;
             this.getter = getter;
-            this.index = index;
+            this.column = column;
         }
 
         @Override
         public void accept(B bean, ResultSet resultSet) {
-            setter.accept(bean, getter.apply(resultSet, index));
+            setter.accept(bean, getter.apply(resultSet, column));
         }
     }
 
