@@ -19,31 +19,38 @@ package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.sql.SQLException;
 
 /**
  * Utility methods for throwables.
  */
 public final class Throwables {
-    private Throwables() {}
+	private Throwables() {
+	}
 
-    /**
-     * Propagate a Throwable as a RuntimeException. The Runtime exception bases it's message on the message of the Throwable,
-     * and the Throwable is set as it's cause. This can be used to deal with exceptions in lambdas etc. Special logic for SQLException, to
-     * throw an {@link UncheckedSQLException}.
-     *
-     * @param exception the Exception to repropagate as a RuntimeException.
-     * @return a RuntimeException
-     */
-    public static RuntimeException propagate(final Exception exception) {
-        if (RuntimeException.class.isAssignableFrom(exception.getClass())) {
-            return (RuntimeException) exception;
-        }
+	/**
+	 * Propagate a Throwable as a RuntimeException. The Runtime exception bases it's message on the message of the Throwable,
+	 * and the Throwable is set as it's cause. This can be used to deal with exceptions in lambdas etc. Special logic for SQLException, to
+	 * throw an {@link UncheckedSQLException}.
+	 *
+	 * @param exception the Exception to repropagate as a RuntimeException.
+	 * @return a RuntimeException
+	 */
+	public static RuntimeException propagate(final Exception exception) {
+		if (RuntimeException.class.isAssignableFrom(exception.getClass())) {
+			return (RuntimeException) exception;
+		}
 
-        if (SQLException.class.isAssignableFrom(exception.getClass())) {
-            return new UncheckedSQLException("Repropagated " + exception.getMessage(), exception);
-        }
+		if (SQLException.class.isAssignableFrom(exception.getClass())) {
+			return new UncheckedSQLException("Repropagated " + exception.getMessage(), exception);
+		}
 
-        return new RuntimeException("Repropagated " + exception.getMessage(), exception);
-    }
+		if (IOException.class.isAssignableFrom(exception.getClass())) {
+			return new UncheckedIOException((IOException) exception);
+		}
+
+		return new RuntimeException("Repropagated " + exception.getMessage(), exception);
+	}
 }
