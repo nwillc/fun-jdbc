@@ -1,7 +1,7 @@
 ## FUN JDBC
 - [Home]()
 - [Example](#docs/example)
-- [Javadoc](docs/javadoc)
+- [Javadoc](javadoc)
 - [License](#docs/LICENSE)
 
 ## Links
