@@ -39,10 +39,6 @@ public final class Throwables {
 	 * @return a RuntimeException
 	 */
 	public static RuntimeException propagate(final Exception exception) {
-		if (RuntimeException.class.isAssignableFrom(exception.getClass())) {
-			return (RuntimeException) exception;
-		}
-
 		if (SQLException.class.isAssignableFrom(exception.getClass())) {
 			return new UncheckedSQLException("Repropagated " + exception.getMessage(), exception);
 		}
@@ -51,6 +47,6 @@ public final class Throwables {
 			return new UncheckedIOException((IOException) exception);
 		}
 
-		return new RuntimeException("Repropagated " + exception.getMessage(), exception);
+		return almost.functional.utils.Throwables.propagate(exception);
 	}
 }
