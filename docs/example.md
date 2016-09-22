@@ -73,10 +73,10 @@ Or you could use the ExtractorFactory to create an extractor:
     void printCounts(Dao dao) {
         ExtractorFactory<Pair> factory = new ExtractorFactory<>();
         Extractor<Pair> extractor = factory
-                                    .add(Pair::setWord, ResultSet::getString, 1)
-                                    .add(Pair::setCount, ResultSet::getInt, 2)
-                                    .factory(Pair::new)
-                                    .getExtractor();
+                     .add(Pair::setWord, ResultSet::getString, 1)
+                     .add(Pair::setCount, ResultSet::getInt, 2)
+                     .factory(Pair::new)
+                     .getExtractor();
          dao.dbQuery(extractor, "SELECT WORD, COUNT FROM WORDS")
                   .forEach(p -> System.out.println(p.word + ": " + p.count));
     }
