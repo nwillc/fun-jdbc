@@ -2,13 +2,12 @@
 - [Home]()
 - [Example](#docs/example)
 - [Javadoc](javadoc)
-- [License](#docs/LICENSE)
 
 ## Links
 - [Issue Tracking](https://github.com/nwillc/fun-jdbc/issues)
 - [Blog Post 1](http://nwillc.wordpress.com/2014/09/27/a-little-java-8-goodness-in-jdbc)
-- [Blog Post 2](https://nwillc.wordpress.com/2016/08/28/functional-jdbc-part-2/)
-
+- [Blog Post 2](https://nwillc.wordpress.com/2016/08/28/functional-jdbc-part-2)
+- [Blog Post 3](https://nwillc.wordpress.com/2016/09/22/java-8-functional-jdbc-part-3)
 -------
 [![ISC License](http://shields-nwillc.rhcloud.com/shield/tldrlegal?package=ISC)](http://shields-nwillc.rhcloud.com/homepage/tldrlegal?package=ISC)
 <br/>
