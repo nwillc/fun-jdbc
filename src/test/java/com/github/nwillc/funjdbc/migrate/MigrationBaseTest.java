@@ -25,10 +25,13 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class MigrationBaseTest {
 	private Migration migration;
+	private Manager manager;
 	@Mock
 	ConnectionProvider connectionProvider;
 
@@ -38,6 +41,19 @@ public class MigrationBaseTest {
 	@Before
 	public void setUp() throws Exception {
 		migration = new DummyMigration();
+		manager = Manager.getInstance();
+	}
+
+	@Test
+	public void testToString() throws Exception {
+		Manager managerSpy = spy(manager);
+		when(managerSpy.migrated(migration.getIdentifier())).thenReturn(true);
+		managerSpy.setConnectionProvider(connectionProvider);
+		final String str = migration.toString();
+		assertThat(str).contains(migration.getClass().getSimpleName())
+			.contains(migration.getDescription())
+			.contains(migration.getIdentifier());
+
 	}
 
 	@Test
@@ -47,7 +63,7 @@ public class MigrationBaseTest {
 
 	@Test
 	public void testShouldProvideConnection() throws Exception {
-		Manager manager = Manager.getInstance();
+
 
 		manager.setConnectionProvider(connectionProvider);
 		migration.getConnection();
@@ -57,12 +73,12 @@ public class MigrationBaseTest {
 	private static class DummyMigration extends MigrationBase {
 		@Override
 		public String getDescription() {
-			return null;
+			return "dummy";
 		}
 
 		@Override
 		public String getIdentifier() {
-			return null;
+			return "1";
 		}
 
 		@Override
