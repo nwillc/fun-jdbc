@@ -20,9 +20,12 @@ import com.github.nwillc.contracts.UtilityClassContract;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.sql.SQLException;
 import java.util.zip.DataFormatException;
 
+import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThrowablesTest extends UtilityClassContract {
@@ -36,7 +39,7 @@ public class ThrowablesTest extends UtilityClassContract {
 	public void testHandlesRuntimeException() throws Exception {
 		final ArithmeticException arithmeticException = new ArithmeticException();
 
-		final RuntimeException runtimeException = Throwables.propagate(arithmeticException);
+		final RuntimeException runtimeException = propagate(arithmeticException);
 		assertThat(runtimeException).isEqualTo(arithmeticException);
 	}
 
@@ -44,10 +47,20 @@ public class ThrowablesTest extends UtilityClassContract {
 	public void testWrapsNormalException() throws Exception {
 		final DataFormatException dataFormatException = new DataFormatException();
 
-		final RuntimeException runtimeException = Throwables.propagate(dataFormatException);
+		final RuntimeException runtimeException = propagate(dataFormatException);
 		assertThat(runtimeException).isNotNull();
 		assertThat(RuntimeException.class).isAssignableFrom(runtimeException.getClass());
 		assertThat(runtimeException.getCause()).isEqualTo(dataFormatException);
+	}
+
+	@Test
+	public void testHandlesIOException() throws Exception {
+		final IOException ioException = new IOException();
+
+		final RuntimeException runtimeException = propagate(ioException);
+		assertThat(runtimeException).isNotNull();
+		assertThat(runtimeException).isInstanceOf(UncheckedIOException.class);
+		assertThat(runtimeException.getCause()).isEqualTo(ioException);
 	}
 
 	@Test
@@ -57,9 +70,9 @@ public class ThrowablesTest extends UtilityClassContract {
 		final int errorCode = 42;
 		final SQLException sqlException = new SQLException(msg, sqlState, errorCode);
 
-		final RuntimeException runtimeException = Throwables.propagate(sqlException);
+		final RuntimeException runtimeException = propagate(sqlException);
 		assertThat(runtimeException).isNotNull();
-		assertThat(runtimeException.getClass()).isEqualTo(UncheckedSQLException.class);
+		assertThat(runtimeException).isInstanceOf(UncheckedSQLException.class);
 		assertThat(runtimeException.getCause()).isEqualTo(sqlException);
 	}
 }
