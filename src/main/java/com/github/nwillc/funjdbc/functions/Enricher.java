@@ -19,6 +19,7 @@ package com.github.nwillc.funjdbc.functions;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Enrich an object with values from the current row of a result set.
@@ -26,14 +27,20 @@ import java.sql.SQLException;
  * @since 0.8.0
  */
 @FunctionalInterface
-public interface Enricher<E> {
+public interface Enricher<E> extends ThrowingBiConsumer<E, ResultSet> {
+    void acceptThrows(E entity, ResultSet rs) throws SQLException;
 
     /**
-     * Enrich an entity with values from the current row of a result set.
-     *
-     * @param entity the entity to enrich
-     * @param rs     the result set, at the current row
-     * @throws SQLException may result from database operations in the enrichement
+     * Chains another enricher to this one to be called upon completion.
+     * @param after another enricher
+     * @return the enriched object
      */
-    void enrich(E entity, ResultSet rs) throws SQLException;
+    default Enricher<E> andThen(Enricher<E> after) {
+        Objects.requireNonNull(after);
+
+        return (l, r) -> {
+            accept(l, r);
+            after.accept(l, r);
+        };
+    }
 }

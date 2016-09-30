@@ -19,7 +19,6 @@ package com.github.nwillc.funjdbc.migrate;
 
 
 import almost.functional.utils.LogFactory;
-import almost.functional.utils.Preconditions;
 import com.github.nwillc.funjdbc.DbAccessor;
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 
@@ -27,6 +26,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -183,8 +183,8 @@ public class Manager implements DbAccessor {
     public static class MigrationComparator implements Comparator<Migration> {
         @Override
         public int compare(Migration o1, Migration o2) {
-            Preconditions.checkNotNull(o1, "Can not compare null Migration instance");
-            Preconditions.checkNotNull(o2, "Can not compare null Migration instance");
+            Objects.requireNonNull(o1, "Can not compare null Migration instance");
+            Objects.requireNonNull(o2, "Can not compare null Migration instance");
 
             if (o1.getIdentifier() == null ^ o2.getIdentifier() == null) {
                 return (o1.getIdentifier() == null) ? -1 : 1;

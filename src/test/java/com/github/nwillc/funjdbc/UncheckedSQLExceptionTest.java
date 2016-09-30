@@ -38,6 +38,14 @@ public class UncheckedSQLExceptionTest {
 	}
 
 	@Test
+	public void testConstructorForSQLException2() throws Exception {
+		Exception e = new SQLException();
+		UncheckedSQLException exception = new UncheckedSQLException(e);
+
+		assertThat(exception.getCause()).isEqualTo(e);
+	}
+
+	@Test
 	public void testConstructorForSQLException() throws Exception {
 		final String msg = "foo";
 		final String sqlState = "bar";

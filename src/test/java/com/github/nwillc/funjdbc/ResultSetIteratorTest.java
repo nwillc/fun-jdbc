@@ -90,7 +90,7 @@ public class ResultSetIteratorTest extends IteratorContract {
 		try {
 			new ResultSetIterator(null, wordExtractor);
 			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-		} catch (IllegalArgumentException ignored) {
+		} catch (NullPointerException ignored) {
 		}
 
 		try (Connection connection = dao.getConnection();
@@ -98,7 +98,7 @@ public class ResultSetIteratorTest extends IteratorContract {
 			 ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
 			new ResultSetIterator(resultSet, null);
 			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-		} catch (IllegalArgumentException ignored) {
+		} catch (NullPointerException ignored) {
 		}
 	}
 

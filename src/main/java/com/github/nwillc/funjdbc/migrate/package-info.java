@@ -17,10 +17,9 @@
 
 /**
  * Basic support for performing scheme migrations. Ideas loosely taken from Liquabase which I'd recommend for
- * complete functionality. The premise is
- * to create a MIGRATION table in the database and persist the status of Migrations there. Migrations are provided in java
- * code, they are added to a Manager, which will, when requested, traverse them in identifier order, and perform
- * any that are not completed, or designated to run always.
+ * complete functionality. The premise is to create a MIGRATION table in the database and persist the status
+ * of Migrations there. Migrations are provided in java code, they are added to a Manager, which will, when requested,
+ * traverse them in identifier order, and perform any that are not completed, or designated to run always.
  *
  * @since 0.7
  */

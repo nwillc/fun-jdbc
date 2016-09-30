@@ -24,5 +24,6 @@ public interface ThrowingBiFunction<T, U, R> extends BiFunction<T, U, R> {
 		}
 	}
 
+	@SuppressWarnings("RedundantThrows")
 	R applyThrows(T t, U u) throws Exception;
 }

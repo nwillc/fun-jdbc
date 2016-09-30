@@ -17,7 +17,6 @@
 
 package com.github.nwillc.funjdbc;
 
-import almost.functional.utils.Preconditions;
 import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
@@ -38,8 +37,8 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private Optional<Boolean> nextAvailable = Optional.empty();
 
     public ResultSetIterator(final ResultSet resultSet, final Extractor<T> extractor) {
-        Preconditions.checkNotNull(resultSet, "A non null result set is required.");
-        Preconditions.checkNotNull(extractor, "A non null extractor is required");
+        Objects.requireNonNull(resultSet, "A non null result set is required.");
+        Objects.requireNonNull(extractor, "A non null extractor is required");
         this.extractor = extractor;
         this.resultSet = resultSet;
     }
@@ -69,7 +68,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
             T result = extractor.extract(resultSet);
             nextAvailable = Optional.empty();
             return result;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             nextAvailable = Optional.of(false);
             throw propagate(e);
         }

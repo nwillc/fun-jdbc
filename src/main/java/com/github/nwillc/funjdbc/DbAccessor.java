@@ -99,7 +99,7 @@ public interface DbAccessor extends ConnectionProvider {
 				if (key != null) {
 					V value = map.get(key);
 					if (value != null) {
-						enricher.enrich(value, resultSet);
+						enricher.accept(value, resultSet);
 					}
 				}
 			}

@@ -51,13 +51,13 @@ public class PerfTest {
 		for (int i = 0; i < LOOPS; i++) {
 			codedBeanExtractor.extract(resultSet);
 		}
-		LOGGER.info("Coded Runtime: " + (System.currentTimeMillis() - start));
+		LOGGER.info("Coded Extractor: " + (System.currentTimeMillis() - start));
 		System.gc();
 		start = System.currentTimeMillis();
 		for (int i = 0; i < LOOPS; i++) {
 			generatedBeanExtractor.extract(resultSet);
 		}
-		LOGGER.info("Generated Runtime: " + (System.currentTimeMillis() - start));
+		LOGGER.info("Generated Extractor: " + (System.currentTimeMillis() - start));
 	}
 
 	private class BeanExtractor implements Extractor<Bean> {
