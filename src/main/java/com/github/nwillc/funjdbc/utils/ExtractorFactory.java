@@ -48,8 +48,8 @@ public final class ExtractorFactory<B> {
     }
 
     /**
-     * Add an extraction used by the Extractor. An extraction pulls a know type from the ResultSet and calls a setter
-     * with it.
+     * Add an extraction used by the Extractor. An extraction pulls a know type from an indexed column of ResultSet
+     * and calls a setter with it.
      *
      * @param setter a BiConsumer that will set the value extracted
      * @param getter a BiFunction that will extract the value from the ResultSet
@@ -63,6 +63,16 @@ public final class ExtractorFactory<B> {
         return this;
     }
 
+    /**
+     * Add an extraction used by the Extractor. An extraction pulls a know type from a named column of the ResultSet
+     * and calls a setter with it.
+     *
+     * @param setter a BiConsumer that will set the value extracted
+     * @param getter a BiFunction that will extract the value from the ResultSet
+     * @param column the name of the column
+     * @param <T>    the type
+     * @return the factory
+     */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
         final Extraction<B, T, String> extraction = new Extraction<>(setter, getter, column);
         consumer = consumer.andThen(extraction);

@@ -33,6 +33,7 @@ public interface Enricher<E> extends ThrowingBiConsumer<E, ResultSet> {
     /**
      * Chains another enricher to this one to be called upon completion.
      * @param after another enricher
+     * @since 0.8.5
      * @return the enriched object
      */
     default Enricher<E> andThen(Enricher<E> after) {
