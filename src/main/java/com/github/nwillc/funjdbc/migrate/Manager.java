@@ -20,15 +20,14 @@ package com.github.nwillc.funjdbc.migrate;
 
 import almost.functional.utils.LogFactory;
 import com.github.nwillc.funjdbc.DbAccessor;
+import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
+import com.github.nwillc.funjdbc.utils.Throwables;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,12 +100,14 @@ public class Manager implements DbAccessor {
     }
 
     /**
-     * Add a Migration to the set..
+     * Add Migrations to the set..
      *
-     * @param migration the migration
+     * @param migrations the migration
      */
-    public void add(Migration migration) {
-        migrations.add(migration);
+    public void add(Migration ... migrations) {
+        if (migrations != null) {
+            Collections.addAll(this.migrations, migrations);
+        }
     }
 
     /**
@@ -169,12 +170,12 @@ public class Manager implements DbAccessor {
      */
     public void doMigrations() {
         migrations.forEach(migration -> {
-            if ((!migrated(migration.getIdentifier()) || migration.runAlways())
-                    && migration.perform()) {
+            if (!migrated(migration.getIdentifier()) || migration.runAlways()) {
                 try {
+                    migration.perform();
                     dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                   throw new UncheckedSQLException("Migration " + migration.getIdentifier() + " failure.", e);
                 }
             }
         });

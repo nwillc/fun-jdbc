@@ -1,0 +1,18 @@
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21',
+            'com.h2database:h2:1.4.192',
+            'org.apache.commons:commons-dbcp2:2.1.1',
+            'com.github.nwillc:fun-jdbc:+'
+
+}
+
+mainClassName = 'com.github.nwillc.funjdbc.example.Example'
