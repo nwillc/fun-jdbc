@@ -157,8 +157,7 @@ public class ManagerTest extends SingletonContract {
 		}
 
 		@Override
-		public boolean perform() {
-			return true;
+		public void perform() throws Exception {
 		}
 	}
 

@@ -80,8 +80,8 @@ public class MigrationBaseTest {
 		}
 
 		@Override
-		public boolean perform() {
-			return false;
+		public void perform() throws Exception {
+			throw new RuntimeException();
 		}
 	}
 }
