@@ -1,5 +1,6 @@
 # Example
-The following is a contrived example just to give you an idea of this codes basic use.
+A cpmplete example can be found in the `example` directory of the repository. But the following is a contrived example 
+just to give you an idea of this codes basic use. 
 
 ## A Word List
 You're storing the words from a document in an in memory database for word count analysis. The table has the following schema:
