@@ -22,7 +22,6 @@ import almost.functional.utils.LogFactory;
 import com.github.nwillc.funjdbc.DbAccessor;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
-import com.github.nwillc.funjdbc.utils.Throwables;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

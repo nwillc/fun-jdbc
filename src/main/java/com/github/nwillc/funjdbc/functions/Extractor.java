@@ -17,7 +17,7 @@
 
 package com.github.nwillc.funjdbc.functions;
 
-import com.github.nwillc.funjdbc.utils.ExtractorFactory;
+import com.github.nwillc.funjdbc.utils.EFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +35,7 @@ public interface Extractor<T> {
      * @param rs the ResultSet to extract from
      * @return the type T extracted
      * @throws SQLException should the extraction fail
-     * @see ExtractorFactory
+     * @see EFactory
      */
     T extract(ResultSet rs) throws SQLException;
 }

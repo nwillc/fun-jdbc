@@ -29,11 +29,11 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * Create a basic Extractor from a series of setter/getter/index tuples.
+ * Create a basic Enricher or Extractor from a series of setter/getter/index tuples.
  *
  * @since 0.8.3+
  */
-public final class ExtractorFactory<B> {
+public final class EFactory<B> {
     private Enricher<B> consumer = null;
     private Supplier<B> factory = null;
 
@@ -44,7 +44,7 @@ public final class ExtractorFactory<B> {
      * @param factory a factory instance
      * @return the extractor factory.
      */
-    public ExtractorFactory<B> factory(Supplier<B> factory) {
+    public EFactory<B> factory(Supplier<B> factory) {
         this.factory = factory;
         return this;
     }
@@ -59,7 +59,7 @@ public final class ExtractorFactory<B> {
      * @param <T>    the type
      * @return the factory
      */
-    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
+    public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
         final SingleEnricher<B, T, Integer> singleEnricher = new SingleEnricher<>(setter, getter, index);
         if (consumer == null) {
             consumer = singleEnricher;
@@ -79,7 +79,7 @@ public final class ExtractorFactory<B> {
      * @param <T>    the type
      * @return the factory
      */
-    public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
+    public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
         final SingleEnricher<B, T, String> singleEnricher = new SingleEnricher<>(setter, getter, column);
         if (consumer == null) {
             consumer = singleEnricher;
@@ -89,10 +89,16 @@ public final class ExtractorFactory<B> {
         return this;
     }
 
+    /**
+     * Get the Enricher that results from the added setter, getter, pairings add.
+     * @return  the generated enricher
+     * @since 0.8.7
+     */
     public Enricher<B> getEnricher() {
         Objects.requireNonNull(consumer, "A consumer(s) are required");
         return consumer;
     }
+
     /**
      * Create the Extractor based on the factory and extractions added.
      * @return the generated extractor

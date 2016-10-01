@@ -18,6 +18,7 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.funjdbc.UncheckedSQLException;
+import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,8 +40,8 @@ import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.mockito.Mockito.when;
 
 
-public class ExtractorFactoryTest {
-	private ExtractorFactory<Bean> factory;
+public class EFactoryTest {
+	private EFactory<Bean> factory;
 	@Mock
 	ResultSet resultSet;
 	@Rule
@@ -48,7 +49,7 @@ public class ExtractorFactoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		factory = new ExtractorFactory<>();
+		factory = new EFactory<>();
 	}
 
 	@Test
@@ -283,6 +284,17 @@ public class ExtractorFactoryTest {
 
 		extractor.extract(resultSet);
 	}
+
+	@Test
+	public void testEnricher() throws Exception {
+		final Enricher<Bean> enricher = factory.add(Bean::setOne, ResultSet::getInt, 1).getEnricher();
+		when(resultSet.getInt(1)).thenReturn(42);
+		Bean bean = new Bean();
+		bean.setOne(0);
+		enricher.accept(bean, resultSet);
+		assertThat(bean.one).isEqualTo(42);
+	}
+
 
 	@Test
 	public void testMultiple() throws Exception {

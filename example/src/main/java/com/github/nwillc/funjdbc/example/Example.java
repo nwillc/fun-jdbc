@@ -1,21 +1,19 @@
 package com.github.nwillc.funjdbc.example;
 
 import com.github.nwillc.funjdbc.DbAccessor;
-import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.example.database.Database;
 import com.github.nwillc.funjdbc.example.database.PersonTable;
 import com.github.nwillc.funjdbc.example.model.Person;
 import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.migrate.Manager;
-import com.github.nwillc.funjdbc.utils.ExtractorFactory;
+import com.github.nwillc.funjdbc.utils.EFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -23,14 +21,14 @@ class Example implements DbAccessor {
     private static final Logger LOGGER = Logger.getLogger(Example.class.getSimpleName());
     private final Database database;
 
-    private Extractor<Person> personExtractor = new ExtractorFactory<Person>()
+    private Extractor<Person> personExtractor = new EFactory<Person>()
             .factory(Person::new)
             .add(Person::setPersonId, ResultSet::getLong, "PERSON_ID")
             .add(Person::setGivenName, ResultSet::getString, "GIVEN_NAME")
             .add(Person::setFamilyName, ResultSet::getString, "FAMILY_NAME")
             .getExtractor();
 
-    private Enricher<Person> ageEnricher = new ExtractorFactory<Person>()
+    private Enricher<Person> ageEnricher = new EFactory<Person>()
             .add(Person::setAge, ResultSet::getInt, "AGE")
             .getEnricher();
 
@@ -75,14 +73,14 @@ class Example implements DbAccessor {
     }
 
     private Optional<Person> find(int id) throws SQLException {
-       return dbFind(personExtractor, "SELECT * FROM PERSON WHERE PERSON_ID = %d", id);
+        return dbFind(personExtractor, "SELECT * FROM PERSON WHERE PERSON_ID = %d", id);
     }
 
-    private Map<Long,Person> query() throws SQLException {
+    private Map<Long, Person> query() throws SQLException {
         return dbQuery(personExtractor, "SELECT * FROM PERSON").collect(Collectors.toMap(Person::getPersonId, person -> person));
     }
 
-    private void enrich(Map<Long,Person> personMap) throws SQLException {
+    private void enrich(Map<Long, Person> personMap) throws SQLException {
         dbEnrich(personMap, rs -> rs.getLong("PERSON_ID"), ageEnricher, "SELECT PERSON_ID, AGE FROM PERSON");
     }
 
