@@ -5,6 +5,7 @@ import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.example.database.Database;
 import com.github.nwillc.funjdbc.example.database.PersonTable;
 import com.github.nwillc.funjdbc.example.model.Person;
+import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.migrate.Manager;
 import com.github.nwillc.funjdbc.utils.ExtractorFactory;
@@ -14,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,10 @@ class Example implements DbAccessor {
             .add(Person::setGivenName, ResultSet::getString, "GIVEN_NAME")
             .add(Person::setFamilyName, ResultSet::getString, "FAMILY_NAME")
             .getExtractor();
+
+    private Enricher<Person> ageEnricher = new ExtractorFactory<Person>()
+            .add(Person::setAge, ResultSet::getInt, "AGE")
+            .getEnricher();
 
     public static void main(String[] args) throws Exception {
         LOGGER.info("Start");
@@ -77,7 +83,7 @@ class Example implements DbAccessor {
     }
 
     private void enrich(Map<Long,Person> personMap) throws SQLException {
-        dbEnrich(personMap, rs -> rs.getLong("PERSON_ID"), (p, rs) -> p.setAge(rs.getInt("AGE")), "SELECT PERSON_ID, AGE FROM PERSON");
+        dbEnrich(personMap, rs -> rs.getLong("PERSON_ID"), ageEnricher, "SELECT PERSON_ID, AGE FROM PERSON");
     }
 
     private void setAge(long id, int age) throws SQLException {

@@ -17,11 +17,13 @@
 
 package com.github.nwillc.funjdbc.utils;
 
+import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.functions.ThrowingBiFunction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -32,8 +34,8 @@ import java.util.function.Supplier;
  * @since 0.8.3+
  */
 public final class ExtractorFactory<B> {
-    private BiConsumer<B, ResultSet> consumer = (b, r) -> {};
-    private Supplier<B> factory;
+    private Enricher<B> consumer = null;
+    private Supplier<B> factory = null;
 
     /**
      * Provide a factor this Extractor will use to create the object it will extract data
@@ -58,8 +60,12 @@ public final class ExtractorFactory<B> {
      * @return the factory
      */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
-        final Extraction<B, T, Integer> extraction = new Extraction<>(setter, getter, index);
-        consumer = consumer.andThen(extraction);
+        final SingleEnricher<B, T, Integer> singleEnricher = new SingleEnricher<>(setter, getter, index);
+        if (consumer == null) {
+            consumer = singleEnricher;
+        }  else {
+            consumer = consumer.andThen(singleEnricher);
+        }
         return this;
     }
 
@@ -74,16 +80,26 @@ public final class ExtractorFactory<B> {
      * @return the factory
      */
     public <T> ExtractorFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
-        final Extraction<B, T, String> extraction = new Extraction<>(setter, getter, column);
-        consumer = consumer.andThen(extraction);
+        final SingleEnricher<B, T, String> singleEnricher = new SingleEnricher<>(setter, getter, column);
+        if (consumer == null) {
+            consumer = singleEnricher;
+        } else {
+            consumer = consumer.andThen(singleEnricher);
+        }
         return this;
     }
 
+    public Enricher<B> getEnricher() {
+        Objects.requireNonNull(consumer, "A consumer(s) are required");
+        return consumer;
+    }
     /**
      * Create the Extractor based on the factory and extractions added.
      * @return the generated extractor
      */
     public Extractor<B> getExtractor() {
+        Objects.requireNonNull(factory, "A non null factory is required");
+        Objects.requireNonNull(consumer, "A consumer(s) are required");
         return new GeneratedExtractor<>(factory, consumer);
     }
 
@@ -104,19 +120,19 @@ public final class ExtractorFactory<B> {
         }
     }
 
-    private static class Extraction<B, T, C> implements BiConsumer<B, ResultSet> {
+    private static class SingleEnricher<B, T, C> implements Enricher<B> {
         final BiConsumer<B, T> setter;
         final BiFunction<ResultSet, C, T> getter;
         final C column;
 
-        Extraction(BiConsumer<B, T> setter, BiFunction<ResultSet, C, T> getter, C column) {
+        SingleEnricher(BiConsumer<B, T> setter, BiFunction<ResultSet, C, T> getter, C column) {
             this.setter = setter;
             this.getter = getter;
             this.column = column;
         }
 
         @Override
-        public void accept(B bean, ResultSet resultSet) {
+        public void acceptThrows(B bean, ResultSet resultSet) {
             setter.accept(bean, getter.apply(resultSet, column));
         }
     }

@@ -27,8 +27,8 @@ import java.util.Objects;
  * @since 0.8.0
  */
 @FunctionalInterface
-public interface Enricher<E> extends ThrowingBiConsumer<E, ResultSet> {
-    void acceptThrows(E entity, ResultSet rs) throws SQLException;
+public interface Enricher<B> extends ThrowingBiConsumer<B, ResultSet> {
+    void acceptThrows(B bean, ResultSet rs) throws SQLException;
 
     /**
      * Chains another enricher to this one to be called upon completion.
@@ -36,7 +36,7 @@ public interface Enricher<E> extends ThrowingBiConsumer<E, ResultSet> {
      * @since 0.8.5
      * @return the enriched object
      */
-    default Enricher<E> andThen(Enricher<E> after) {
+    default Enricher<B> andThen(Enricher<B> after) {
         Objects.requireNonNull(after);
 
         return (l, r) -> {

@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.mockito.Mockito.when;
 
 
@@ -51,11 +52,32 @@ public class ExtractorFactoryTest {
 	}
 
 	@Test
-	public void testConstructor() throws Exception {
-		final Extractor<Bean> extractor = factory.factory(Bean::new).getExtractor();
+	public void testConstructorNoFactory() throws Exception {
+		try {
+			factory.getExtractor();
+			failBecauseExceptionWasNotThrown(NullPointerException.class);
+		} catch (NullPointerException e) {
+
+		}
+	}
+
+	@Test
+	public void testConstructorNoExtractor() throws Exception {
+		try {
+			factory.factory(Bean::new).getExtractor();
+			failBecauseExceptionWasNotThrown(NullPointerException.class);
+		} catch (NullPointerException e) {
+
+		}
+	}
+
+	@Test
+	public void testConstructorNo() throws Exception {
+		final Extractor<Bean> extractor = factory
+				.factory(Bean::new)
+				.add(Bean::setOne, ResultSet::getInt, 1)
+				.getExtractor();
 		assertThat(extractor).isNotNull();
-		final Bean bean = extractor.extract(null);
-		assertThat(bean).isInstanceOf(Bean.class);
 	}
 
 	@Test
