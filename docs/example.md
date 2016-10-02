@@ -1,6 +1,6 @@
 # Example
-A cpmplete example can be found in the `example` directory of the repository. But the following is a contrived example 
-just to give you an idea of this codes basic use. 
+A cpmplete example can be found in the [example](https://github.com/nwillc/fun-jdbc/tree/master/example) directory of the repository. 
+But the following is a contrived example just to give you an idea of this codes basic use. 
 
 ## A Word List
 You're storing the words from a document in an in memory database for word count analysis. The table has the following schema:
@@ -69,7 +69,7 @@ And of course your Extractor can be more complex:
           .forEach(p -> System.out.println(p.word + ": " + p.count));
     }
     
-Or you could use the ExtractorFactory to create an extractor:
+Or you could use the EFactory to create an extractor:
 
     void printCounts(Dao dao) {
         ExtractorFactory<Pair> factory = new ExtractorFactory<>();
