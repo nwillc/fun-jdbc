@@ -17,6 +17,8 @@
 
 package com.github.nwillc.funjdbc.functions;
 
+import com.github.nwillc.funjdbc.utils.EFactory;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -35,6 +37,7 @@ public interface Enricher<B> extends ThrowingBiConsumer<B, ResultSet> {
      * @param after another enricher
      * @since 0.8.5
      * @return the enriched object
+     * @see EFactory
      */
     default Enricher<B> andThen(Enricher<B> after) {
         Objects.requireNonNull(after);

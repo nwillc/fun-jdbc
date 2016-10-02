@@ -26,7 +26,8 @@ import java.util.*;
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
 /**
- * This is an Iterator that traverses a ResultSet. Additionally this implements Autocloseable, and support for adding other onClose Runnables.
+ * This is an Iterator that traverses a ResultSet returning elements via an Extractor. Additionally this
+ * implements Autocloseable, and support for adding other onClose Runnables.
  *
  * @param <T> The type of elements being extracted
  */
@@ -36,6 +37,13 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private final List<Runnable> closers = new ArrayList<>();
     private Boolean nextAvailable = null;
 
+    /**
+     * Create an instance with with a ResultSet to iterate over, and an Extractor to apply to
+     * each row.
+     *
+     * @param resultSet the ResultSet to iterate over
+     * @param extractor the Extractor to apply to each row
+     */
     public ResultSetIterator(final ResultSet resultSet, final Extractor<T> extractor) {
         Objects.requireNonNull(resultSet, "A non null result set is required.");
         Objects.requireNonNull(extractor, "A non null extractor is required");
@@ -87,7 +95,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
 
     @Override
     public void close() throws SQLException {
-            resultSet.close();
-            closers.forEach(Runnable::run);
+        resultSet.close();
+        closers.forEach(Runnable::run);
     }
 }

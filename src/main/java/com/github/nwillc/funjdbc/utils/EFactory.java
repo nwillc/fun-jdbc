@@ -60,12 +60,11 @@ public final class EFactory<B> {
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
+        Objects.requireNonNull(setter);
+        Objects.requireNonNull(getter);
+        Objects.requireNonNull(index);
         final SingleEnricher<B, T, Integer> singleEnricher = new SingleEnricher<>(setter, getter, index);
-        if (consumer == null) {
-            consumer = singleEnricher;
-        }  else {
-            consumer = consumer.andThen(singleEnricher);
-        }
+        consumer = (consumer == null) ? singleEnricher : consumer.andThen(singleEnricher);
         return this;
     }
 
@@ -80,12 +79,11 @@ public final class EFactory<B> {
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
+        Objects.requireNonNull(setter);
+        Objects.requireNonNull(getter);
+        Objects.requireNonNull(column);
         final SingleEnricher<B, T, String> singleEnricher = new SingleEnricher<>(setter, getter, column);
-        if (consumer == null) {
-            consumer = singleEnricher;
-        } else {
-            consumer = consumer.andThen(singleEnricher);
-        }
+        consumer = (consumer == null) ? singleEnricher : consumer.andThen(singleEnricher);
         return this;
     }
 

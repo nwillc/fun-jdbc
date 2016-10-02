@@ -40,7 +40,6 @@ import static com.github.nwillc.funjdbc.utils.Closer.close;
 public interface DbAccessor extends ConnectionProvider {
 	Logger LOGGER = Logger.getLogger(DbAccessor.class.getName());
 
-
 	/**
 	 * Indicate if the formatted SQL should be logged. Your implementer can override this
 	 * to turn on logging.
