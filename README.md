@@ -6,7 +6,7 @@ framework is, you get a lot of bang for about a 20k jar.
 ## Features 
  - default method interface providing query, find, update etc.
  - ResultSet traversal as a Stream
- - Efficient functional approach to ResultSet to model objects
- - Minimalist schema migration mechanism
+ - Efficient functional approach to copying ResultSet values to model objects
+ - Minimalist schema migration mechanism 
 
 
