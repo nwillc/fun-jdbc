@@ -34,7 +34,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private final ResultSet resultSet;
     private final Extractor<T> extractor;
     private final List<Runnable> closers = new ArrayList<>();
-    private Optional<Boolean> nextAvailable = Optional.empty();
+    private Boolean nextAvailable = null;
 
     public ResultSetIterator(final ResultSet resultSet, final Extractor<T> extractor) {
         Objects.requireNonNull(resultSet, "A non null result set is required.");
@@ -45,14 +45,14 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
 
     @Override
     public boolean hasNext() {
-        if (nextAvailable.isPresent()) {
-            return nextAvailable.get();
+        if (nextAvailable != null) {
+            return nextAvailable;
         }
         try {
-            nextAvailable = Optional.of(resultSet.next());
-            return nextAvailable.get();
+            nextAvailable = resultSet.next();
+            return nextAvailable;
         } catch (Exception e) {
-            nextAvailable = Optional.of(false);
+            nextAvailable = false;
             throw propagate(e);
         }
     }
@@ -60,16 +60,16 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     @Override
     public T next() {
         hasNext();
-        if (!(nextAvailable.isPresent() && nextAvailable.get())) {
+        if (!Boolean.TRUE.equals(nextAvailable)) {
             throw new NoSuchElementException();
         }
 
         try {
             T result = extractor.extract(resultSet);
-            nextAvailable = Optional.empty();
+            nextAvailable = null;
             return result;
         } catch (Exception e) {
-            nextAvailable = Optional.of(false);
+            nextAvailable = false;
             throw propagate(e);
         }
     }
