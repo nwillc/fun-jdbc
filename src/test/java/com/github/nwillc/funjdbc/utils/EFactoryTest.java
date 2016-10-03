@@ -45,7 +45,7 @@ public class EFactoryTest {
 	@Mock
 	ResultSet resultSet;
 	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
+	public MockitoRule rule = MockitoJUnit.rule().silent();
 
 	@Before
 	public void setUp() throws Exception {

@@ -22,7 +22,7 @@ public class PerfTest {
 	@Mock
 	ResultSet resultSet;
 	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
+	public MockitoRule rule = MockitoJUnit.rule().silent();
 	private Extractor<Bean> codedBeanExtractor = new BeanExtractor();
 	private Extractor<Bean> generatedBeanExtractor;
 

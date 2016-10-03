@@ -34,7 +34,7 @@ public class MigrationBaseTest {
 	ConnectionProvider connectionProvider;
 
 	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
+	public MockitoRule rule = MockitoJUnit.rule().silent();
 
 	@Before
 	public void setUp() throws Exception {

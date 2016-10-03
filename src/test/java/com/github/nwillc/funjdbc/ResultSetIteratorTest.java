@@ -51,7 +51,7 @@ public class ResultSetIteratorTest extends IteratorContract {
 	@Mock
 	Extractor mockExtractor;
 	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
+	public MockitoRule rule = MockitoJUnit.rule().silent();
 
 
 	@Before

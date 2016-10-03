@@ -21,7 +21,9 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
@@ -34,7 +36,7 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private final ResultSet resultSet;
     private final Extractor<T> extractor;
-    private final List<Runnable> closers = new ArrayList<>();
+    private Runnable closers = () -> {};
     private Boolean nextAvailable = null;
 
     /**
@@ -89,13 +91,17 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
      * @return this instance
      */
     public ResultSetIterator<T> onClose(final Runnable runnable) {
-        closers.add(runnable);
+        Runnable previous = closers;
+        closers = () -> {
+            previous.run();
+            runnable.run();
+        };
         return this;
     }
 
     @Override
     public void close() throws SQLException {
         resultSet.close();
-        closers.forEach(Runnable::run);
+        closers.run();
     }
 }

@@ -29,7 +29,7 @@ public class CloserTest extends UtilityClassContract {
 	@Mock
 	AutoCloseable autoCloseable;
 	@Rule
-	public MockitoRule rule = MockitoJUnit.rule();
+	public MockitoRule rule = MockitoJUnit.rule().silent();
 
 
 	@Override
