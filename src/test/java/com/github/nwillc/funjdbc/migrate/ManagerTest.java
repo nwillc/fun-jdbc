@@ -31,138 +31,138 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class ManagerTest extends SingletonContract {
-	private Manager manager;
-	private InMemWordsDatabase dao;
+    private Manager manager;
+    private InMemWordsDatabase dao;
 
-	@Override
-	public Class<?> getClassToTest() {
-		return Manager.class;
-	}
+    @Override
+    public Class<?> getClassToTest() {
+        return Manager.class;
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		manager = Manager.getInstance();
-		assertThat(manager).isNotNull();
-		dao = new InMemWordsDatabase();
-		manager.setConnectionProvider(dao);
-		dao.create();
-	}
+    @Before
+    public void setUp() throws Exception {
+        manager = Manager.getInstance();
+        assertThat(manager).isNotNull();
+        dao = new InMemWordsDatabase();
+        manager.setConnectionProvider(dao);
+        dao.create();
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		manager.clear();
-		dao.drop();
-	}
+    @After
+    public void tearDown() throws Exception {
+        manager.clear();
+        dao.drop();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testMigrationsEnabledException() throws Exception {
-		Manager managerSpy = spy(manager);
-		when(managerSpy.getConnection()).thenThrow(SQLException.class);
-		assertThat(managerSpy.migrationsEnabled()).isFalse();
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testMigrationsEnabledException() throws Exception {
+        Manager managerSpy = spy(manager);
+        when(managerSpy.getConnection()).thenThrow(SQLException.class);
+        assertThat(managerSpy.migrationsEnabled()).isFalse();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testMigratedException() throws Exception {
-		Manager managerSpy = spy(manager);
-		when(managerSpy.getConnection()).thenThrow(SQLException.class);
-		assertThat(managerSpy.migrated("foo")).isFalse();
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testMigratedException() throws Exception {
+        Manager managerSpy = spy(manager);
+        when(managerSpy.getConnection()).thenThrow(SQLException.class);
+        assertThat(managerSpy.migrated("foo")).isFalse();
+    }
 
-	@Test
-	public void testGetConnection() throws Exception {
-		assertThat(manager.getConnectionProvider()).isEqualTo(dao);
-	}
+    @Test
+    public void testGetConnection() throws Exception {
+        assertThat(manager.getConnectionProvider()).isEqualTo(dao);
+    }
 
-	@Test
-	public void testNoConnectionProvider() throws Exception {
-		manager.setConnectionProvider(null);
-		try {
-			manager.getConnection();
-			failBecauseExceptionWasNotThrown(IllegalStateException.class);
-		} catch (IllegalStateException e) {
-		}
-	}
+    @Test
+    public void testNoConnectionProvider() throws Exception {
+        manager.setConnectionProvider(null);
+        try {
+            manager.getConnection();
+            failBecauseExceptionWasNotThrown(IllegalStateException.class);
+        } catch (IllegalStateException e) {
+        }
+    }
 
-	@Test
-	public void testRegisterClass() throws Exception {
-		manager.add(DummyMigration.class);
-		assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
-	}
+    @Test
+    public void testRegisterClass() throws Exception {
+        manager.add(DummyMigration.class);
+        assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
+    }
 
-	@Test
-	public void testRegisterInstance() throws Exception {
-		manager.add(new DummyMigration());
-		assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
-	}
+    @Test
+    public void testRegisterInstance() throws Exception {
+        manager.add(new DummyMigration());
+        assertThat(manager.getMigrations()).hasAtLeastOneElementOfType(DummyMigration.class);
+    }
 
-	@Test
-	public void testBadMigrationClass() throws Exception {
-		try {
-			manager.add(MigrationWithConstructor.class);
-			failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-		} catch (IllegalArgumentException e) {
-		}
-	}
+    @Test
+    public void testBadMigrationClass() throws Exception {
+        try {
+            manager.add(MigrationWithConstructor.class);
+            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+        } catch (IllegalArgumentException e) {
+        }
+    }
 
-	@Test
-	public void testRegistrationOrder() throws Exception {
-		DummyMigration one = new DummyMigration("1");
-		DummyMigration two = new DummyMigration("2");
-		DummyMigration three = new DummyMigration("3");
+    @Test
+    public void testRegistrationOrder() throws Exception {
+        DummyMigration one = new DummyMigration("1");
+        DummyMigration two = new DummyMigration("2");
+        DummyMigration three = new DummyMigration("3");
 
-		manager.add(two);
-		manager.add(three);
-		manager.add(one);
-		assertThat(manager.getMigrations()).containsExactly(one, two, three);
-	}
+        manager.add(two);
+        manager.add(three);
+        manager.add(one);
+        assertThat(manager.getMigrations()).containsExactly(one, two, three);
+    }
 
-	@Test
-	public void testMigrationsEnabled() throws Exception {
-		assertThat(manager.migrationsEnabled()).isFalse();
-		manager.enableMigrations();
-		assertThat(manager.migrationsEnabled()).isTrue();
-	}
+    @Test
+    public void testMigrationsEnabled() throws Exception {
+        assertThat(manager.migrationsEnabled()).isFalse();
+        manager.enableMigrations();
+        assertThat(manager.migrationsEnabled()).isTrue();
+    }
 
-	@Test
-	public void testSimpleMigration() throws Exception {
-		manager.enableMigrations();
-		assertThat(manager.migrationsEnabled()).isTrue();
-		manager.add(new DummyMigration("first"));
-		assertThat(manager.migrated("first")).isFalse();
-		manager.doMigrations();
-		assertThat(manager.migrated("first")).isTrue();
-	}
+    @Test
+    public void testSimpleMigration() throws Exception {
+        manager.enableMigrations();
+        assertThat(manager.migrationsEnabled()).isTrue();
+        manager.add(new DummyMigration("first"));
+        assertThat(manager.migrated("first")).isFalse();
+        manager.doMigrations();
+        assertThat(manager.migrated("first")).isTrue();
+    }
 
-	public static class DummyMigration extends MigrationBase {
-		private String identifier;
+    public static class DummyMigration extends MigrationBase {
+        private String identifier;
 
-		public DummyMigration() {
-			this(null);
-		}
+        public DummyMigration() {
+            this(null);
+        }
 
-		public DummyMigration(String identifier) {
-			this.identifier = identifier;
-		}
+        public DummyMigration(String identifier) {
+            this.identifier = identifier;
+        }
 
-		@Override
-		public String getDescription() {
-			return null;
-		}
+        @Override
+        public String getDescription() {
+            return null;
+        }
 
-		@Override
-		public String getIdentifier() {
-			return identifier;
-		}
+        @Override
+        public String getIdentifier() {
+            return identifier;
+        }
 
-		@Override
-		public void perform() throws Exception {
-		}
-	}
+        @Override
+        public void perform() throws Exception {
+        }
+    }
 
-	public static class MigrationWithConstructor extends DummyMigration {
-		MigrationWithConstructor(String arg) {
-		}
-	}
+    public static class MigrationWithConstructor extends DummyMigration {
+        MigrationWithConstructor(String arg) {
+        }
+    }
 }

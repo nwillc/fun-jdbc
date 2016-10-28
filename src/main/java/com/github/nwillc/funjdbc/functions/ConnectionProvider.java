@@ -29,6 +29,7 @@ public interface ConnectionProvider {
      * Get a JDBC database connection.
      *
      * @return A valid database connection
+     *
      * @throws SQLException if a connection can not be returned
      */
     Connection getConnection() throws SQLException;

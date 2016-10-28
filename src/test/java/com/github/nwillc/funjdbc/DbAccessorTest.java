@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(Parameterized.class)
 public class DbAccessorTest {
@@ -122,6 +123,14 @@ public class DbAccessorTest {
         assertThat(words.count()).isEqualTo(count);
     }
 
+    @Test
+    public void testUpdateWithException() throws Exception {
+        final int count = 2;
+        final String sql = "blah blah";
+        assertThatThrownBy(() -> dao.dbUpdate(sql)).isInstanceOf(SQLException.class);
+    }
+
+
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
         dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
@@ -144,6 +153,30 @@ public class DbAccessorTest {
                 "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
         assertThat(counts.get("b").count).isEqualTo(1);
         assertThat(counts.get("a").count).isEqualTo(2);
+    }
+
+    @Test
+    public void shouldDbEnrichNoKey() throws Exception {
+        Map<String, WordCount> counts = new HashMap<>();
+
+        dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
+
+        assertThat(counts.size()).isEqualTo(2);
+        dao.dbEnrich(counts,
+                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
+                "SELECT COUNT(*) FROM WORDS");
+        assertThat(counts.size()).isEqualTo(2);
+        counts.values().forEach(wordCount -> assertThat(wordCount.count).isEqualTo(0));
+    }
+
+    @Test
+    public void shouldDbEnrichNoValue() throws Exception {
+        Map<String, WordCount> counts = new HashMap<>();
+
+        dao.dbEnrich(counts,
+                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
+                "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
+        assertThat(counts).hasSize(0);
     }
 
     @Test
@@ -186,7 +219,7 @@ public class DbAccessorTest {
 
         private WordCount(String word) {
             this.word = word;
-            this.count = 1;
+            this.count = 0;
         }
     }
 }

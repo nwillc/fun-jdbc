@@ -16,6 +16,6 @@
  */
 
 /**
- *  Functional interface definitions.
+ * Functional interface definitions.
  */
 package com.github.nwillc.funjdbc.functions;

@@ -34,10 +34,13 @@ public interface Enricher<B> extends ThrowingBiConsumer<B, ResultSet> {
 
     /**
      * Chains another enricher to this one to be called upon completion.
+     *
      * @param after another enricher
-     * @since 0.8.5
+     *
      * @return the enriched object
+     *
      * @see EFactory
+     * @since 0.8.5
      */
     default Enricher<B> andThen(Enricher<B> after) {
         Objects.requireNonNull(after);

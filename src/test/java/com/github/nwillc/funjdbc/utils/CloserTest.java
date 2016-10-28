@@ -26,32 +26,32 @@ import org.mockito.junit.MockitoRule;
 import static org.mockito.Mockito.verify;
 
 public class CloserTest extends UtilityClassContract {
-	@Mock
-	AutoCloseable autoCloseable;
-	@Rule
-	public MockitoRule rule = MockitoJUnit.rule().silent();
+    @Mock
+    AutoCloseable autoCloseable;
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().silent();
 
 
-	@Override
-	public Class<?> getClassToTest() {
-		return Closer.class;
-	}
+    @Override
+    public Class<?> getClassToTest() {
+        return Closer.class;
+    }
 
-	@Test
-	public void testHandlesNull() throws Exception {
-		Closer.close(null);
-	}
+    @Test
+    public void testHandlesNull() throws Exception {
+        Closer.close(null);
+    }
 
-	@Test
-	public void shouldClose() throws Exception {
-		Closer.close(autoCloseable);
-		verify(autoCloseable).close();
-	}
+    @Test
+    public void shouldClose() throws Exception {
+        Closer.close(autoCloseable);
+        verify(autoCloseable).close();
+    }
 
-	@Test
-	public void testHandlesThrownException() throws Exception {
-		Closer.close(() -> {
-			throw new Exception();
-		});
-	}
+    @Test
+    public void testHandlesThrownException() throws Exception {
+        Closer.close(() -> {
+            throw new Exception();
+        });
+    }
 }

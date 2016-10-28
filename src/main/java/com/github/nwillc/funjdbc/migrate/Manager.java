@@ -87,6 +87,7 @@ public class Manager implements DbAccessor {
      * Add a Migration to the set.
      *
      * @param aMigration the a migration
+     *
      * @throws IllegalArgumentException the illegal argument exception
      */
     public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
@@ -103,7 +104,7 @@ public class Manager implements DbAccessor {
      *
      * @param migrations the migration
      */
-    public void add(Migration ... migrations) {
+    public void add(Migration... migrations) {
         if (migrations != null) {
             Collections.addAll(this.migrations, migrations);
         }
@@ -153,6 +154,7 @@ public class Manager implements DbAccessor {
      * Check if a migration has been performed.
      *
      * @param first the first
+     *
      * @return the boolean
      */
     public boolean migrated(String first) {
@@ -174,7 +176,7 @@ public class Manager implements DbAccessor {
                     migration.perform();
                     dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
                 } catch (Exception e) {
-                   throw new UncheckedSQLException("Migration " + migration.getIdentifier() + " failure.", e);
+                    throw new UncheckedSQLException("Migration " + migration.getIdentifier() + " failure.", e);
                 }
             }
         });

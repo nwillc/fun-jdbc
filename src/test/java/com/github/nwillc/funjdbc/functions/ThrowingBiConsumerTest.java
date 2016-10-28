@@ -13,7 +13,9 @@ import static org.mockito.Mockito.mock;
 public class ThrowingBiConsumerTest {
     @Test
     public void testAcceptException() throws Exception {
-        Enricher<Boolean> enricher = (o,r) -> { throw new SQLException("test"); };
+        Enricher<Boolean> enricher = (o, r) -> {
+            throw new SQLException("test");
+        };
         ResultSet resultSet = mock(ResultSet.class);
 
         try {

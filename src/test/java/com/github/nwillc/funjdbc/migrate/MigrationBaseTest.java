@@ -28,60 +28,60 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class MigrationBaseTest {
-	private Migration migration;
-	private Manager manager;
-	@Mock
-	ConnectionProvider connectionProvider;
+    private Migration migration;
+    private Manager manager;
+    @Mock
+    ConnectionProvider connectionProvider;
 
-	@Rule
-	public MockitoRule rule = MockitoJUnit.rule().silent();
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().silent();
 
-	@Before
-	public void setUp() throws Exception {
-		migration = new DummyMigration();
-		manager = Manager.getInstance();
-	}
+    @Before
+    public void setUp() throws Exception {
+        migration = new DummyMigration();
+        manager = Manager.getInstance();
+    }
 
-	@Test
-	public void testToString() throws Exception {
-		Manager managerSpy = spy(manager);
-		when(managerSpy.migrated(migration.getIdentifier())).thenReturn(true);
-		managerSpy.setConnectionProvider(connectionProvider);
-		final String str = migration.toString();
-		assertThat(str).contains(migration.getClass().getSimpleName())
-			.contains(migration.getDescription())
-			.contains(migration.getIdentifier());
+    @Test
+    public void testToString() throws Exception {
+        Manager managerSpy = spy(manager);
+        when(managerSpy.migrated(migration.getIdentifier())).thenReturn(true);
+        managerSpy.setConnectionProvider(connectionProvider);
+        final String str = migration.toString();
+        assertThat(str).contains(migration.getClass().getSimpleName())
+                .contains(migration.getDescription())
+                .contains(migration.getIdentifier());
 
-	}
+    }
 
-	@Test
-	public void testRunAlwaysDefaultsFalse() throws Exception {
-		assertThat(migration.runAlways()).isFalse();
-	}
+    @Test
+    public void testRunAlwaysDefaultsFalse() throws Exception {
+        assertThat(migration.runAlways()).isFalse();
+    }
 
-	@Test
-	public void testShouldProvideConnection() throws Exception {
+    @Test
+    public void testShouldProvideConnection() throws Exception {
 
 
-		manager.setConnectionProvider(connectionProvider);
-		migration.getConnection();
-		verify(connectionProvider).getConnection();
-	}
+        manager.setConnectionProvider(connectionProvider);
+        migration.getConnection();
+        verify(connectionProvider).getConnection();
+    }
 
-	private static class DummyMigration extends MigrationBase {
-		@Override
-		public String getDescription() {
-			return "dummy";
-		}
+    private static class DummyMigration extends MigrationBase {
+        @Override
+        public String getDescription() {
+            return "dummy";
+        }
 
-		@Override
-		public String getIdentifier() {
-			return "1";
-		}
+        @Override
+        public String getIdentifier() {
+            return "1";
+        }
 
-		@Override
-		public void perform() throws Exception {
-			throw new RuntimeException();
-		}
-	}
+        @Override
+        public void perform() throws Exception {
+            throw new RuntimeException();
+        }
+    }
 }

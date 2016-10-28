@@ -41,320 +41,320 @@ import static org.mockito.Mockito.when;
 
 
 public class EFactoryTest {
-	private EFactory<Bean> factory;
-	@Mock
-	ResultSet resultSet;
-	@Rule
-	public MockitoRule rule = MockitoJUnit.rule().silent();
+    private EFactory<Bean> factory;
+    @Mock
+    ResultSet resultSet;
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().silent();
 
-	@Before
-	public void setUp() throws Exception {
-		factory = new EFactory<>();
-	}
+    @Before
+    public void setUp() throws Exception {
+        factory = new EFactory<>();
+    }
 
-	@Test
-	public void testConstructorNoFactory() throws Exception {
-		try {
-			factory.getExtractor();
-			failBecauseExceptionWasNotThrown(NullPointerException.class);
-		} catch (NullPointerException e) {
+    @Test
+    public void testConstructorNoFactory() throws Exception {
+        try {
+            factory.getExtractor();
+            failBecauseExceptionWasNotThrown(NullPointerException.class);
+        } catch (NullPointerException e) {
 
-		}
-	}
+        }
+    }
 
-	@Test
-	public void testConstructorNoExtractor() throws Exception {
-		try {
-			factory.factory(Bean::new).getExtractor();
-			failBecauseExceptionWasNotThrown(NullPointerException.class);
-		} catch (NullPointerException e) {
+    @Test
+    public void testConstructorNoExtractor() throws Exception {
+        try {
+            factory.factory(Bean::new).getExtractor();
+            failBecauseExceptionWasNotThrown(NullPointerException.class);
+        } catch (NullPointerException e) {
 
-		}
-	}
+        }
+    }
 
-	@Test
-	public void testConstructorNo() throws Exception {
-		final Extractor<Bean> extractor = factory
-				.factory(Bean::new)
-				.add(Bean::setOne, ResultSet::getInt, 1)
-				.getExtractor();
-		assertThat(extractor).isNotNull();
-	}
+    @Test
+    public void testConstructorNo() throws Exception {
+        final Extractor<Bean> extractor = factory
+                .factory(Bean::new)
+                .add(Bean::setOne, ResultSet::getInt, 1)
+                .getExtractor();
+        assertThat(extractor).isNotNull();
+    }
 
-	@Test
-	public void testInteger() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testInteger() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getInt(1)).thenReturn(5);
+        when(resultSet.getInt(1)).thenReturn(5);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.one).isEqualTo(5);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.one).isEqualTo(5);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testIntegerException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testIntegerException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getInt(1)).thenThrow(SQLException.class);
+        when(resultSet.getInt(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testString() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testString() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getString(1)).thenReturn("two");
+        when(resultSet.getString(1)).thenReturn("two");
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.two).isEqualTo("two");
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.two).isEqualTo("two");
+    }
 
-	@Test
-	public void testStringColumn() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, "word").factory(Bean::new).getExtractor();
+    @Test
+    public void testStringColumn() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, "word").factory(Bean::new).getExtractor();
 
-		when(resultSet.getString("word")).thenReturn("two");
+        when(resultSet.getString("word")).thenReturn("two");
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.two).isEqualTo("two");
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.two).isEqualTo("two");
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testStringException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testStringException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getString(1)).thenThrow(SQLException.class);
+        when(resultSet.getString(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testBoolean() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testBoolean() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getBoolean(1)).thenReturn(true);
+        when(resultSet.getBoolean(1)).thenReturn(true);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.three).isTrue();
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.three).isTrue();
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testBooleanException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testBooleanException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getBoolean(1)).thenThrow(SQLException.class);
+        when(resultSet.getBoolean(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testLong() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testLong() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getLong(1)).thenReturn(42L);
+        when(resultSet.getLong(1)).thenReturn(42L);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.four).isEqualTo(42L);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.four).isEqualTo(42L);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testLongException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testLongException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getLong(1)).thenThrow(SQLException.class);
+        when(resultSet.getLong(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testDouble() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testDouble() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getDouble(1)).thenReturn(3.142);
+        when(resultSet.getDouble(1)).thenReturn(3.142);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.five).isEqualTo(3.142);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.five).isEqualTo(3.142);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testDoubleException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testDoubleException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getDouble(1)).thenThrow(SQLException.class);
+        when(resultSet.getDouble(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testFloat() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testFloat() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getFloat(1)).thenReturn(3.142f);
+        when(resultSet.getFloat(1)).thenReturn(3.142f);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.six).isEqualTo(3.142f);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.six).isEqualTo(3.142f);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testFloatException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testFloatException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getFloat(1)).thenThrow(SQLException.class);
+        when(resultSet.getFloat(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
 
-	@Test
-	public void testBigDecimal() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testBigDecimal() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getBigDecimal(1)).thenReturn(BigDecimal.TEN);
+        when(resultSet.getBigDecimal(1)).thenReturn(BigDecimal.TEN);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.seven).isEqualTo(BigDecimal.TEN);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.seven).isEqualTo(BigDecimal.TEN);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testBigDecimalException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testBigDecimalException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getBigDecimal(1)).thenThrow(SQLException.class);
+        when(resultSet.getBigDecimal(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testTime() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testTime() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
 
-		final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
-		when(resultSet.getTime(1)).thenReturn(new Time(time));
+        final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
+        when(resultSet.getTime(1)).thenReturn(new Time(time));
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.eight.getTime()).isEqualTo(time);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(time);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testTimeException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testTimeException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getTime(1)).thenThrow(SQLException.class);
+        when(resultSet.getTime(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testDate() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testDate() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
 
-		final long date = TimeUnit.DAYS.toMillis(40);
-		when(resultSet.getDate(1)).thenReturn(new java.sql.Date(date));
+        final long date = TimeUnit.DAYS.toMillis(40);
+        when(resultSet.getDate(1)).thenReturn(new java.sql.Date(date));
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.eight.getTime()).isEqualTo(date);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(date);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testDateException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testDateException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getDate(1)).thenThrow(SQLException.class);
+        when(resultSet.getDate(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testTimestamp() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
+    @Test
+    public void testTimestamp() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
 
-		final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
-		when(resultSet.getTimestamp(1)).thenReturn(new Timestamp(timestamp));
+        final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
+        when(resultSet.getTimestamp(1)).thenReturn(new Timestamp(timestamp));
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.eight.getTime()).isEqualTo(timestamp);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.eight.getTime()).isEqualTo(timestamp);
+    }
 
-	@Test(expected = UncheckedSQLException.class)
-	public void testTimestampException() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
+    @Test(expected = UncheckedSQLException.class)
+    public void testTimestampException() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
 
-		when(resultSet.getTimestamp(1)).thenThrow(SQLException.class);
+        when(resultSet.getTimestamp(1)).thenThrow(SQLException.class);
 
-		extractor.extract(resultSet);
-	}
+        extractor.extract(resultSet);
+    }
 
-	@Test
-	public void testEnricher() throws Exception {
-		final Enricher<Bean> enricher = factory.add(Bean::setOne, ResultSet::getInt, 1).getEnricher();
-		when(resultSet.getInt(1)).thenReturn(42);
-		Bean bean = new Bean();
-		bean.setOne(0);
-		enricher.accept(bean, resultSet);
-		assertThat(bean.one).isEqualTo(42);
-	}
+    @Test
+    public void testEnricher() throws Exception {
+        final Enricher<Bean> enricher = factory.add(Bean::setOne, ResultSet::getInt, 1).getEnricher();
+        when(resultSet.getInt(1)).thenReturn(42);
+        Bean bean = new Bean();
+        bean.setOne(0);
+        enricher.accept(bean, resultSet);
+        assertThat(bean.one).isEqualTo(42);
+    }
 
 
-	@Test
-	public void testMultiple() throws Exception {
-		final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1)
-				.add(Bean::setOne, ResultSet::getInt, 2)
-				.add(Bean::setFour, ResultSet::getLong, 4)
-				.factory(Bean::new)
-				.getExtractor();
+    @Test
+    public void testMultiple() throws Exception {
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1)
+                .add(Bean::setOne, ResultSet::getInt, 2)
+                .add(Bean::setFour, ResultSet::getLong, 4)
+                .factory(Bean::new)
+                .getExtractor();
 
-		when(resultSet.getString(1)).thenReturn("two");
-		when(resultSet.getInt(2)).thenReturn(1);
-		when(resultSet.getLong(4)).thenReturn(20L);
+        when(resultSet.getString(1)).thenReturn("two");
+        when(resultSet.getInt(2)).thenReturn(1);
+        when(resultSet.getLong(4)).thenReturn(20L);
 
-		final Bean bean = extractor.extract(resultSet);
-		assertThat(bean.one).isEqualTo(1);
-		assertThat(bean.two).isEqualTo("two");
-		assertThat(bean.four).isEqualTo(20L);
-	}
+        final Bean bean = extractor.extract(resultSet);
+        assertThat(bean.one).isEqualTo(1);
+        assertThat(bean.two).isEqualTo("two");
+        assertThat(bean.four).isEqualTo(20L);
+    }
 
 
-	private static class Bean {
-		int one;
-		String two;
-		boolean three;
-		long four;
-		double five;
-		float six;
-		BigDecimal seven;
-		Date eight;
+    private static class Bean {
+        int one;
+        String two;
+        boolean three;
+        long four;
+        double five;
+        float six;
+        BigDecimal seven;
+        Date eight;
 
-		void setOne(int one) {
-			this.one = one;
-		}
+        void setOne(int one) {
+            this.one = one;
+        }
 
-		void setTwo(String two) {
-			this.two = two;
-		}
+        void setTwo(String two) {
+            this.two = two;
+        }
 
-		void setThree(boolean three) {
-			this.three = three;
-		}
+        void setThree(boolean three) {
+            this.three = three;
+        }
 
-		void setFour(long four) {
-			this.four = four;
-		}
+        void setFour(long four) {
+            this.four = four;
+        }
 
-		void setFive(double five) {
-			this.five = five;
-		}
+        void setFive(double five) {
+            this.five = five;
+        }
 
-		void setSix(float six) {
-			this.six = six;
-		}
+        void setSix(float six) {
+            this.six = six;
+        }
 
-		void setSeven(BigDecimal seven) {
-			this.seven = seven;
-		}
+        void setSeven(BigDecimal seven) {
+            this.seven = seven;
+        }
 
-		void setEight(Date eight) {
-			this.eight = eight;
-		}
-	}
+        void setEight(Date eight) {
+            this.eight = eight;
+        }
+    }
 }

@@ -13,7 +13,8 @@ import static org.mockito.Mockito.mock;
 public class EnricherTest {
     @Test
     public void testAndThenArgumentCheck() throws Exception {
-        Enricher<Boolean> enricher = (o,r) -> {};
+        Enricher<Boolean> enricher = (o, r) -> {
+        };
 
         try {
             enricher.andThen(null);
@@ -27,8 +28,8 @@ public class EnricherTest {
     public void testAndThen() throws Exception {
         ResultSet rs = mock(ResultSet.class);
         AtomicInteger i = new AtomicInteger(0);
-        Enricher<AtomicInteger> enricher = (o,r) -> o.addAndGet(1);
-        enricher = enricher.andThen((o,r) -> o.addAndGet(2));
+        Enricher<AtomicInteger> enricher = (o, r) -> o.addAndGet(1);
+        enricher = enricher.andThen((o, r) -> o.addAndGet(2));
 
         enricher.accept(i, rs);
 

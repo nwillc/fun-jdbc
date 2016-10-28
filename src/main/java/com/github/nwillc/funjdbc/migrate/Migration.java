@@ -55,7 +55,7 @@ public interface Migration extends DbAccessor {
     /**
      * Perform this migration. This method should contain the code, using JDBC, to alter the database as desired.
      *
-     * @throws  Exception on failure.
+     * @throws Exception on failure.
      */
     void perform() throws Exception;
 }

@@ -33,7 +33,9 @@ public interface Extractor<T> {
      * Extract type T from the current position in the ResultSet.
      *
      * @param rs the ResultSet to extract from
+     *
      * @return the type T extracted
+     *
      * @throws SQLException should the extraction fail
      * @see EFactory
      */

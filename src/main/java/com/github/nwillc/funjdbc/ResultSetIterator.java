@@ -36,7 +36,8 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private final ResultSet resultSet;
     private final Extractor<T> extractor;
-    private Runnable closers = () -> {};
+    private Runnable closers = () -> {
+    };
     private Boolean nextAvailable = null;
 
     /**
@@ -88,6 +89,7 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
      * Add a Runnable to be invoked when this instance is closed. Runnables will be invoked in the order they are added.
      *
      * @param runnable a runnable
+     *
      * @return this instance
      */
     public ResultSetIterator<T> onClose(final Runnable runnable) {

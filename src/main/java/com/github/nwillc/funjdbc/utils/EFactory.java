@@ -42,6 +42,7 @@ public final class EFactory<B> {
      * from the result set into.
      *
      * @param factory a factory instance
+     *
      * @return the extractor factory.
      */
     public EFactory<B> factory(Supplier<B> factory) {
@@ -55,8 +56,9 @@ public final class EFactory<B> {
      *
      * @param setter a BiConsumer that will set the value extracted
      * @param getter a BiFunction that will extract the value from the ResultSet
-     * @param index  the column index
-     * @param <T>    the type
+     * @param index the column index
+     * @param <T> the type
+     *
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
@@ -75,7 +77,8 @@ public final class EFactory<B> {
      * @param setter a BiConsumer that will set the value extracted
      * @param getter a BiFunction that will extract the value from the ResultSet
      * @param column the name of the column
-     * @param <T>    the type
+     * @param <T> the type
+     *
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
@@ -89,7 +92,9 @@ public final class EFactory<B> {
 
     /**
      * Get the Enricher that results from the added setter, getter, pairings add.
-     * @return  the generated enricher
+     *
+     * @return the generated enricher
+     *
      * @since 0.8.7
      */
     public Enricher<B> getEnricher() {
@@ -99,6 +104,7 @@ public final class EFactory<B> {
 
     /**
      * Create the Extractor based on the factory and extractions added.
+     *
      * @return the generated extractor
      */
     public Extractor<B> getExtractor() {
