@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 /**
  * Create a basic Enricher or Extractor from a series of setter/getter/index tuples.
  *
+ * @param <B>  the type of the Bean
  * @since 0.8.3+
  */
 public final class EFactory<B> {
