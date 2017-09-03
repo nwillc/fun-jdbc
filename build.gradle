@@ -22,8 +22,8 @@ plugins {
     id 'pmd'
     id 'com.github.nwillc.vplugin' version "2.0.1"
     id 'info.solidsoft.pitest' version '1.1.11'
-    id "org.ajoberstar.github-pages" version "1.7.1"
-    id "org.sonarqube" version "2.4"
+    id "org.ajoberstar.github-pages" version "1.7.2"
+    id "org.sonarqube" version "2.5"
 
 }
 
@@ -37,16 +37,16 @@ repositories {
 dependencies {
     compile 'com.github.nwillc:almost-functional:1.9.7'
     testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:' + assertj_version,
-            'com.h2database:h2:' + h2database_version,
+            "org.assertj:assertj-core:$assertj_version",
+            "com.h2database:h2:$h2database_version",
             'com.github.nwillc:jdk_contract_tests:1.8.2',
-            'org.mockito:mockito-core:' + mockito_core_version,
+            "org.mockito:mockito-core:$mockito_core_version",
             'org.apache.commons:commons-dbcp2:2.1.1'
 }
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.8.10'
+version = '0.8.11-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
@@ -121,6 +121,7 @@ bintrayUpload.onlyIf { !project.version.toString().endsWith('SNAPSHOT') }
 pitest {
     threads = 4
     outputFormats = ['XML', 'HTML']
+    pitestVersion = '1.2.2'
 }
 
 githubPages {
