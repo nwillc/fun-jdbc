@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -120,7 +121,7 @@ public interface DbAccessor extends ConnectionProvider {
      */
     default <T> Stream<T> stream(final Extractor<T> extractor, final ResultSet resultSet) {
         ResultSetIterator<T> iterator = new ResultSetIterator<>(resultSet, extractor);
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false)
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.NONNULL), false)
                 .onClose(() -> close(resultSet));
     }
 

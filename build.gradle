@@ -21,7 +21,7 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id 'com.github.nwillc.vplugin' version "2.0.1"
-    id 'info.solidsoft.pitest' version '1.1.11'
+    id 'info.solidsoft.pitest' version '1.2.2'
     id "org.ajoberstar.github-pages" version "1.7.2"
     id "org.sonarqube" version "2.5"
 
@@ -46,7 +46,7 @@ dependencies {
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.8.11-SNAPSHOT'
+version = '0.8.12-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
@@ -121,7 +121,7 @@ bintrayUpload.onlyIf { !project.version.toString().endsWith('SNAPSHOT') }
 pitest {
     threads = 4
     outputFormats = ['XML', 'HTML']
-    pitestVersion = '1.2.2'
+    pitestVersion = '1.2.3'
 }
 
 githubPages {
