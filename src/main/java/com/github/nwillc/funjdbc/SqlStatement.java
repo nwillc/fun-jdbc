@@ -15,34 +15,33 @@
  *
  */
 
-package com.github.nwillc.funjdbc.functions;
+package com.github.nwillc.funjdbc;
 
-import java.util.function.BiFunction;
-
-import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
 /**
- * A BiFunction that allows for exceptions, rethrowing them as an appropriate
- * type of RuntimeException.
+ * A SQL statement comprised of a template SQL string, which is a {@link java.util.Formatter} string, and
+ * the arguments to pass to it.
  *
- * @param <T> type of first argument to apply
- * @param <U> type of second argument to apply
- * @param <R> type of return value from apply
- *
- * @since 0.8.4
+ * @since 0.9.0
  */
-@FunctionalInterface
-public interface ThrowingBiFunction<T, U, R> extends BiFunction<T, U, R> {
+public class SqlStatement {
+    private final String sql;
+    private Object[] args;
 
-    @Override
-    default R apply(T t, U u) {
-        try {
-            return applyThrows(t, u);
-        } catch (Exception e) {
-            throw propagate(e);
-        }
+    public SqlStatement(String sql, Object... args) {
+        this.sql = sql;
+        setArgs(args);
     }
 
-    @SuppressWarnings("RedundantThrows")
-    R applyThrows(T t, U u) throws Exception;
+    public void setArgs(Object... args) {
+        this.args = args;
+    }
+
+    @Override
+    public String toString() {
+        if (args == null || args.length == 0) {
+            return sql;
+        }
+        return String.format(sql, args);
+    }
 }

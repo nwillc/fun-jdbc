@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, nwillc@gmail.com
+ * Copyright (c) 2017, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -20,6 +20,7 @@ package com.github.nwillc.funjdbc.migrate;
 
 import almost.functional.utils.LogFactory;
 import com.github.nwillc.funjdbc.DbAccessor;
+import com.github.nwillc.funjdbc.SqlStatement;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 
@@ -38,8 +39,8 @@ public class Manager implements DbAccessor {
     private static final Logger LOGGER = LogFactory.getLogger();
     private static final Manager INSTANCE = new Manager();
 
-    private static final String CREATE = "CREATE TABLE MIGRATIONS ( IDENTIFIER CHAR(40) PRIMARY KEY, DESCRIPTION CHAR(120))";
-    private static final String INSERT = "INSERT INTO MIGRATIONS (IDENTIFIER, DESCRIPTION) VALUES('%s', '%s')";
+    private static final SqlStatement CREATE = new SqlStatement("CREATE TABLE MIGRATIONS ( IDENTIFIER CHAR(40) PRIMARY KEY, DESCRIPTION CHAR(120))");
+    private static final SqlStatement INSERT = new SqlStatement("INSERT INTO MIGRATIONS (IDENTIFIER, DESCRIPTION) VALUES('%s', '%s')");
     private static final String FIND = "SELECT * FROM MIGRATIONS WHERE IDENTIFIER = '%s'";
 
     private final Set<Migration> migrations = new TreeSet<>(new MigrationComparator());
@@ -92,7 +93,7 @@ public class Manager implements DbAccessor {
      */
     public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
         try {
-            migrations.add(aMigration.newInstance());
+            migrations.add(aMigration.getConstructor().newInstance());
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Unable to add " + aMigration.getSimpleName() + " because " + e);
             throw new IllegalArgumentException(e);
@@ -159,7 +160,7 @@ public class Manager implements DbAccessor {
      */
     public boolean migrated(String first) {
         try {
-            return dbFind(rs -> rs.getString(1), FIND, first).isPresent();
+            return dbFind(rs -> rs.getString(1), new SqlStatement(FIND, first)).isPresent();
         } catch (SQLException e) {
             LOGGER.warning(e.toString());
         }
@@ -174,7 +175,8 @@ public class Manager implements DbAccessor {
             if (!migrated(migration.getIdentifier()) || migration.runAlways()) {
                 try {
                     migration.perform();
-                    dbUpdate(INSERT, migration.getIdentifier(), migration.getDescription());
+                    INSERT.setArgs(migration.getIdentifier(), migration.getDescription());
+                    dbUpdate(INSERT);
                 } catch (Exception e) {
                     throw new UncheckedSQLException("Migration " + migration.getIdentifier() + " failure.", e);
                 }

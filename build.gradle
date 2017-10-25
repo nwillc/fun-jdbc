@@ -46,9 +46,13 @@ dependencies {
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.8.12'
+version = '0.9.0-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
+
+compileJava {
+    // options.compilerArgs << '-Xlint:deprecation'
+}
 
 jacocoTestReport {
     reports {

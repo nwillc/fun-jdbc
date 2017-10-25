@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, nwillc@gmail.com
+ * Copyright (c) 2017, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,6 +12,7 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.funjdbc;
@@ -70,19 +71,19 @@ public class DbAccessorTest {
 
     @Test
     public void testQuery() throws Exception {
-        Stream<Word> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS");
+        Stream<Word> words = dao.dbQuery(wordExtractor, new SqlStatement("SELECT * FROM WORDS"));
         assertThat(words.count()).isEqualTo(3);
     }
 
     @Test
     public void testQueryWithArgs() throws Exception {
-        Stream<Word> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "a");
+        Stream<Word> words = dao.dbQuery(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = '%s'", "a"));
         assertThat(words.count()).isEqualTo(2);
     }
 
     @Test
     public void testFind() throws Exception {
-        Optional<Word> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'b'");
+        Optional<Word> word = dao.dbFind(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = 'b'"));
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get().word).isEqualTo("b");
@@ -90,7 +91,7 @@ public class DbAccessorTest {
 
     @Test
     public void testFindWithArgs() throws Exception {
-        Optional<Word> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "b");
+        Optional<Word> word = dao.dbFind(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = '%s'", "b"));
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get().word).isEqualTo("b");
@@ -99,16 +100,14 @@ public class DbAccessorTest {
 
     @Test
     public void testNotFound() throws Exception {
-        Optional<Word> word = dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'c'");
+        Optional<Word> word = dao.dbFind(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = 'c'"));
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
     }
 
     @Test
     public void testStream() throws Exception {
-        final String sql = "SELECT * FROM WORDS";
-
-        try (Stream<Word> stream = dao.dbQuery(wordExtractor, sql)) {
+        try (Stream<Word> stream = dao.dbQuery(wordExtractor, new SqlStatement("SELECT * FROM WORDS"))) {
             assertThat(stream.count()).isEqualTo(3);
         }
     }
@@ -116,24 +115,24 @@ public class DbAccessorTest {
     @Test
     public void testUpdate() throws Exception {
         final int count = 2;
-        final String sql = "UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'";
+        final SqlStatement sql = new SqlStatement("UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'");
         final int dbUpdated = dao.dbUpdate(sql);
         assertThat(dbUpdated).isEqualTo(count);
-        Stream<Word> words = dao.dbQuery(wordExtractor, "SELECT * FROM WORDS WHERE WORD = '%s'", "c");
+        Stream<Word> words = dao.dbQuery(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = '%s'", "c"));
         assertThat(words.count()).isEqualTo(count);
     }
 
     @Test
     public void testUpdateWithException() throws Exception {
         final int count = 2;
-        final String sql = "blah blah";
+        final SqlStatement sql = new SqlStatement("blah blah");
         assertThatThrownBy(() -> dao.dbUpdate(sql)).isInstanceOf(SQLException.class);
     }
 
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
-        dao.dbFind(wordExtractor, "SELECT * FROM WORDS WHERE WORD = 'a'");
+        dao.dbFind(wordExtractor, new SqlStatement("SELECT * FROM WORDS WHERE WORD = 'a'"));
     }
 
     @Test
@@ -145,12 +144,12 @@ public class DbAccessorTest {
     public void shouldDbEnrich() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
-        dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
+        dao.dbQuery(WORD_COUNT_EXTRACTOR, new SqlStatement("SELECT DISTINCT WORD FROM WORDS")).forEach(c -> counts.put(c.word, c));
 
         assertThat(counts.size()).isEqualTo(2);
         dao.dbEnrich(counts,
                 rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
+                new SqlStatement("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"));
         assertThat(counts.get("b").count).isEqualTo(1);
         assertThat(counts.get("a").count).isEqualTo(2);
     }
@@ -159,12 +158,12 @@ public class DbAccessorTest {
     public void shouldDbEnrichNoKey() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
-        dao.dbQuery(WORD_COUNT_EXTRACTOR, "SELECT DISTINCT WORD FROM WORDS").forEach(c -> counts.put(c.word, c));
+        dao.dbQuery(WORD_COUNT_EXTRACTOR, new SqlStatement("SELECT DISTINCT WORD FROM WORDS")).forEach(c -> counts.put(c.word, c));
 
         assertThat(counts.size()).isEqualTo(2);
         dao.dbEnrich(counts,
                 rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                "SELECT COUNT(*) FROM WORDS");
+                new SqlStatement("SELECT COUNT(*) FROM WORDS"));
         assertThat(counts.size()).isEqualTo(2);
         counts.values().forEach(wordCount -> assertThat(wordCount.count).isEqualTo(0));
     }
@@ -175,7 +174,7 @@ public class DbAccessorTest {
 
         dao.dbEnrich(counts,
                 rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                "SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD");
+                new SqlStatement("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"));
         assertThat(counts).hasSize(0);
     }
 
