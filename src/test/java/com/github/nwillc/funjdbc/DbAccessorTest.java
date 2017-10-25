@@ -136,11 +136,6 @@ public class DbAccessorTest {
     }
 
     @Test
-    public void shouldLogSql() throws Exception {
-        assertThat(dao.logSql()).isTrue();
-    }
-
-    @Test
     public void shouldDbEnrich() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
@@ -189,12 +184,6 @@ public class DbAccessorTest {
             stream.close();
             assertThat(resultSet.isClosed()).isTrue();
         }
-    }
-
-    @Test
-    public void testDefaultLogging() throws Exception {
-        DbAccessor dbAccessor = () -> null;
-        assertThat(dbAccessor.logSql()).isFalse();
     }
 
     private static class Word {

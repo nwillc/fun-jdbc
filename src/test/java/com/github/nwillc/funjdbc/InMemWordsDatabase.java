@@ -41,11 +41,6 @@ public class InMemWordsDatabase implements DbAccessor {
     }
 
     @Override
-    public boolean logSql() {
-        return true;
-    }
-
-    @Override
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
