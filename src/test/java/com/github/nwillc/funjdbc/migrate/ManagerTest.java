@@ -20,6 +20,7 @@ package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.contracts.SingletonContract;
 import com.github.nwillc.funjdbc.InMemWordsDatabase;
+import com.github.nwillc.funjdbc.UncheckedSQLException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -79,11 +81,7 @@ public class ManagerTest extends SingletonContract {
     @Test
     public void testNoConnectionProvider() throws Exception {
         manager.setConnectionProvider(null);
-        try {
-            manager.getConnection();
-            failBecauseExceptionWasNotThrown(IllegalStateException.class);
-        } catch (IllegalStateException e) {
-        }
+        assertThatThrownBy(() -> manager.getConnection()).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -100,11 +98,12 @@ public class ManagerTest extends SingletonContract {
 
     @Test
     public void testBadMigrationClass() throws Exception {
-        try {
-            manager.add(MigrationWithConstructor.class);
-            failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-        } catch (IllegalArgumentException e) {
-        }
+        assertThatThrownBy(() -> manager.add(MigrationWithConstructor.class)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void testEmptyAdd() throws Exception {
+            manager.add();
     }
 
     @Test
@@ -134,6 +133,19 @@ public class ManagerTest extends SingletonContract {
         assertThat(manager.migrated("first")).isFalse();
         manager.doMigrations();
         assertThat(manager.migrated("first")).isTrue();
+    }
+
+    @Test
+    public void testMigrationException() throws Exception {
+        manager.enableMigrations();
+        assertThat(manager.migrationsEnabled()).isTrue();
+        manager.add(new DummyMigration("first") {
+            @Override
+            public void perform() throws Exception {
+                throw new RuntimeException("test");
+            }
+        });
+        assertThatThrownBy(() -> manager.doMigrations()).isInstanceOf(UncheckedSQLException.class);
     }
 
     public static class DummyMigration extends MigrationBase {

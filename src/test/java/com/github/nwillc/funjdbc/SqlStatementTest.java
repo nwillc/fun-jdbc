@@ -43,6 +43,14 @@ public class SqlStatementTest {
     }
 
     @Test
+    public void testToStringNoArgsArray() throws Exception {
+        final String sql = "SELECT * FROM FOO";
+        final SqlStatement sqlStatement = new SqlStatement(sql, new Object[0]);
+
+        assertThat(sqlStatement.toString()).isEqualTo(sql);
+    }
+
+    @Test
     public void testToStringArgs() throws Exception {
         final String sql = "SELECT * FROM FOO WHERE x = '%s' AND y = %d";
         final String x = "foo";
