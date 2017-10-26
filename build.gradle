@@ -14,23 +14,34 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'com.jfrog.bintray' version "1.7.3"
-    id 'jacoco'
-    id 'pmd'
-    id 'com.github.nwillc.vplugin' version "2.0.1"
-    id 'info.solidsoft.pitest' version '1.2.2'
-    id "org.ajoberstar.github-pages" version "1.7.2"
-    id "org.sonarqube" version "2.5"
-
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url mvn_repository
+        }
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
+                'org.ajoberstar:gradle-git:1.7.2',
+                'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3',
+                'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.2'
+    }
 }
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
+apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'org.ajoberstar.github-pages'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: "info.solidsoft.pitest"
 
 repositories {
     mavenLocal()
-    jcenter {
-        url 'http://jcenter.bintray.com'
+    maven {
+        url mvn_repository
     }
 }
 
@@ -63,14 +74,12 @@ jacocoTestReport {
 
 test {
     beforeTest { descriptor ->
-        logger.lifecycle("\tRunning " + descriptor.className + "." + descriptor.name)
+        logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")
     }
 
     afterSuite { descriptor, result ->
         if (descriptor.parent == null) {
-            logger.lifecycle("\tTests run: " + result.testCount
-                    + ", Failures: " + result.failedTestCount
-                    + ", Skipped: " + result.skippedTestCount)
+            logger.lifecycle("\tTests run: $result.testCount, Failures: $result.failedTestCount, Skipped: $result.skippedTestCount")
         }
     }
 
@@ -131,6 +140,6 @@ pitest {
 githubPages {
     pages {
         from javadoc
-        into "javadoc"
+        into 'javadoc'
     }
 }
