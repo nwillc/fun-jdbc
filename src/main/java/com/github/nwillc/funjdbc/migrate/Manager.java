@@ -148,7 +148,9 @@ public class Manager implements DbAccessor {
      * @throws java.sql.SQLException if the migration table can not be added to the database.
      */
     public void enableMigrations() throws SQLException {
-        dbUpdate(CREATE);
+        if (!migrationsEnabled()) {
+            dbUpdate(CREATE);
+        }
     }
 
     /**
