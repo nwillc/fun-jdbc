@@ -29,9 +29,9 @@ public class SqlStatementTest {
         final String x1 = "foo";
         final String x2 = "bar";
         final SqlStatement sqlStatement = new SqlStatement(sql, x1);
-        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql,x1));
+        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x1));
         sqlStatement.setArgs(x2);
-        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql,x2));
+        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x2));
     }
 
     @Test
@@ -57,6 +57,6 @@ public class SqlStatementTest {
         final int y = 10;
         final SqlStatement sqlStatement = new SqlStatement(sql, x, y);
 
-        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql,x,y));
+        assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x, y));
     }
 }

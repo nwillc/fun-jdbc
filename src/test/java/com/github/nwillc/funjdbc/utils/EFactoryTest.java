@@ -20,12 +20,12 @@ package com.github.nwillc.funjdbc.utils;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -37,15 +37,12 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.mockito.Mockito.when;
 
-
+@RunWith(JMockit.class)
 public class EFactoryTest {
     private EFactory<Bean> factory;
-    @Mock
+    @Mocked
     ResultSet resultSet;
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
 
     @Before
     public void setUp() throws Exception {
@@ -85,7 +82,10 @@ public class EFactoryTest {
     public void testInteger() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getInt(1)).thenReturn(5);
+        new Expectations() {{
+            resultSet.getInt(1);
+            result = 5;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.one).isEqualTo(5);
@@ -95,7 +95,10 @@ public class EFactoryTest {
     public void testIntegerException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getInt(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getInt(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -104,7 +107,10 @@ public class EFactoryTest {
     public void testString() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getString(1)).thenReturn("two");
+        new Expectations() {{
+            resultSet.getString(1);
+            result = "two";
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.two).isEqualTo("two");
@@ -114,7 +120,10 @@ public class EFactoryTest {
     public void testStringColumn() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, "word").factory(Bean::new).getExtractor();
 
-        when(resultSet.getString("word")).thenReturn("two");
+        new Expectations() {{
+            resultSet.getString("word");
+            result = "two";
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.two).isEqualTo("two");
@@ -124,7 +133,10 @@ public class EFactoryTest {
     public void testStringException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getString(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getString(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -133,7 +145,10 @@ public class EFactoryTest {
     public void testBoolean() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getBoolean(1)).thenReturn(true);
+        new Expectations() {{
+            resultSet.getBoolean(1);
+            result = true;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.three).isTrue();
@@ -143,7 +158,10 @@ public class EFactoryTest {
     public void testBooleanException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getBoolean(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getBoolean(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -152,7 +170,10 @@ public class EFactoryTest {
     public void testLong() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getLong(1)).thenReturn(42L);
+        new Expectations() {{
+            resultSet.getLong(1);
+            result = 42L;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.four).isEqualTo(42L);
@@ -162,7 +183,10 @@ public class EFactoryTest {
     public void testLongException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getLong(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getLong(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -171,7 +195,10 @@ public class EFactoryTest {
     public void testDouble() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getDouble(1)).thenReturn(3.142);
+        new Expectations() {{
+            resultSet.getDouble(1);
+            result = 3.142;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.five).isEqualTo(3.142);
@@ -181,7 +208,10 @@ public class EFactoryTest {
     public void testDoubleException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getDouble(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getDouble(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -190,7 +220,10 @@ public class EFactoryTest {
     public void testFloat() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getFloat(1)).thenReturn(3.142f);
+        new Expectations() {{
+            resultSet.getFloat(1);
+            result = 3.142f;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.six).isEqualTo(3.142f);
@@ -200,7 +233,10 @@ public class EFactoryTest {
     public void testFloatException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getFloat(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getFloat(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -210,7 +246,10 @@ public class EFactoryTest {
     public void testBigDecimal() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getBigDecimal(1)).thenReturn(BigDecimal.TEN);
+        new Expectations() {{
+            resultSet.getBigDecimal(1);
+            result = BigDecimal.TEN;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.seven).isEqualTo(BigDecimal.TEN);
@@ -220,7 +259,10 @@ public class EFactoryTest {
     public void testBigDecimalException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getBigDecimal(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getBigDecimal(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -230,7 +272,11 @@ public class EFactoryTest {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
 
         final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
-        when(resultSet.getTime(1)).thenReturn(new Time(time));
+
+        new Expectations() {{
+            resultSet.getTime(1);
+            result = new Time(time);
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.eight.getTime()).isEqualTo(time);
@@ -240,7 +286,10 @@ public class EFactoryTest {
     public void testTimeException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getTime(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getTime(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -250,7 +299,11 @@ public class EFactoryTest {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
 
         final long date = TimeUnit.DAYS.toMillis(40);
-        when(resultSet.getDate(1)).thenReturn(new java.sql.Date(date));
+
+        new Expectations() {{
+            resultSet.getDate(1);
+            result = new java.sql.Date(date);
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.eight.getTime()).isEqualTo(date);
@@ -260,7 +313,10 @@ public class EFactoryTest {
     public void testDateException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getDate(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getDate(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -270,7 +326,11 @@ public class EFactoryTest {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
 
         final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
-        when(resultSet.getTimestamp(1)).thenReturn(new Timestamp(timestamp));
+
+        new Expectations() {{
+            resultSet.getTimestamp(1);
+            result = new Timestamp(timestamp);
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.eight.getTime()).isEqualTo(timestamp);
@@ -280,7 +340,10 @@ public class EFactoryTest {
     public void testTimestampException() throws Exception {
         final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
 
-        when(resultSet.getTimestamp(1)).thenThrow(SQLException.class);
+        new Expectations() {{
+            resultSet.getTimestamp(1);
+            result = new SQLException();
+        }};
 
         extractor.extract(resultSet);
     }
@@ -288,7 +351,11 @@ public class EFactoryTest {
     @Test
     public void testEnricher() throws Exception {
         final Enricher<Bean> enricher = factory.add(Bean::setOne, ResultSet::getInt, 1).getEnricher();
-        when(resultSet.getInt(1)).thenReturn(42);
+
+        new Expectations() {{
+            resultSet.getInt(1);
+            result = 42;
+        }};
         Bean bean = new Bean();
         bean.setOne(0);
         enricher.accept(bean, resultSet);
@@ -304,9 +371,14 @@ public class EFactoryTest {
                 .factory(Bean::new)
                 .getExtractor();
 
-        when(resultSet.getString(1)).thenReturn("two");
-        when(resultSet.getInt(2)).thenReturn(1);
-        when(resultSet.getLong(4)).thenReturn(20L);
+        new Expectations() {{
+            resultSet.getString(1);
+            result = "two";
+            resultSet.getInt(2);
+            result = 1;
+            resultSet.getLong(4);
+            result = 20L;
+        }};
 
         final Bean bean = extractor.extract(resultSet);
         assertThat(bean.one).isEqualTo(1);

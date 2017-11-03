@@ -19,39 +19,30 @@ package com.github.nwillc.funjdbc.performance;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.EFactory;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.runner.RunWith;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
-
+@RunWith(JMockit.class)
 public class PerfTest {
     private final static Logger LOGGER = Logger.getLogger(PerfTest.class.getName());
-    private static final int LOOPS = 100_000;
-    @Mock
-    ResultSet resultSet;
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
+    private static final int LOOPS = 1_000_000;
+    @Mocked
+    private ResultSet resultSet;
     private Extractor<Bean> codedBeanExtractor = new BeanExtractor();
     private Extractor<Bean> generatedBeanExtractor;
+    private AtomicInteger counter = new AtomicInteger(0);
 
     @Before
     public void setup() throws Exception {
-        when(resultSet.getInt(anyInt()))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-        when(resultSet.getString(anyInt()))
-                .thenAnswer(invocation -> invocation.getArgument(0).toString());
-        when(resultSet.getDouble(anyInt()))
-                .thenAnswer(invocation -> ((Integer) invocation.getArgument(0)).doubleValue());
-
         EFactory<Bean> factory = new EFactory<>();
         generatedBeanExtractor = factory
                 .add(Bean::setDoubleValue, ResultSet::getDouble, 1)
@@ -63,6 +54,14 @@ public class PerfTest {
 
     @Test
     public void loop() throws Exception {
+        new Expectations() {{
+            resultSet.getInt(anyInt);
+            result = counter.incrementAndGet();
+            resultSet.getString(anyInt);
+            result = String.valueOf(counter.incrementAndGet());
+            resultSet.getDouble(anyInt);
+            result = counter.incrementAndGet();
+        }};
         System.gc();
         long start = System.currentTimeMillis();
         for (int i = 0; i < LOOPS; i++) {

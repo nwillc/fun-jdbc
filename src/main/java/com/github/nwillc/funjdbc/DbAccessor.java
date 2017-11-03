@@ -51,13 +51,29 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException if the query or an extraction fails
      */
     default <T> Stream<T> dbQuery(final Extractor<T> extractor, final SqlStatement sqlStatement) throws SQLException {
-        Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sqlStatement.toString());
-        return stream(extractor, resultSet).onClose(() -> {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        // Can not try-with-resources here because if we return the stream we don't want to close
+        try {
+            final Connection c = getConnection();
+            connection = c;
+            final Statement s = connection.createStatement();
+            statement = s;
+            final ResultSet rs = statement.executeQuery(sqlStatement.toString());
+            resultSet = rs;
+            return stream(extractor, resultSet).onClose(() -> {
+                close(s);
+                close(c);
+                close(rs);
+            });
+        } catch (Exception e) {
             close(statement);
             close(connection);
-        });
+            close(resultSet);
+            throw new SQLException("Query failed", e);
+        }
     }
 
     /**

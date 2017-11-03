@@ -20,10 +20,9 @@ package com.github.nwillc.funjdbc.migrate;
 import com.github.nwillc.contracts.ComparatorContract;
 import org.junit.Before;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Comparator;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MigrationComparatorTest extends ComparatorContract<Migration> {
 
@@ -39,16 +38,49 @@ public class MigrationComparatorTest extends ComparatorContract<Migration> {
 
     @Override
     protected Migration getValue() {
-        Migration migration = mock(Migration.class);
-        when(migration.getIdentifier()).thenReturn("1");
-        return migration;
+        return new TestMigration("1");
     }
 
     @Override
     protected Migration getLesserValue() {
-        Migration migration = mock(Migration.class);
-        when(migration.getIdentifier()).thenReturn("0");
-        return migration;
+        return new TestMigration("0");
     }
 
+    private static class TestMigration implements Migration {
+        final private String identifier;
+
+        public TestMigration(String identifier) {
+            this.identifier = identifier;
+        }
+
+        @Override
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
+        public String getIdentifier() {
+            return identifier;
+        }
+
+        @Override
+        public boolean runAlways() {
+            return false;
+        }
+
+        @Override
+        public boolean completed() {
+            return false;
+        }
+
+        @Override
+        public void perform() throws Exception {
+
+        }
+
+        @Override
+        public Connection getConnection() throws SQLException {
+            return null;
+        }
+    }
 }

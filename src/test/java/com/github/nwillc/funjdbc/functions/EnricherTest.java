@@ -17,17 +17,22 @@
 
 package com.github.nwillc.funjdbc.functions;
 
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.sql.ResultSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.mockito.Mockito.mock;
 
-
+@RunWith(JMockit.class)
 public class EnricherTest {
+    @Mocked
+    private ResultSet resultSet;
+
     @Test
     public void testAndThenArgumentCheck() throws Exception {
         Enricher<Boolean> enricher = (o, r) -> {
@@ -43,12 +48,11 @@ public class EnricherTest {
 
     @Test
     public void testAndThen() throws Exception {
-        ResultSet rs = mock(ResultSet.class);
         AtomicInteger i = new AtomicInteger(0);
         Enricher<AtomicInteger> enricher = (o, r) -> o.addAndGet(1);
         enricher = enricher.andThen((o, r) -> o.addAndGet(2));
 
-        enricher.accept(i, rs);
+        enricher.accept(i, resultSet);
 
         assertThat(i.get()).isEqualTo(3);
     }

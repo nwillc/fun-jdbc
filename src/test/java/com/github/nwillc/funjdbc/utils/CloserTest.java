@@ -18,19 +18,16 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.contracts.UtilityClassContract;
-import org.junit.Rule;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.runner.RunWith;
 
-import static org.mockito.Mockito.verify;
-
+@RunWith(JMockit.class)
 public class CloserTest extends UtilityClassContract {
-    @Mock
+    @Mocked
     AutoCloseable autoCloseable;
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
 
 
     @Override
@@ -46,7 +43,10 @@ public class CloserTest extends UtilityClassContract {
     @Test
     public void shouldClose() throws Exception {
         Closer.close(autoCloseable);
-        verify(autoCloseable).close();
+        new Verifications() {{
+            autoCloseable.close();
+            times = 1;
+        }};
     }
 
     @Test

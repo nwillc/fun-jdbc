@@ -21,18 +21,19 @@ package com.github.nwillc.funjdbc.migrate;
 import com.github.nwillc.contracts.SingletonContract;
 import com.github.nwillc.funjdbc.InMemWordsDatabase;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
+import mockit.Expectations;
+import mockit.integration.junit4.JMockit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
+@RunWith(JMockit.class)
 public class ManagerTest extends SingletonContract {
     private Manager manager;
     private InMemWordsDatabase dao;
@@ -60,17 +61,21 @@ public class ManagerTest extends SingletonContract {
     @SuppressWarnings("unchecked")
     @Test
     public void testMigrationsEnabledException() throws Exception {
-        Manager managerSpy = spy(manager);
-        when(managerSpy.getConnection()).thenThrow(SQLException.class);
-        assertThat(managerSpy.migrationsEnabled()).isFalse();
+        new Expectations(Manager.class) {{
+            manager.getConnection();
+            result = new SQLException();
+        }};
+        assertThat(manager.migrationsEnabled()).isFalse();
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testMigratedException() throws Exception {
-        Manager managerSpy = spy(manager);
-        when(managerSpy.getConnection()).thenThrow(SQLException.class);
-        assertThat(managerSpy.migrated("foo")).isFalse();
+        new Expectations(Manager.class) {{
+            manager.getConnection();
+            result = new SQLException();
+        }};
+        assertThat(manager.migrated("foo")).isFalse();
     }
 
     @Test
@@ -103,7 +108,7 @@ public class ManagerTest extends SingletonContract {
 
     @Test
     public void testEmptyAdd() throws Exception {
-            manager.add();
+        manager.add();
     }
 
     @Test

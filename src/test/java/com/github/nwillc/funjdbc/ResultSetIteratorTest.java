@@ -20,13 +20,13 @@ package com.github.nwillc.funjdbc;
 import com.github.nwillc.contracts.IteratorContract;
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.Closer;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.junit4.JMockit;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.runner.RunWith;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -40,19 +40,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.github.nwillc.funjdbc.utils.Closer.close;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
+@RunWith(JMockit.class)
 public class ResultSetIteratorTest extends IteratorContract {
     private InMemWordsDatabase dao;
     private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
     private List<ResultSetIterator<String>> iterators;
-    @Mock
+    @Mocked
     ResultSet mockResultSet;
-    @Mock
+    @Mocked
     Extractor mockExtractor;
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
 
 
     @Before
@@ -106,8 +103,12 @@ public class ResultSetIteratorTest extends IteratorContract {
     @SuppressWarnings("unchecked")
     @Test
     public void testExtractorSQLException() throws Exception {
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockExtractor.extract(any(ResultSet.class))).thenThrow(SQLException.class);
+        new Expectations() {{
+            mockResultSet.next();
+            result = true;
+            mockExtractor.extract((ResultSet) any);
+            result = new SQLException();
+        }};
 
         ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, mockExtractor);
         try {
@@ -120,7 +121,11 @@ public class ResultSetIteratorTest extends IteratorContract {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldHandleResultSetExceptions() throws Exception {
-        when(mockResultSet.next()).thenThrow(SQLException.class);
+        new Expectations() {{
+            mockResultSet.next();
+            result = new SQLException();
+        }};
+
         ResultSetIterator resultSetIterator = new ResultSetIterator(mockResultSet, wordExtractor);
 
         try {

@@ -18,24 +18,22 @@
 package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.funjdbc.functions.ConnectionProvider;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.integration.junit4.JMockit;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
+@RunWith(JMockit.class)
 public class MigrationBaseTest {
     private Migration migration;
     private Manager manager;
-    @Mock
+    @Mocked
     ConnectionProvider connectionProvider;
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
 
     @Before
     public void setUp() throws Exception {
@@ -45,9 +43,11 @@ public class MigrationBaseTest {
 
     @Test
     public void testToString() throws Exception {
-        Manager managerSpy = spy(manager);
-        when(managerSpy.migrated(migration.getIdentifier())).thenReturn(true);
-        managerSpy.setConnectionProvider(connectionProvider);
+        new Expectations(Manager.class) {{
+            manager.migrated(migration.getIdentifier());
+            result = true;
+        }};
+        manager.setConnectionProvider(connectionProvider);
         final String str = migration.toString();
         assertThat(str).contains(migration.getClass().getSimpleName())
                 .contains(migration.getDescription())
@@ -62,11 +62,12 @@ public class MigrationBaseTest {
 
     @Test
     public void testShouldProvideConnection() throws Exception {
-
-
         manager.setConnectionProvider(connectionProvider);
         migration.getConnection();
-        verify(connectionProvider).getConnection();
+        new Verifications() {{
+            connectionProvider.getConnection();
+            times = 1;
+        }};
     }
 
     private static class DummyMigration extends MigrationBase {
