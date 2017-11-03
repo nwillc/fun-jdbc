@@ -27,7 +27,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.github.nwillc:vplugin:2.1.1',
                 'org.ajoberstar:gradle-git:1.7.2',
-                'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3',
+                'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0',
                 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.2'
     }
 }
@@ -55,7 +55,8 @@ dependencies {
             "com.h2database:h2:$h2database_version",
             'com.github.nwillc:jdk_contract_tests:1.8.2',
             "org.mockito:mockito-core:$mockito_core_version",
-            'org.apache.commons:commons-dbcp2:2.1.1'
+            'org.apache.commons:commons-dbcp2:2.1.1',
+            "org.jmockit:jmockit:$jmockit_version"
 }
 
 group = 'com.github.nwillc'
