@@ -76,6 +76,8 @@ jacocoTestReport {
 }
 
 test {
+    jvmArgs "-Djdk.attach.allowAttachSelf"
+    
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")
     }
