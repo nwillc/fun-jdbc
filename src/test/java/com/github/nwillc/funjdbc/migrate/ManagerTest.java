@@ -134,10 +134,12 @@ public class ManagerTest extends SingletonContract {
     public void testSimpleMigration() throws Exception {
         manager.enableMigrations();
         assertThat(manager.migrationsEnabled()).isTrue();
-        manager.add(new DummyMigration("first"));
-        assertThat(manager.migrated("first")).isFalse();
+        final DummyMigration first = new DummyMigration("first");
+        manager.add(first);
+        assertThat(manager.migrated(first.getIdentifier())).isFalse();
         manager.doMigrations();
-        assertThat(manager.migrated("first")).isTrue();
+        assertThat(manager.migrated(first.getIdentifier())).isTrue();
+        assertThat(first.completed()).isTrue();
     }
 
     @Test

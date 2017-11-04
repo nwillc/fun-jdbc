@@ -62,12 +62,12 @@ public class MigrationBaseTest {
 
     @Test
     public void testShouldProvideConnection() throws Exception {
-        manager.setConnectionProvider(connectionProvider);
-        migration.getConnection();
-        new Verifications() {{
+        new Expectations() {{
             connectionProvider.getConnection();
             times = 1;
         }};
+        manager.setConnectionProvider(connectionProvider);
+        migration.getConnection();
     }
 
     private static class DummyMigration extends MigrationBase {
