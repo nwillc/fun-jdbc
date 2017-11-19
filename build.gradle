@@ -49,18 +49,19 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.nwillc:almost-functional:1.9.7'
-    testCompile 'junit:junit:4.12',
+    compile "com.github.nwillc:almost-functional:$almost_functional_version",
+            "org.tinylog:tinylog:$tinylog_version"
+    testCompile "junit:junit:$junit_version",
             "org.assertj:assertj-core:$assertj_version",
             "com.h2database:h2:$h2database_version",
-            'com.github.nwillc:jdk_contract_tests:1.8.2',
-            'org.apache.commons:commons-dbcp2:2.1.1',
+            "com.github.nwillc:jdk_contract_tests:$jdk_contract_version",
+            "org.apache.commons:commons-dbcp2:$dbcp2_version",
             "org.jmockit:jmockit:$jmockit_version"
 }
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.9.2-SNAPSHOT'
+version = '0.9.2'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
@@ -76,7 +77,7 @@ jacocoTestReport {
 }
 
 test {
-    jvmArgs "-Djdk.attach.allowAttachSelf"
+    jvmArgs = ['-Djdk.attach.allowAttachSelf', '-Dtinylog.level=debug']
     
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")

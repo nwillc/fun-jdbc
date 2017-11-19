@@ -18,6 +18,8 @@
 package com.github.nwillc.funjdbc;
 
 
+import org.pmw.tinylog.Logger;
+
 /**
  * A SQL statement comprised of a template SQL string, which is a {@link java.util.Formatter} string, and
  * the arguments to pass to it.
@@ -39,9 +41,8 @@ public class SqlStatement {
 
     @Override
     public String toString() {
-        if (args == null || args.length == 0) {
-            return sql;
-        }
-        return String.format(sql, args);
+        final String formatted = (args == null || args.length == 0) ?  sql : String.format(sql, args);
+        Logger.debug("Formatted SQL: {}", formatted);
+        return formatted;
     }
 }
