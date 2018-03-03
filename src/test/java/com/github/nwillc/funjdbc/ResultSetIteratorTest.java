@@ -26,6 +26,7 @@ import mockit.integration.junit4.JMockit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 
 import java.sql.Connection;
@@ -51,7 +52,7 @@ public class ResultSetIteratorTest extends IteratorContract {
     @Mocked
     Extractor mockExtractor;
 
-
+    @BeforeEach
     @Before
     public void setUp() throws Exception {
         dao = new InMemWordsDatabase();
