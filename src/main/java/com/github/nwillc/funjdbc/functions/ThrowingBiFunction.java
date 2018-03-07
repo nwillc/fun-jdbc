@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -28,7 +28,6 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
  * @param <T> type of first argument to apply
  * @param <U> type of second argument to apply
  * @param <R> type of return value from apply
- *
  * @since 0.8.4
  */
 @FunctionalInterface

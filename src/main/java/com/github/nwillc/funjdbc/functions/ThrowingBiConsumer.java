@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,6 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
  *
  * @param <T> type of the first argument to operations
  * @param <U> type of second argument to operations
- *
  * @since 0.8.5
  */
 @FunctionalInterface
@@ -53,7 +52,6 @@ public interface ThrowingBiConsumer<T, U> extends BiConsumer<T, U> {
      *
      * @param t type of the first argument to operation
      * @param u type of second argument to operation
-     *
      * @throws Exception this function can throw exceptions
      */
     @SuppressWarnings({"RedundantThrows", "EmptyMethod"})

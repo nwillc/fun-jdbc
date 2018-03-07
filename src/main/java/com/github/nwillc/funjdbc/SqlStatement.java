@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -41,8 +41,12 @@ public class SqlStatement {
 
     @Override
     public String toString() {
-        final String formatted = (args == null || args.length == 0) ?  sql : String.format(sql, args);
+        final String formatted = (args == null || args.length == 0) ? sql : String.format(sql, args);
         Logger.debug("Formatted SQL: {}", formatted);
         return formatted;
+    }
+
+    public static SqlStatement sql(String sql, Object... args) {
+        return new SqlStatement(sql, args);
     }
 }

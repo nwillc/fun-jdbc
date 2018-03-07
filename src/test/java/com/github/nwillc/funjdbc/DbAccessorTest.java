@@ -164,6 +164,12 @@ public class DbAccessorTest {
     }
 
     @Test
+    public void shouldDbExecute() throws Exception {
+        final SqlStatement sqlStatement = new SqlStatement("SELECT 1");
+        assertThat(dao.dbExecute(sqlStatement)).isTrue();
+    }
+
+    @Test
     public void shouldDbEnrichNoValue() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 

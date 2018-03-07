@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -161,6 +161,23 @@ public interface DbAccessor extends ConnectionProvider {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             return statement.executeUpdate(sqlStatement.toString());
+        }
+    }
+
+    /**
+     * Execute a SQL statement.
+     *
+     * @param sqlStatement The SQL statement
+     * @return <code>true</code> if the first result is a <code>ResultSet</code>
+     * object; <code>false</code> if it is an update count or there are
+     * no results
+     * @throws SQLException if the SQL is invalid
+     * @since 0.9.3
+     */
+    default boolean dbExecute(SqlStatement sqlStatement) throws SQLException {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            return statement.execute(sqlStatement.toString());
         }
     }
 }

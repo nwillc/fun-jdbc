@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -29,7 +29,6 @@ public interface ConnectionProvider {
      * Get a JDBC database connection.
      *
      * @return A valid database connection
-     *
      * @throws SQLException if a connection can not be returned
      */
     Connection getConnection() throws SQLException;

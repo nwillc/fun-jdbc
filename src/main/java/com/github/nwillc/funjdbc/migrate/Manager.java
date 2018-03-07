@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -88,7 +88,6 @@ public class Manager implements DbAccessor {
      * Add a Migration to the set.
      *
      * @param aMigration the a migration
-     *
      * @throws IllegalArgumentException the illegal argument exception
      */
     public void add(Class<? extends Migration> aMigration) throws IllegalArgumentException {
@@ -157,7 +156,6 @@ public class Manager implements DbAccessor {
      * Check if a migration has been performed.
      *
      * @param first the first
-     *
      * @return the boolean
      */
     public boolean migrated(String first) {

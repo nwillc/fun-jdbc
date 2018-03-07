@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -33,9 +33,7 @@ public interface Extractor<T> {
      * Extract type T from the current position in the ResultSet.
      *
      * @param rs the ResultSet to extract from
-     *
      * @return the type T extracted
-     *
      * @throws SQLException should the extraction fail
      * @see EFactory
      */

@@ -24,20 +24,19 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import static com.github.nwillc.funjdbc.SqlStatement.sql;
 
 public class InMemWordsDatabase implements DbAccessor {
     private final static String DRIVER = "org.h2.Driver";
     private final static String URL = "jdbc:h2:mem:";
     private static long instanceId = 0;
-    private final Connection connection;
     private final DataSource dataSource;
 
-    public InMemWordsDatabase() throws ClassNotFoundException, SQLException {
+    public InMemWordsDatabase() throws ClassNotFoundException {
         Class.forName(DRIVER);
         String name = String.format("db%04d", instanceId++);
         dataSource = setupDataSource(URL + name);
-        connection = getConnection();
     }
 
     @Override
@@ -46,21 +45,14 @@ public class InMemWordsDatabase implements DbAccessor {
     }
 
     public void create() throws SQLException {
-        try (Connection c = getConnection();
-             Statement statement = c.createStatement()) {
-            statement.execute("CREATE TABLE WORDS ( WORD CHAR(20) )");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('a')");
-            statement.execute("INSERT INTO WORDS (WORD) VALUES ('b')");
-        }
+        dbExecute(sql("CREATE TABLE WORDS ( WORD CHAR(20) )"));
+        dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('a')"));
+        dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('a')"));
+        dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('b')"));
     }
 
     public void drop() throws SQLException {
-        try (Connection c = getConnection();
-             Statement statement = c.createStatement()) {
-            statement.execute("DROP TABLE WORDS");
-            connection.close();
-        }
+        dbExecute(sql("DROP TABLE WORDS"));
     }
 
     private static DataSource setupDataSource(String connectURI) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 /**
  * Create a basic Enricher or Extractor from a series of setter/getter/index tuples.
  *
- * @param <B>  the type of the Bean
+ * @param <B> the type of the Bean
  * @since 0.8.3+
  */
 public final class EFactory<B> {
@@ -43,7 +43,6 @@ public final class EFactory<B> {
      * from the result set into.
      *
      * @param factory a factory instance
-     *
      * @return the extractor factory.
      */
     public EFactory<B> factory(Supplier<B> factory) {
@@ -57,9 +56,8 @@ public final class EFactory<B> {
      *
      * @param setter a BiConsumer that will set the value extracted
      * @param getter a BiFunction that will extract the value from the ResultSet
-     * @param index the column index
-     * @param <T> the type
-     *
+     * @param index  the column index
+     * @param <T>    the type
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, Integer, T> getter, Integer index) {
@@ -78,8 +76,7 @@ public final class EFactory<B> {
      * @param setter a BiConsumer that will set the value extracted
      * @param getter a BiFunction that will extract the value from the ResultSet
      * @param column the name of the column
-     * @param <T> the type
-     *
+     * @param <T>    the type
      * @return the factory
      */
     public <T> EFactory<B> add(BiConsumer<B, T> setter, ThrowingBiFunction<ResultSet, String, T> getter, String column) {
@@ -95,7 +92,6 @@ public final class EFactory<B> {
      * Get the Enricher that results from the added setter, getter, pairings add.
      *
      * @return the generated enricher
-     *
      * @since 0.8.7
      */
     public Enricher<B> getEnricher() {

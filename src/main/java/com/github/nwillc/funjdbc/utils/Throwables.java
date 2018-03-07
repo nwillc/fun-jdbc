@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -36,7 +36,6 @@ public final class Throwables {
      * throw an {@link UncheckedSQLException}.
      *
      * @param exception the Exception to repropagate as a RuntimeException.
-     *
      * @return a RuntimeException
      */
     public static RuntimeException propagate(final Exception exception) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -89,7 +89,6 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
      * Add a Runnable to be invoked when this instance is closed. Runnables will be invoked in the order they are added.
      *
      * @param runnable a runnable
-     *
      * @return this instance
      */
     public ResultSetIterator<T> onClose(final Runnable runnable) {

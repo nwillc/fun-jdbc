@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, nwillc@gmail.com
+ * Copyright (c) 2018, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -36,9 +36,7 @@ public interface Enricher<B> extends ThrowingBiConsumer<B, ResultSet> {
      * Chains another enricher to this one to be called upon completion.
      *
      * @param after another enricher
-     *
      * @return the enriched object
-     *
      * @see EFactory
      * @since 0.8.5
      */

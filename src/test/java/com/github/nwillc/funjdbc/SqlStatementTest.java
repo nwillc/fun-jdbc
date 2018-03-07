@@ -19,10 +19,14 @@ package com.github.nwillc.funjdbc;
 
 import org.junit.Test;
 
+import static com.github.nwillc.funjdbc.SqlStatement.sql;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 public class SqlStatementTest {
+    public static final String SELECT_1 = "SELECT 1";
+
     @Test
     public void testSetArgs() throws Exception {
         final String sql = "SELECT * FROM FOO WHERE x = '%s'";
@@ -66,5 +70,12 @@ public class SqlStatementTest {
         final SqlStatement sqlStatement = new SqlStatement(sql, x, y);
 
         assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x, y));
+    }
+
+    @Test
+    public void testSqlStatic() {
+        final SqlStatement sql = sql(SELECT_1);
+        assertThat(sql).isInstanceOf(SqlStatement.class);
+        assertThat(sql.toString()).isEqualTo(SELECT_1);
     }
 }
