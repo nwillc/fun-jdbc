@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static com.github.nwillc.funjdbc.SqlStatement.sql;
 
 class Example implements DbAccessor {
     private static final Logger LOGGER = Logger.getLogger(Example.class.getSimpleName());
@@ -73,18 +74,18 @@ class Example implements DbAccessor {
     }
 
     private Optional<Person> find(int id) throws SQLException {
-        return dbFind(personExtractor, "SELECT * FROM PERSON WHERE PERSON_ID = %d", id);
+        return dbFind(personExtractor, sql("SELECT * FROM PERSON WHERE PERSON_ID = %d", id));
     }
 
     private Map<Long, Person> query() throws SQLException {
-        return dbQuery(personExtractor, "SELECT * FROM PERSON").collect(Collectors.toMap(Person::getPersonId, person -> person));
+        return dbQuery(personExtractor, sql("SELECT * FROM PERSON")).collect(Collectors.toMap(Person::getPersonId, person -> person));
     }
 
     private void enrich(Map<Long, Person> personMap) throws SQLException {
-        dbEnrich(personMap, rs -> rs.getLong("PERSON_ID"), ageEnricher, "SELECT PERSON_ID, AGE FROM PERSON");
+        dbEnrich(personMap, rs -> rs.getLong("PERSON_ID"), ageEnricher, sql("SELECT PERSON_ID, AGE FROM PERSON"));
     }
 
     private void setAge(long id, int age) throws SQLException {
-        dbUpdate("UPDATE PERSON SET AGE = %d WHERE PERSON_ID = %d", age, id);
+        dbUpdate(sql("UPDATE PERSON SET AGE = %d WHERE PERSON_ID = %d", age, id));
     }
 }

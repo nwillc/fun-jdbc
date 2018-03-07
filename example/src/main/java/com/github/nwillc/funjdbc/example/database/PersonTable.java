@@ -1,6 +1,7 @@
 package com.github.nwillc.funjdbc.example.database;
 
 import com.github.nwillc.funjdbc.migrate.MigrationBase;
+import static com.github.nwillc.funjdbc.SqlStatement.sql;
 
 public class PersonTable extends MigrationBase {
     private static final String CREATE = "CREATE TABLE PERSON (\n" +
@@ -23,8 +24,8 @@ public class PersonTable extends MigrationBase {
 
     @Override
     public void perform() throws Exception {
-        dbUpdate(CREATE);
-        dbUpdate(INSERT, "Wile", "Coyote", 25);
-        dbUpdate(INSERT, "Elmer", "Fud", 50);
+        dbUpdate(sql(CREATE));
+        dbUpdate(sql(INSERT, "Wile", "Coyote", 25));
+        dbUpdate(sql(INSERT, "Elmer", "Fud", 50));
     }
 }
