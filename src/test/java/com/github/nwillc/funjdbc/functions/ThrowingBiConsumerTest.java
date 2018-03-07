@@ -25,8 +25,7 @@ import org.junit.runner.RunWith;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(JMockit.class)
 public class ThrowingBiConsumerTest {
@@ -39,12 +38,7 @@ public class ThrowingBiConsumerTest {
             throw new SQLException("test");
         };
 
-        try {
-            enricher.accept(true, resultSet);
-            failBecauseExceptionWasNotThrown(RuntimeException.class);
-        } catch (Exception e) {
-            assertThat(e.getCause()).isInstanceOf(SQLException.class);
-        }
+        assertThatThrownBy(() -> enricher.accept(true, resultSet)).isInstanceOf(RuntimeException.class);
     }
 
 }

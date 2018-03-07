@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(JMockit.class)
 public class EFactoryTest {
@@ -51,22 +51,12 @@ public class EFactoryTest {
 
     @Test
     public void testConstructorNoFactory() throws Exception {
-        try {
-            factory.getExtractor();
-            failBecauseExceptionWasNotThrown(NullPointerException.class);
-        } catch (NullPointerException e) {
-
-        }
+        assertThatThrownBy(() -> factory.getExtractor()).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testConstructorNoExtractor() throws Exception {
-        try {
-            factory.factory(Bean::new).getExtractor();
-            failBecauseExceptionWasNotThrown(NullPointerException.class);
-        } catch (NullPointerException e) {
-
-        }
+        assertThatThrownBy(() -> factory.factory(Bean::new).getExtractor()).isInstanceOf(NullPointerException.class);
     }
 
     @Test

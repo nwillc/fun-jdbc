@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 @RunWith(JMockit.class)
@@ -38,12 +39,7 @@ public class EnricherTest {
         Enricher<Boolean> enricher = (o, r) -> {
         };
 
-        try {
-            enricher.andThen(null);
-            failBecauseExceptionWasNotThrown(NullPointerException.class);
-        } catch (Exception e) {
-            assertThat(e).isInstanceOf(NullPointerException.class);
-        }
+        assertThatThrownBy(() -> enricher.andThen(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test

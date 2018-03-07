@@ -32,7 +32,7 @@ public class SqlStatementTest {
         final String sql = "SELECT * FROM FOO WHERE x = '%s'";
         final String x1 = "foo";
         final String x2 = "bar";
-        final SqlStatement sqlStatement = new SqlStatement(sql, x1);
+        final SqlStatement sqlStatement = sql(sql, x1);
         assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x1));
         sqlStatement.setArgs(x2);
         assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x2));
@@ -41,7 +41,7 @@ public class SqlStatementTest {
     @Test
     public void testToStringNoArgs() throws Exception {
         final String sql = "SELECT * FROM FOO";
-        final SqlStatement sqlStatement = new SqlStatement(sql);
+        final SqlStatement sqlStatement = sql(sql);
 
         assertThat(sqlStatement.toString()).isEqualTo(sql);
     }
@@ -49,7 +49,7 @@ public class SqlStatementTest {
     @Test
     public void testToStringNoArgsArray() throws Exception {
         final String sql = "SELECT * FROM FOO";
-        final SqlStatement sqlStatement = new SqlStatement(sql, new Object[0]);
+        final SqlStatement sqlStatement = sql(sql, new Object[0]);
 
         assertThat(sqlStatement.toString()).isEqualTo(sql);
     }
@@ -57,7 +57,7 @@ public class SqlStatementTest {
     @Test
     public void testToStringNullArgs() throws Exception {
         final String sql = "SELECT * FROM FOO";
-        final SqlStatement sqlStatement = new SqlStatement(sql, null);
+        final SqlStatement sqlStatement = sql(sql, null);
 
         assertThat(sqlStatement.toString()).isEqualTo(sql);
     }
@@ -67,7 +67,7 @@ public class SqlStatementTest {
         final String sql = "SELECT * FROM FOO WHERE x = '%s' AND y = %d";
         final String x = "foo";
         final int y = 10;
-        final SqlStatement sqlStatement = new SqlStatement(sql, x, y);
+        final SqlStatement sqlStatement = sql(sql, x, y);
 
         assertThat(sqlStatement.toString()).isEqualTo(String.format(sql, x, y));
     }
