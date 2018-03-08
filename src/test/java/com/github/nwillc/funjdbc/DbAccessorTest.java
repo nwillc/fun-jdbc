@@ -193,6 +193,14 @@ public class DbAccessorTest {
         }
     }
 
+    @Test
+    public void testGeneratedKeys() throws Exception {
+       try (final Stream<Long> keys = dao.dbInsertAutoIncrement(sql("INSERT INTO KEYED(WORD) VALUES('foo')"))) {
+           final long count = keys.count();
+           assertThat(count).isGreaterThan(0);
+       }
+    }
+
     private static class Word {
         String word;
 

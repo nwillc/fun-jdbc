@@ -165,6 +165,41 @@ public interface DbAccessor extends ConnectionProvider {
     }
 
     /**
+     * Execute an insert into a table with an auto incremented key, returning a stream of the keys.
+     *
+     * @param sqlStatement The SQL statement
+     * @return the stream of keys generated
+     * @throws SQLException if the insert failed
+     * @since 0.11.0
+     */
+    default Stream<Long> dbInsertAutoIncrement(SqlStatement sqlStatement) throws SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        // Can not try-with-resources here because if we return the stream we don't want to close
+        try {
+            final Connection c = getConnection();
+            connection = c;
+            final Statement s = connection.createStatement();
+            statement = s;
+            statement.executeUpdate(sqlStatement.toString(), Statement.RETURN_GENERATED_KEYS);
+            final ResultSet rs = statement.getGeneratedKeys();
+            resultSet = rs;
+            return stream(r -> r.getLong(1), resultSet).onClose(() -> {
+                close(s);
+                close(c);
+                close(rs);
+            });
+        } catch (Exception e) {
+            close(statement);
+            close(connection);
+            close(resultSet);
+            throw new SQLException("Insert failed", e);
+        }
+    }
+
+    /**
      * Execute a SQL statement.
      *
      * @param sqlStatement The SQL statement

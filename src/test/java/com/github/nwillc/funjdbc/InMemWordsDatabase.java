@@ -49,6 +49,7 @@ public class InMemWordsDatabase implements DbAccessor {
         dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('a')"));
         dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('a')"));
         dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('b')"));
+        dbExecute(sql("CREATE TABLE KEYED(ID BIGINT AUTO_INCREMENT, WORD CHAR(20))"));
     }
 
     public void drop() throws SQLException {
