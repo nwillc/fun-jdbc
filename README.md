@@ -1,6 +1,6 @@
 # fun-jdbc
 
-Java 8 functional JDBC utility code, applying some of Java's newer functional features to reduce JDBC boilerplate code.
+Java JDBC utility code employing JDK 8+ features (streams, lambdas, unchecked exceptions, etc) to reduce JDBC boilerplate code.
 
 ## Home
 
