@@ -16,7 +16,7 @@
  */
 
 /**
- * Java 8 support in JDBC. Support for streams, lambdas and unchecked exceptions.
+ * Java JDBC utility code employing JDK 8+ features (streams, lambdas, unchecked exceptions, etc) to reduce JDBC boilerplate code.
  *
  * @since 0.4
  */

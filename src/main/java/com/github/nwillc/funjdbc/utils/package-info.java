@@ -16,7 +16,7 @@
  */
 
 /**
- * Java JDBC utility code employing JDK 8+ features (streams, lambdas, unchecked exceptions, etc) to reduce JDBC boilerplate code.
+ * Utility classes to support java functional features in JDBC.
  *
  * @since 0.4
  */
