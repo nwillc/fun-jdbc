@@ -51,12 +51,12 @@ repositories {
 dependencies {
     compile "com.github.nwillc:almost-functional:$almost_functional_version",
             "org.tinylog:tinylog:$tinylog_version"
+
     testCompile "junit:junit:$junit_version",
             "org.assertj:assertj-core:$assertj_version",
-            "com.h2database:h2:$h2database_version",
             "com.github.nwillc:jdk_contract_tests:$jdk_contract_version",
-            "org.apache.commons:commons-dbcp2:$dbcp2_version",
-            "org.jmockit:jmockit:$jmockit_version"
+            "org.jmockit:jmockit:$jmockit_version",
+            "org.zapodot:embedded-db-junit:$embedded_db_junit_version"
 }
 
 group = 'com.github.nwillc'

@@ -19,24 +19,33 @@ package com.github.nwillc.funjdbc.migrate;
 
 
 import com.github.nwillc.contracts.SingletonContract;
-import com.github.nwillc.funjdbc.InMemWordsDatabase;
+import com.github.nwillc.funjdbc.DbAccessor;
+import com.github.nwillc.funjdbc.TestDbIntialization;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import mockit.Expectations;
 import mockit.integration.junit4.JMockit;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(JMockit.class)
-public class ManagerTest extends SingletonContract {
+public class ManagerTest extends SingletonContract implements DbAccessor {
     private Manager manager;
-    private InMemWordsDatabase dao;
+
+    @Rule
+    public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
+            .builder()
+            .initializedByPlugin(new TestDbIntialization())
+            .build();
 
     @Override
     public Class<?> getClassToTest() {
@@ -47,15 +56,12 @@ public class ManagerTest extends SingletonContract {
     public void setUp() throws Exception {
         manager = Manager.getInstance();
         assertThat(manager).isNotNull();
-        dao = new InMemWordsDatabase();
-        manager.setConnectionProvider(dao);
-        dao.create();
+        manager.setConnectionProvider(this::getConnection);
     }
 
     @After
     public void tearDown() throws Exception {
         manager.clear();
-        dao.drop();
     }
 
     @SuppressWarnings("unchecked")
@@ -76,11 +82,6 @@ public class ManagerTest extends SingletonContract {
             result = new SQLException();
         }};
         assertThat(manager.migrated("foo")).isFalse();
-    }
-
-    @Test
-    public void testGetConnection() throws Exception {
-        assertThat(manager.getConnectionProvider()).isEqualTo(dao);
     }
 
     @Test
@@ -153,6 +154,11 @@ public class ManagerTest extends SingletonContract {
             }
         });
         assertThatThrownBy(() -> manager.doMigrations()).isInstanceOf(UncheckedSQLException.class);
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return embeddedDb.getConnection();
     }
 
     public static class DummyMigration extends MigrationBase {

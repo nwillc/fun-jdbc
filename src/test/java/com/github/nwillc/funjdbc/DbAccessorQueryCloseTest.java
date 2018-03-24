@@ -21,28 +21,34 @@ import com.github.nwillc.funjdbc.utils.Closer;
 import mockit.Expectations;
 import mockit.integration.junit4.JMockit;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(JMockit.class)
-public class DbAccessorQueryCloseTest {
-    private InMemWordsDatabase dao;
-
-    @Before
-    public void setUp() throws Exception {
-        dao = new InMemWordsDatabase();
-        dao.create();
-    }
+public class DbAccessorQueryCloseTest implements DbAccessor {
+    @Rule
+    public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
+            .builder()
+            .initializedByPlugin(new TestDbIntialization())
+            .build();
 
     @Test
     public void testExceptionCloser() throws Exception {
         new Expectations(Closer.class){{
             Closer.close((AutoCloseable)any); times = 3;
         }};
-        assertThatThrownBy(() -> dao.dbQuery(null,null)).isInstanceOf(SQLException.class);
+        assertThatThrownBy(() -> dbQuery(null,null)).isInstanceOf(SQLException.class);
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return embeddedDb.getConnection();
     }
 }

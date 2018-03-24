@@ -25,9 +25,11 @@ import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -43,10 +45,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 @RunWith(JMockit.class)
-public class ResultSetIteratorTest extends IteratorContract {
-    private InMemWordsDatabase dao;
+public class ResultSetIteratorTest extends IteratorContract implements DbAccessor {
     private final static Extractor<String> wordExtractor = rs -> rs.getString("WORD");
     private List<ResultSetIterator<String>> iterators;
+
+    @Rule
+    public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
+            .builder()
+            .initializedByPlugin(new TestDbIntialization())
+            .build();
+
     @Mocked
     ResultSet mockResultSet;
     @Mocked
@@ -55,8 +63,6 @@ public class ResultSetIteratorTest extends IteratorContract {
     @BeforeEach
     @Before
     public void setUp() throws Exception {
-        dao = new InMemWordsDatabase();
-        dao.create();
         iterators = new ArrayList<>();
     }
 
@@ -69,7 +75,7 @@ public class ResultSetIteratorTest extends IteratorContract {
     @Override
     protected Iterator getNonEmptyIterator() {
         try {
-            Connection connection = dao.getConnection();
+            Connection connection = getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS");
             ResultSetIterator<String> iterator = new ResultSetIterator<>(resultSet, wordExtractor).onClose(() -> {
@@ -92,7 +98,7 @@ public class ResultSetIteratorTest extends IteratorContract {
         } catch (NullPointerException ignored) {
         }
 
-        try (Connection connection = dao.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM WORDS")) {
             new ResultSetIterator(resultSet, null);
@@ -140,7 +146,7 @@ public class ResultSetIteratorTest extends IteratorContract {
     public void testOnClose() throws Exception {
         final AtomicBoolean tattleTale = new AtomicBoolean(false);
         ResultSet resultSet;
-        try (Connection connection = dao.getConnection();
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             resultSet = statement.executeQuery("SELECT * FROM WORDS");
             @SuppressWarnings("unchecked") ResultSetIterator resultSetIterator = new ResultSetIterator(resultSet, wordExtractor).onClose(() -> tattleTale.set(true));
@@ -149,5 +155,10 @@ public class ResultSetIteratorTest extends IteratorContract {
             assertThat(resultSet.isClosed()).isTrue();
         }
 
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return embeddedDb.getConnection();
     }
 }
