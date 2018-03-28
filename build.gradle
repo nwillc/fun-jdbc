@@ -145,12 +145,12 @@ pitest {
 }
 
 gitPublish {
-    repoUrl = 'git@github.com:nwillc/fun-jdbc.git'
+    repoUri = 'git@github.com:nwillc/fun-jdbc.git'
     branch = 'gh-pages'
     repoDir = file("$buildDir/somewhereelse")
     contents {
         from(javadoc) {
-            into 'api'
+            into 'javadoc'
         }
     }
 }
