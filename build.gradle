@@ -62,7 +62,7 @@ dependencies {
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.11.1-SNAPSHOT'
+version = '0.11.1'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
@@ -149,6 +149,7 @@ gitPublish {
     branch = 'gh-pages'
     repoDir = file("$buildDir/somewhereelse")
     contents {
+        from 'src/main/pages'
         from(javadoc) {
             into 'javadoc'
         }
