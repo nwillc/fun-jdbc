@@ -20,7 +20,7 @@ package com.github.nwillc.funjdbc.migrate;
 
 import com.github.nwillc.contracts.SingletonContract;
 import com.github.nwillc.funjdbc.DbAccessor;
-import com.github.nwillc.funjdbc.TestDbIntialization;
+import com.github.nwillc.funjdbc.TestDbInitialization;
 import com.github.nwillc.funjdbc.UncheckedSQLException;
 import mockit.Expectations;
 import mockit.integration.junit4.JMockit;
@@ -44,7 +44,7 @@ public class ManagerTest extends SingletonContract implements DbAccessor {
     @Rule
     public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
             .builder()
-            .initializedByPlugin(new TestDbIntialization())
+            .initializedByPlugin(new TestDbInitialization())
             .build();
 
     @Override

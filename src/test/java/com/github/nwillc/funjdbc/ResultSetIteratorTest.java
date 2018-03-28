@@ -52,7 +52,7 @@ public class ResultSetIteratorTest extends IteratorContract implements DbAccesso
     @Rule
     public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
             .builder()
-            .initializedByPlugin(new TestDbIntialization())
+            .initializedByPlugin(new TestDbInitialization())
             .build();
 
     @Mocked

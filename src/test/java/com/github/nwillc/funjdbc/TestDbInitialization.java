@@ -15,12 +15,12 @@ import java.sql.SQLException;
 
 import static com.github.nwillc.funjdbc.SqlStatement.sql;
 
-public class TestDbIntialization implements DbAccessor, InitializationPlugin {
+public class TestDbInitialization implements DbAccessor, InitializationPlugin {
     private Connection connection;
 
     @Override
     public void connectionMade(String name, Connection connection) {
-        setConnection(connection);
+        this.connection = connection;
         try {
             dbExecute(sql("CREATE TABLE WORDS ( WORD CHAR(20) )"));
             dbExecute(sql("INSERT INTO WORDS (WORD) VALUES ('a')"));
@@ -30,10 +30,6 @@ public class TestDbIntialization implements DbAccessor, InitializationPlugin {
         } catch (SQLException e) {
             throw new UncheckedSQLException(e);
         }
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
     }
 
     @Override

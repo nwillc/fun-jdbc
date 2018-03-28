@@ -36,7 +36,7 @@ public class DbAccessorTest implements DbAccessor {
     @Rule
     public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
             .builder()
-            .initializedByPlugin(new TestDbIntialization())
+            .initializedByPlugin(new TestDbInitialization())
             .build();
 
     public DbAccessorTest(Extractor<Word> extractor) {

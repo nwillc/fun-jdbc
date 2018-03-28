@@ -20,7 +20,6 @@ package com.github.nwillc.funjdbc;
 import com.github.nwillc.funjdbc.utils.Closer;
 import mockit.Expectations;
 import mockit.integration.junit4.JMockit;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +35,7 @@ public class DbAccessorQueryCloseTest implements DbAccessor {
     @Rule
     public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
             .builder()
-            .initializedByPlugin(new TestDbIntialization())
+            .initializedByPlugin(new TestDbInitialization())
             .build();
 
     @Test
