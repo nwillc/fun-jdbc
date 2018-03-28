@@ -10,6 +10,7 @@ package com.github.nwillc.funjdbc;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.EFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class DbAccessorTest implements DbAccessor {
     private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
     private Extractor<Word> wordExtractor;
+    private boolean connectionFailed;
 
     @Rule
     public final EmbeddedDatabaseRule embeddedDb = EmbeddedDatabaseRule
@@ -41,6 +43,11 @@ public class DbAccessorTest implements DbAccessor {
 
     public DbAccessorTest(Extractor<Word> extractor) {
         wordExtractor = extractor;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        connectionFailed = false;
     }
 
     @SuppressWarnings("unchecked")
@@ -116,12 +123,17 @@ public class DbAccessorTest implements DbAccessor {
     }
 
     @Test
-    public void testUpdateWithException() throws Exception {
-        final int count = 2;
+    public void testUpdateWithBadSqlException() throws Exception {
         final SqlStatement sql = sql("blah blah");
         assertThatThrownBy(() -> dbUpdate(sql)).isInstanceOf(SQLException.class);
     }
 
+    @Test
+    public void testUpdateWithBadConnectionException() throws Exception {
+        connectionFailed = true;
+        final SqlStatement sql = sql("SELECT 1");
+        assertThatThrownBy(() -> dbUpdate(sql)).isInstanceOf(SQLException.class);
+    }
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
@@ -163,6 +175,19 @@ public class DbAccessorTest implements DbAccessor {
     }
 
     @Test
+    public void shouldBadSqlExecute() throws Exception {
+        final SqlStatement sqlStatement = sql("blah");
+        assertThatThrownBy(() -> dbExecute(sqlStatement)).isInstanceOf(SQLException.class);
+    }
+
+    @Test
+    public void shouldDbBadConnectionExecute() throws Exception {
+        connectionFailed = true;
+        final SqlStatement sqlStatement = sql("SELECT 1");
+        assertThatThrownBy(() -> dbExecute(sqlStatement)).isInstanceOf(SQLException.class);
+    }
+
+    @Test
     public void shouldDbEnrichNoValue() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
@@ -195,6 +220,9 @@ public class DbAccessorTest implements DbAccessor {
 
     @Override
     public Connection getConnection() throws SQLException {
+        if (connectionFailed) {
+            throw new SQLException("testing failed connection");
+        }
         return embeddedDb.getConnection();
     }
 
