@@ -172,7 +172,7 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException if the insert failed
      * @since 0.11.0
      */
-    default Stream<Long> dbInsertAutoIncrement(SqlStatement sqlStatement) throws SQLException {
+    default Stream<Integer> dbInsertAutoIncrement(SqlStatement sqlStatement) throws SQLException {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -186,7 +186,7 @@ public interface DbAccessor extends ConnectionProvider {
             statement.executeUpdate(sqlStatement.toString(), Statement.RETURN_GENERATED_KEYS);
             final ResultSet rs = statement.getGeneratedKeys();
             resultSet = rs;
-            return stream(r -> r.getLong(1), resultSet).onClose(() -> {
+            return stream(r -> r.getInt(1), resultSet).onClose(() -> {
                 close(s);
                 close(c);
                 close(rs);

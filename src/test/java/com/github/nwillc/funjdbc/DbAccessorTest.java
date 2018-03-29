@@ -212,7 +212,7 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test
     public void testGeneratedKeys() throws Exception {
-        try (final Stream<Long> keys = dbInsertAutoIncrement(sql("INSERT INTO KEYED(WORD) VALUES('foo')"))) {
+        try (final Stream<Integer> keys = dbInsertAutoIncrement(sql("INSERT INTO KEYED(WORD) VALUES('foo')"))) {
             final long count = keys.count();
             assertThat(count).isGreaterThan(0);
         }
