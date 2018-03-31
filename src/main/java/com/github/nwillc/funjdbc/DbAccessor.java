@@ -63,7 +63,6 @@ public interface DbAccessor extends ConnectionProvider {
             return stream(extractor, resultSet).onClose(() -> {
                 close(s);
                 close(c);
-                close(rs);
             });
         } catch (Exception e) {
             close(statement);
@@ -164,12 +163,13 @@ public interface DbAccessor extends ConnectionProvider {
     /**
      * Execute an insert into a table with an auto incremented key, returning a stream of the keys.
      *
+     * @param <T> key type of generated keys for each tuple.
      * @param sqlStatement The SQL statement
      * @return the stream of keys generated
      * @throws SQLException if the insert failed
      * @since 0.13.0
      */
-    default <T> Stream<T> dbInsertGetGeneratedKeys(SqlStatement sqlStatement, String[] keyColumns, Extractor<T> longExtractor) throws SQLException {
+    default <T> Stream<T> dbInsertGetGeneratedKeys(SqlStatement sqlStatement, String[] keyColumns, Extractor<T> keyExtractor) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -183,8 +183,7 @@ public interface DbAccessor extends ConnectionProvider {
             final ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             resultSet = generatedKeys;
 
-            return stream(longExtractor,generatedKeys).onClose(() -> {
-              close(generatedKeys);
+            return stream(keyExtractor,generatedKeys).onClose(() -> {
               close(preparedStatement);
               close(c);
             });
