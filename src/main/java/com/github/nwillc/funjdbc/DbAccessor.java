@@ -21,10 +21,7 @@ import com.github.nwillc.funjdbc.functions.ConnectionProvider;
 import com.github.nwillc.funjdbc.functions.Enricher;
 import com.github.nwillc.funjdbc.functions.Extractor;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterator;
@@ -170,32 +167,32 @@ public interface DbAccessor extends ConnectionProvider {
      * @param sqlStatement The SQL statement
      * @return the stream of keys generated
      * @throws SQLException if the insert failed
-     * @since 0.11.0
+     * @since 0.13.0
      */
-    default Stream<Integer> dbInsertAutoIncrement(SqlStatement sqlStatement) throws SQLException {
+    default <T> Stream<T> dbInsertGetGeneratedKeys(SqlStatement sqlStatement, String[] keyColumns, Extractor<T> longExtractor) throws SQLException {
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
 
-        // Can not try-with-resources here because if we return the stream we don't want to close
         try {
             final Connection c = getConnection();
             connection = c;
-            final Statement s = connection.createStatement();
-            statement = s;
-            statement.executeUpdate(sqlStatement.toString(), Statement.RETURN_GENERATED_KEYS);
-            final ResultSet rs = statement.getGeneratedKeys();
-            resultSet = rs;
-            return stream(r -> r.getInt(1), resultSet).onClose(() -> {
-                close(s);
-                close(c);
-                close(rs);
+            final PreparedStatement preparedStatement = c.prepareStatement(sqlStatement.toString(),keyColumns);
+            statement = preparedStatement;
+            preparedStatement.execute();
+            final ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            resultSet = generatedKeys;
+
+            return stream(longExtractor,generatedKeys).onClose(() -> {
+              close(generatedKeys);
+              close(preparedStatement);
+              close(c);
             });
         } catch (Exception e) {
+            close(resultSet);
             close(statement);
             close(connection);
-            close(resultSet);
-            throw new SQLException("Insert failed", e);
+            throw new SQLException("Insert failed",e);
         }
     }
 

@@ -32,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @RunWith(Parameterized.class)
 public class DbAccessorTest implements DbAccessor {
     private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
+    public static final String ID_COLUMN = "ID";
     private Extractor<Word> wordExtractor;
     private boolean connectionFailed;
 
@@ -212,9 +213,12 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test
     public void testGeneratedKeys() throws Exception {
-        try (final Stream<Integer> keys = dbInsertAutoIncrement(sql("INSERT INTO KEYED(WORD) VALUES('foo')"))) {
-            final long count = keys.count();
-            assertThat(count).isGreaterThan(0);
+        final SqlStatement sql = sql("INSERT INTO KEYED(WORD) VALUES('bar')");
+        final String[] keys = {ID_COLUMN};
+        Extractor<Long> longExtractor = rs -> rs.getLong(1);
+
+        try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(sql, keys, longExtractor)) {
+             assertThat(keyStream.count()).isEqualTo(1L);
         }
     }
 
