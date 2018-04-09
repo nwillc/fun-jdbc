@@ -214,10 +214,9 @@ public class DbAccessorTest implements DbAccessor {
     @Test
     public void testGeneratedKeys() throws Exception {
         final SqlStatement sql = sql("INSERT INTO KEYED(WORD) VALUES('bar')");
-        final String[] keys = {ID_COLUMN};
         Extractor<Long> longExtractor = rs -> rs.getLong(1);
 
-        try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(sql, keys, longExtractor)) {
+        try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(longExtractor, sql)) {
              assertThat(keyStream.count()).isEqualTo(1L);
         }
     }
