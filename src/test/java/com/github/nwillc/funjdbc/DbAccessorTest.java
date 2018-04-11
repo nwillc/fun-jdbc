@@ -72,19 +72,19 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test
     public void testQuery() throws Exception {
-        Stream<Word> words = dbQuery(wordExtractor, sql("SELECT * FROM WORDS"));
+        Stream<Word> words = dbQuery(sql("SELECT * FROM WORDS"), wordExtractor);
         assertThat(words.count()).isEqualTo(3);
     }
 
     @Test
     public void testQueryWithArgs() throws Exception {
-        Stream<Word> words = dbQuery(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = '%s'", "a"));
+        Stream<Word> words = dbQuery(sql("SELECT * FROM WORDS WHERE WORD = '%s'", "a"), wordExtractor);
         assertThat(words.count()).isEqualTo(2);
     }
 
     @Test
     public void testFind() throws Exception {
-        Optional<Word> word = dbFind(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = 'b'"));
+        Optional<Word> word = dbFind(sql("SELECT * FROM WORDS WHERE WORD = 'b'"), wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get().word).isEqualTo("b");
@@ -92,7 +92,7 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test
     public void testFindWithArgs() throws Exception {
-        Optional<Word> word = dbFind(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = '%s'", "b"));
+        Optional<Word> word = dbFind(sql("SELECT * FROM WORDS WHERE WORD = '%s'", "b"), wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isTrue();
         assertThat(word.get().word).isEqualTo("b");
@@ -101,14 +101,14 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test
     public void testNotFound() throws Exception {
-        Optional<Word> word = dbFind(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = 'c'"));
+        Optional<Word> word = dbFind(sql("SELECT * FROM WORDS WHERE WORD = 'c'"), wordExtractor);
         assertThat(word).isNotNull();
         assertThat(word.isPresent()).isFalse();
     }
 
     @Test
     public void testStream() throws Exception {
-        try (Stream<Word> stream = dbQuery(wordExtractor, sql("SELECT * FROM WORDS"))) {
+        try (Stream<Word> stream = dbQuery(sql("SELECT * FROM WORDS"), wordExtractor)) {
             assertThat(stream.count()).isEqualTo(3);
         }
     }
@@ -119,7 +119,7 @@ public class DbAccessorTest implements DbAccessor {
         final SqlStatement sql = sql("UPDATE WORDS set WORD = 'c' WHERE WORD = 'a'");
         final int dbUpdated = dbUpdate(sql);
         assertThat(dbUpdated).isEqualTo(count);
-        Stream<Word> words = dbQuery(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = '%s'", "c"));
+        Stream<Word> words = dbQuery(sql("SELECT * FROM WORDS WHERE WORD = '%s'", "c"), wordExtractor);
         assertThat(words.count()).isEqualTo(count);
     }
 
@@ -138,19 +138,19 @@ public class DbAccessorTest implements DbAccessor {
 
     @Test(expected = SQLException.class)
     public void testFindFails() throws Exception {
-        dbFind(wordExtractor, sql("SELECT * FROM WORDS WHERE WORD = 'a'"));
+        dbFind(sql("SELECT * FROM WORDS WHERE WORD = 'a'"), wordExtractor);
     }
 
     @Test
     public void shouldDbEnrich() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
-        dbQuery(WORD_COUNT_EXTRACTOR, sql("SELECT DISTINCT WORD FROM WORDS")).forEach(c -> counts.put(c.word, c));
+        dbQuery(sql("SELECT DISTINCT WORD FROM WORDS"), WORD_COUNT_EXTRACTOR).forEach(c -> counts.put(c.word, c));
 
         assertThat(counts.size()).isEqualTo(2);
-        dbEnrich(counts,
-                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                sql("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"));
+        dbEnrich(sql("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"), rs -> rs.getString(1), counts,
+                (e, rs) -> e.count = rs.getInt(2)
+        );
         assertThat(counts.get("b").count).isEqualTo(1);
         assertThat(counts.get("a").count).isEqualTo(2);
     }
@@ -159,12 +159,12 @@ public class DbAccessorTest implements DbAccessor {
     public void shouldDbEnrichNoKey() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
-        dbQuery(WORD_COUNT_EXTRACTOR, sql("SELECT DISTINCT WORD FROM WORDS")).forEach(c -> counts.put(c.word, c));
+        dbQuery(sql("SELECT DISTINCT WORD FROM WORDS"), WORD_COUNT_EXTRACTOR).forEach(c -> counts.put(c.word, c));
 
         assertThat(counts.size()).isEqualTo(2);
-        dbEnrich(counts,
-                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                sql("SELECT COUNT(*) FROM WORDS"));
+        dbEnrich(sql("SELECT COUNT(*) FROM WORDS"), rs -> rs.getString(1), counts,
+                (e, rs) -> e.count = rs.getInt(2)
+        );
         assertThat(counts.size()).isEqualTo(2);
         counts.values().forEach(wordCount -> assertThat(wordCount.count).isEqualTo(0));
     }
@@ -192,31 +192,18 @@ public class DbAccessorTest implements DbAccessor {
     public void shouldDbEnrichNoValue() throws Exception {
         Map<String, WordCount> counts = new HashMap<>();
 
-        dbEnrich(counts,
-                rs -> rs.getString(1), (e, rs) -> e.count = rs.getInt(2),
-                sql("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"));
+        dbEnrich(sql("SELECT WORD, COUNT(*) FROM WORDS GROUP BY WORD"), rs -> rs.getString(1), counts,
+                (e, rs) -> e.count = rs.getInt(2)
+        );
         assertThat(counts).hasSize(0);
-    }
-
-    @Test
-    public void testAutoclose() throws Exception {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()
-        ) {
-            ResultSet resultSet = statement.executeQuery("SELECT DISTINCT WORD FROM WORDS");
-            final Stream<WordCount> stream = stream(WORD_COUNT_EXTRACTOR, resultSet);
-            assertThat(resultSet.isClosed()).isFalse();
-            stream.close();
-            assertThat(resultSet.isClosed()).isTrue();
-        }
     }
 
     @Test
     public void testGeneratedKeys() throws Exception {
         final SqlStatement sql = sql("INSERT INTO KEYED(WORD) VALUES('bar')");
         Extractor<Long> longExtractor = rs -> rs.getLong(1);
-
-        try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(longExtractor, sql)) {
+        final String[] keys = {"ID"};
+        try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(sql, longExtractor, keys)) {
              assertThat(keyStream.count()).isEqualTo(1L);
         }
     }

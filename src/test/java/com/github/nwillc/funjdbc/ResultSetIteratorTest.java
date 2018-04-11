@@ -27,7 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
@@ -60,7 +59,6 @@ public class ResultSetIteratorTest extends IteratorContract implements DbAccesso
     @Mocked
     Extractor mockExtractor;
 
-    @BeforeEach
     @Before
     public void setUp() throws Exception {
         iterators = new ArrayList<>();

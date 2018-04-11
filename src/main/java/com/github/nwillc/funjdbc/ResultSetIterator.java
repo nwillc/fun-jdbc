@@ -21,9 +21,9 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 

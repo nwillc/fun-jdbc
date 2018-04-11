@@ -43,7 +43,7 @@ public class DbAccessorQueryCloseTest implements DbAccessor {
         new Expectations(Closer.class){{
             Closer.close((AutoCloseable)any); times = 3;
         }};
-        assertThatThrownBy(() -> dbQuery(null,null)).isInstanceOf(SQLException.class);
+        assertThatThrownBy(() -> dbQuery(null, null)).isInstanceOf(SQLException.class);
     }
 
     @Override

@@ -55,14 +55,17 @@ dependencies {
 
     testCompile "junit:junit:$junit_version",
             "org.assertj:assertj-core:$assertj_version",
-            "com.github.nwillc:jdk_contract_tests:$jdk_contract_version",
             "org.jmockit:jmockit:$jmockit_version",
             "org.zapodot:embedded-db-junit:$embedded_db_junit_version"
+
+    testCompile("com.github.nwillc:jdk_contract_tests:$jdk_contract_version") {
+        exclude module: "junit-jupiter-api"
+    }
 }
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '0.14.0'
+version = '1.0.0'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
