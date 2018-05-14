@@ -3,7 +3,6 @@ sudo: false
 
 jdk:
   - oraclejdk8
-  - oraclejdk9
 
 env:
   - TERM=dumb
@@ -11,17 +10,7 @@ env:
 after_success:
   - ./gradlew jacocoTestReport
   - bash <(curl -s https://codecov.io/bash)
-  - ./gradlew clean jar bintray -x test
 
 branches:
   only:
     - master
-
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
