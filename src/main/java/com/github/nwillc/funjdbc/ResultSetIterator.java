@@ -29,7 +29,7 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 
 /**
  * This is an Iterator that traverses a ResultSet returning elements via an Extractor. Additionally this
- * implements Autocloseable, and support for adding other onClose Runnables.
+ * implements AutoCloseable, and support for adding other onClose Runnables.
  *
  * @param <T> The type of elements being extracted
  */
@@ -56,31 +56,25 @@ public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
 
     @Override
     public boolean hasNext() {
-        if (nextAvailable != null) {
-            return nextAvailable;
+        if (nextAvailable == null) {
+           try {
+               nextAvailable = resultSet.next();
+           } catch (Exception e) {
+               throw propagate(e);
+           }
         }
-        try {
-            nextAvailable = resultSet.next();
-            return nextAvailable;
-        } catch (Exception e) {
-            nextAvailable = false;
-            throw propagate(e);
-        }
+        return nextAvailable;
     }
 
     @Override
     public T next() {
-        hasNext();
-        if (!Boolean.TRUE.equals(nextAvailable)) {
+        if (!hasNext()) {
             throw new NoSuchElementException();
         }
-
+        nextAvailable = null;
         try {
-            T result = extractor.extract(resultSet);
-            nextAvailable = null;
-            return result;
+            return extractor.extract(resultSet);
         } catch (Exception e) {
-            nextAvailable = false;
             throw propagate(e);
         }
     }

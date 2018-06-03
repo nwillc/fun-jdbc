@@ -65,7 +65,7 @@ dependencies {
 
 group = 'com.github.nwillc'
 archivesBaseName = 'fun-jdbc'
-version = '1.0.0'
+version = '1.0.1-SNAPSHOT'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
