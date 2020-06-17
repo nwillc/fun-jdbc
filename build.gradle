@@ -17,19 +17,16 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven {
-            url mvn_repository
-        }
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
-        classpath 'gradle.plugin.com.github.nwillc:vplugin:2.3.0',
+        classpath 'com.github.nwillc:vplugin:3.0.5',
                 'org.ajoberstar:gradle-git:1.7.2',
-                'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4',
-                'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0',
-                'org.ajoberstar:gradle-git-publish:2.1.1'
+                'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5',
+                'org.ajoberstar:gradle-git-publish:3.0.0-rc.1'
     }
 }
 
@@ -40,13 +37,10 @@ apply plugin: 'pmd'
 apply plugin: 'com.github.nwillc.vplugin'
 apply plugin: 'org.ajoberstar.git-publish'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: "info.solidsoft.pitest"
 
 repositories {
     mavenLocal()
-    maven {
-        url mvn_repository
-    }
+    jcenter()
 }
 
 dependencies {
@@ -82,7 +76,7 @@ jacocoTestReport {
 
 test {
     jvmArgs = ['-Djdk.attach.allowAttachSelf', '-Dtinylog.level=debug']
-    
+
     beforeTest { descriptor ->
         logger.lifecycle("\tRunning $descriptor.className.$descriptor.name")
     }
@@ -140,12 +134,6 @@ bintray {
 }
 
 bintrayUpload.onlyIf { !project.version.toString().endsWith('SNAPSHOT') }
-
-pitest {
-    threads = 4
-    outputFormats = ['XML', 'HTML']
-    pitestVersion = '1.4.9'
-}
 
 gitPublish {
     repoUri = 'git@github.com:nwillc/fun-jdbc.git'

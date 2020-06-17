@@ -25,7 +25,7 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
  * A Function that allows for exceptions, rethrowing them as an appropriate
  * type of RuntimeException.
  *
- * @param <T> The type of the arqument
+ * @param <T> The type of the argument
  * @param <R> The type of the result
  * @since 0.13.1
  */
