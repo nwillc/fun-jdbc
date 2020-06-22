@@ -18,9 +18,6 @@
 package com.github.nwillc.funjdbc.utils;
 
 import com.github.nwillc.contracts.UtilityClassContract;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  *

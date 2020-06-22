@@ -45,22 +45,22 @@ public class EFactoryTest {
     ResultSet resultSet;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         factory = new EFactory<>();
     }
 
     @Test
-    public void testConstructorNoFactory() throws Exception {
+    public void testConstructorNoFactory() {
         assertThatThrownBy(() -> factory.getExtractor()).isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    public void testConstructorNoExtractor() throws Exception {
+    public void testConstructorNoExtractor() {
         assertThatThrownBy(() -> factory.factory(Bean::new).getExtractor()).isInstanceOf(NullPointerException.class);
     }
 
     @Test
-    public void testConstructorNo() throws Exception {
+    public void testConstructorNo() {
         final Extractor<Bean> extractor = factory
                 .factory(Bean::new)
                 .add(Bean::setOne, ResultSet::getInt, 1)

@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UncheckedSQLExceptionTest {
 
     @Test
-    public void testConstructorForGeneralThrowable() throws Exception {
+    public void testConstructorForGeneralThrowable() {
         final String msg = "foo";
         final NullPointerException nullPointerException = new NullPointerException();
 
@@ -39,7 +39,7 @@ public class UncheckedSQLExceptionTest {
     }
 
     @Test
-    public void testConstructorForSQLException2() throws Exception {
+    public void testConstructorForSQLException2() {
         Exception e = new SQLException();
         UncheckedSQLException exception = new UncheckedSQLException(e);
 
@@ -47,7 +47,7 @@ public class UncheckedSQLExceptionTest {
     }
 
     @Test
-    public void testConstructorForSQLException() throws Exception {
+    public void testConstructorForSQLException() {
         final String msg = "foo";
         final String sqlState = "bar";
         final int errorCode = 42;
@@ -64,7 +64,7 @@ public class UncheckedSQLExceptionTest {
     }
 
     @Test
-    public void testWhereCauseIsUncheckedSqlException() throws Exception {
+    public void testWhereCauseIsUncheckedSqlException() {
 
         final String msg = "foo";
         final String sqlState = "bar";
@@ -83,7 +83,7 @@ public class UncheckedSQLExceptionTest {
     }
 
     @Test
-    public void testWithoutCause() throws Exception {
+    public void testWithoutCause() {
         final UncheckedSQLException uncheckedSQLException = new UncheckedSQLException("Test", null);
 
         assertThat(uncheckedSQLException).isNotNull();

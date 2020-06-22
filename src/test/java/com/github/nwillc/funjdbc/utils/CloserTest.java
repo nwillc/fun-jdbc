@@ -36,7 +36,7 @@ public class CloserTest extends UtilityClassContract {
     }
 
     @Test
-    public void testHandlesNull() throws Exception {
+    public void testHandlesNull() {
         Closer.close(null);
     }
 
@@ -50,7 +50,7 @@ public class CloserTest extends UtilityClassContract {
     }
 
     @Test
-    public void testHandlesThrownException() throws Exception {
+    public void testHandlesThrownException() {
         Closer.close(() -> {
             throw new Exception();
         });

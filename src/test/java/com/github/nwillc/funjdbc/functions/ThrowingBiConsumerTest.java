@@ -33,7 +33,7 @@ public class ThrowingBiConsumerTest {
     private ResultSet resultSet;
 
     @Test
-    public void testAcceptException() throws Exception {
+    public void testAcceptException() {
         Enricher<Boolean> enricher = (o, r) -> {
             throw new SQLException("test");
         };

@@ -37,7 +37,7 @@ public class ThrowablesTest extends UtilityClassContract {
     }
 
     @Test
-    public void testHandlesRuntimeException() throws Exception {
+    public void testHandlesRuntimeException() {
         final ArithmeticException arithmeticException = new ArithmeticException();
 
         final RuntimeException runtimeException = propagate(arithmeticException);
@@ -45,7 +45,7 @@ public class ThrowablesTest extends UtilityClassContract {
     }
 
     @Test
-    public void testWrapsNormalException() throws Exception {
+    public void testWrapsNormalException() {
         final DataFormatException dataFormatException = new DataFormatException();
 
         final RuntimeException runtimeException = propagate(dataFormatException);
@@ -55,7 +55,7 @@ public class ThrowablesTest extends UtilityClassContract {
     }
 
     @Test
-    public void testHandlesIOException() throws Exception {
+    public void testHandlesIOException() {
         final IOException ioException = new IOException();
 
         final RuntimeException runtimeException = propagate(ioException);
@@ -65,7 +65,7 @@ public class ThrowablesTest extends UtilityClassContract {
     }
 
     @Test
-    public void testHandlesSQLException() throws Exception {
+    public void testHandlesSQLException() {
         final String msg = "foo";
         final String sqlState = "bar";
         final int errorCode = 42;

@@ -33,7 +33,7 @@ public class TestDbInitialization implements DbAccessor, InitializationPlugin {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return connection;
     }
 }

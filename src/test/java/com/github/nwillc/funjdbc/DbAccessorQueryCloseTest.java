@@ -39,7 +39,7 @@ public class DbAccessorQueryCloseTest implements DbAccessor {
             .build();
 
     @Test
-    public void testExceptionCloser() throws Exception {
+    public void testExceptionCloser() {
         new Expectations(Closer.class){{
             Closer.close((AutoCloseable)any); times = 3;
         }};
@@ -47,7 +47,7 @@ public class DbAccessorQueryCloseTest implements DbAccessor {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return embeddedDb.getConnection();
     }
 }

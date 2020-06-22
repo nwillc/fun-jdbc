@@ -37,12 +37,12 @@ public class PerfTest {
     private static final int LOOPS = 1_000_000;
     @Mocked
     private ResultSet resultSet;
-    private Extractor<Bean> codedBeanExtractor = new BeanExtractor();
+    private final Extractor<Bean> codedBeanExtractor = new BeanExtractor();
     private Extractor<Bean> generatedBeanExtractor;
-    private AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         EFactory<Bean> factory = new EFactory<>();
         generatedBeanExtractor = factory
                 .add(Bean::setDoubleValue, ResultSet::getDouble, 1)
@@ -87,7 +87,7 @@ public class PerfTest {
         }
     }
 
-    private class Bean {
+    private static class Bean {
         private Integer integerValue;
         private String stringValue;
         private double doubleValue;

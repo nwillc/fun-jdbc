@@ -60,12 +60,12 @@ public class ResultSetIteratorTest extends IteratorContract implements DbAccesso
     Extractor mockExtractor;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         iterators = new ArrayList<>();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         iterators.forEach(Closer::close);
         iterators = null;
     }
@@ -156,7 +156,7 @@ public class ResultSetIteratorTest extends IteratorContract implements DbAccesso
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return embeddedDb.getConnection();
     }
 }

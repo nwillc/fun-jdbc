@@ -120,7 +120,7 @@ public final class EFactory<B> {
         }
 
         @Override
-        public B extract(ResultSet rs) throws SQLException {
+        public B extract(ResultSet rs) {
             final B bean = factory.get();
             consumer.accept(bean, rs);
             return bean;

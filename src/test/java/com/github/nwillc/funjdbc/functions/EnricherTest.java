@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 @RunWith(JMockit.class)
 public class EnricherTest {
@@ -35,7 +34,7 @@ public class EnricherTest {
     private ResultSet resultSet;
 
     @Test
-    public void testAndThenArgumentCheck() throws Exception {
+    public void testAndThenArgumentCheck() {
         Enricher<Boolean> enricher = (o, r) -> {
         };
 
@@ -43,7 +42,7 @@ public class EnricherTest {
     }
 
     @Test
-    public void testAndThen() throws Exception {
+    public void testAndThen() {
         AtomicInteger i = new AtomicInteger(0);
         Enricher<AtomicInteger> enricher = (o, r) -> o.addAndGet(1);
         enricher = enricher.andThen((o, r) -> o.addAndGet(2));

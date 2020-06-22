@@ -21,14 +21,13 @@ import org.junit.Test;
 
 import static com.github.nwillc.funjdbc.SqlStatement.sql;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 public class SqlStatementTest {
     public static final String SELECT_1 = "SELECT 1";
 
     @Test
-    public void testSetArgs() throws Exception {
+    public void testSetArgs() {
         final String sql = "SELECT * FROM FOO WHERE x = '%s'";
         final String x1 = "foo";
         final String x2 = "bar";
@@ -39,7 +38,7 @@ public class SqlStatementTest {
     }
 
     @Test
-    public void testToStringNoArgs() throws Exception {
+    public void testToStringNoArgs() {
         final String sql = "SELECT * FROM FOO";
         final SqlStatement sqlStatement = sql(sql);
 
@@ -47,15 +46,15 @@ public class SqlStatementTest {
     }
 
     @Test
-    public void testToStringNoArgsArray() throws Exception {
+    public void testToStringNoArgsArray() {
         final String sql = "SELECT * FROM FOO";
-        final SqlStatement sqlStatement = sql(sql, new Object[0]);
+        final SqlStatement sqlStatement = sql(sql);
 
         assertThat(sqlStatement.toString()).isEqualTo(sql);
     }
 
     @Test
-    public void testToStringNullArgs() throws Exception {
+    public void testToStringNullArgs() {
         final String sql = "SELECT * FROM FOO";
         final SqlStatement sqlStatement = sql(sql, null);
 
@@ -63,7 +62,7 @@ public class SqlStatementTest {
     }
 
     @Test
-    public void testToStringArgs() throws Exception {
+    public void testToStringArgs() {
         final String sql = "SELECT * FROM FOO WHERE x = '%s' AND y = %d";
         final String x = "foo";
         final int y = 10;

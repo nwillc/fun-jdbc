@@ -21,8 +21,12 @@ import org.zapodot.junit.db.EmbeddedDatabaseRule;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.github.nwillc.funjdbc.SqlStatement.sql;
@@ -32,8 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @RunWith(Parameterized.class)
 public class DbAccessorTest implements DbAccessor {
     private final static Extractor<WordCount> WORD_COUNT_EXTRACTOR = rs -> new WordCount(rs.getString(1));
-    public static final String ID_COLUMN = "ID";
-    private Extractor<Word> wordExtractor;
+    private final Extractor<Word> wordExtractor;
     private boolean connectionFailed;
 
     @Rule
@@ -47,7 +50,7 @@ public class DbAccessorTest implements DbAccessor {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         connectionFailed = false;
     }
 
@@ -124,13 +127,13 @@ public class DbAccessorTest implements DbAccessor {
     }
 
     @Test
-    public void testUpdateWithBadSqlException() throws Exception {
+    public void testUpdateWithBadSqlException() {
         final SqlStatement sql = sql("blah blah");
         assertThatThrownBy(() -> dbUpdate(sql)).isInstanceOf(SQLException.class);
     }
 
     @Test
-    public void testUpdateWithBadConnectionException() throws Exception {
+    public void testUpdateWithBadConnectionException() {
         connectionFailed = true;
         final SqlStatement sql = sql("SELECT 1");
         assertThatThrownBy(() -> dbUpdate(sql)).isInstanceOf(SQLException.class);
@@ -176,13 +179,13 @@ public class DbAccessorTest implements DbAccessor {
     }
 
     @Test
-    public void shouldBadSqlExecute() throws Exception {
+    public void shouldBadSqlExecute() {
         final SqlStatement sqlStatement = sql("blah");
         assertThatThrownBy(() -> dbExecute(sqlStatement)).isInstanceOf(SQLException.class);
     }
 
     @Test
-    public void shouldDbBadConnectionExecute() throws Exception {
+    public void shouldDbBadConnectionExecute() {
         connectionFailed = true;
         final SqlStatement sqlStatement = sql("SELECT 1");
         assertThatThrownBy(() -> dbExecute(sqlStatement)).isInstanceOf(SQLException.class);
@@ -204,7 +207,7 @@ public class DbAccessorTest implements DbAccessor {
         Extractor<Long> longExtractor = rs -> rs.getLong(1);
         final String[] keys = {"ID"};
         try (Stream<Long> keyStream = dbInsertGetGeneratedKeys(sql, longExtractor, keys)) {
-             assertThat(keyStream.count()).isEqualTo(1L);
+            assertThat(keyStream.count()).isEqualTo(1L);
         }
     }
 
