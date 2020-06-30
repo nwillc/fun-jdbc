@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"com.github.nwillc.funjdbc"},{"l":"com.github.nwillc.funjdbc.functions"},{"l":"com.github.nwillc.funjdbc.migrate"},{"l":"com.github.nwillc.funjdbc.utils"}]
