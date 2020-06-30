@@ -26,16 +26,17 @@ import org.pmw.tinylog.Logger;
  *
  * @since 0.9.0
  */
-public class SqlStatement {
-    private final transient String sqlString;
-    private transient Object[] args;
+@SuppressWarnings("PMD.BeanMembersShouldSerialize")
+public final class SqlStatement {
+    private final String sqlString;
+    private Object[] args;
 
     public SqlStatement(String sqlString, Object... args) {
         this.sqlString = sqlString;
         setArgs(args);
     }
 
-    public final void setArgs(Object... args) {
+    public void setArgs(Object... args) {
         this.args = args;
     }
 

@@ -56,7 +56,7 @@ public class SqlStatementTest {
     @Test
     public void testToStringNullArgs() {
         final String sql = "SELECT * FROM FOO";
-        final SqlStatement sqlStatement = sql(sql, null);
+        final SqlStatement sqlStatement = sql(sql, (Object[])null);
 
         assertThat(sqlStatement.toString()).isEqualTo(sql);
     }

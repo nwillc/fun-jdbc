@@ -33,12 +33,13 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
  *
  * @param <T> The type of elements being extracted
  */
-public class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
-    private final transient ResultSet resultSet;
-    private final transient Extractor<T> extractor;
-    private transient Runnable closers = () -> {
+@SuppressWarnings("PMD.BeanMembersShouldSerialize")
+public final class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
+    private final ResultSet resultSet;
+    private final Extractor<T> extractor;
+    private Runnable closers = () -> {
     };
-    private transient Boolean nextAvailable = null;
+    private Boolean nextAvailable = null;
 
     /**
      * Create an instance with with a ResultSet to iterate over, and an Extractor to apply to

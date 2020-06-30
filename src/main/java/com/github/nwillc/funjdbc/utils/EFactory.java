@@ -33,9 +33,10 @@ import java.util.function.Supplier;
  * @param <B> the type of the Bean
  * @since 0.8.3+
  */
+@SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public final class EFactory<B> {
-    private transient Enricher<B> consumer = null;
-    private transient Supplier<B> factory = null;
+    private Enricher<B> consumer = null;
+    private Supplier<B> factory = null;
 
     /**
      * Provide a factor this Extractor will use to create the object it will extract data
@@ -109,9 +110,10 @@ public final class EFactory<B> {
         return new GeneratedExtractor<>(factory, consumer);
     }
 
-    private static class GeneratedExtractor<B> implements Extractor<B> {
-        private final transient Supplier<B> factory;
-        private final transient BiConsumer<B, ResultSet> consumer;
+    @SuppressWarnings("PMD.BeanMembersShouldSerialize")
+    private final static class GeneratedExtractor<B> implements Extractor<B> {
+        private final Supplier<B> factory;
+        private final BiConsumer<B, ResultSet> consumer;
 
         GeneratedExtractor(Supplier<B> factory, BiConsumer<B, ResultSet> consumer) {
             this.factory = factory;
@@ -126,10 +128,11 @@ public final class EFactory<B> {
         }
     }
 
-    private static class SingleEnricher<B, T, C> implements Enricher<B> {
-        final transient BiConsumer<B, T> setter;
-        final transient BiFunction<ResultSet, C, T> getter;
-        final transient C column;
+    @SuppressWarnings("PMD.BeanMembersShouldSerialize")
+    private final static class SingleEnricher<B, T, C> implements Enricher<B> {
+        final BiConsumer<B, T> setter;
+        final BiFunction<ResultSet, C, T> getter;
+        final C column;
 
         SingleEnricher(BiConsumer<B, T> setter, BiFunction<ResultSet, C, T> getter, C column) {
             this.setter = setter;
