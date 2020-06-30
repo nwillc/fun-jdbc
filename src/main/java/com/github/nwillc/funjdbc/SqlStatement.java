@@ -27,21 +27,21 @@ import org.pmw.tinylog.Logger;
  * @since 0.9.0
  */
 public class SqlStatement {
-    private final String sql;
-    private Object[] args;
+    private final transient String sqlString;
+    private transient Object[] args;
 
-    public SqlStatement(String sql, Object... args) {
-        this.sql = sql;
+    public SqlStatement(String sqlString, Object... args) {
+        this.sqlString = sqlString;
         setArgs(args);
     }
 
-    public void setArgs(Object... args) {
+    public final void setArgs(Object... args) {
         this.args = args;
     }
 
     @Override
     public String toString() {
-        final String formatted = (args == null || args.length == 0) ? sql : String.format(sql, args);
+        final String formatted = (args == null || args.length == 0) ? sqlString : String.format(sqlString, args);
         Logger.debug("Formatted SQL: {}", formatted);
         return formatted;
     }

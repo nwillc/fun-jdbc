@@ -48,7 +48,7 @@ public class PerfTest {
                 .add(Bean::setDoubleValue, ResultSet::getDouble, 1)
                 .add(Bean::setIntegerValue, ResultSet::getInt, 2)
                 .add(Bean::setStringValue, ResultSet::getString, 3)
-                .factory(Bean::new)
+                .withFactory(Bean::new)
                 .getExtractor();
     }
 

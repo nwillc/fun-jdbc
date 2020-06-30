@@ -60,7 +60,7 @@ public class DbAccessorTest implements DbAccessor {
         List<Extractor<Word>[]> extractors = new ArrayList<>();
 
         extractors.add(new Extractor[]{rs -> new Word(rs.getString(1))});
-        final Extractor<Word> extractor = new EFactory<Word>().factory(Word::new)
+        final Extractor<Word> extractor = new EFactory<Word>().withFactory(Word::new)
                 .add(Word::setWord, ResultSet::getString, 1)
                 .getExtractor();
         extractors.add(new Extractor[]{extractor});

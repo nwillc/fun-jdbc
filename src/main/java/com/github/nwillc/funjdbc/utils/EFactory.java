@@ -34,8 +34,8 @@ import java.util.function.Supplier;
  * @since 0.8.3+
  */
 public final class EFactory<B> {
-    private Enricher<B> consumer = null;
-    private Supplier<B> factory = null;
+    private transient Enricher<B> consumer = null;
+    private transient Supplier<B> factory = null;
 
     /**
      * Provide a factor this Extractor will use to create the object it will extract data
@@ -44,7 +44,7 @@ public final class EFactory<B> {
      * @param factory a factory instance
      * @return the extractor factory.
      */
-    public EFactory<B> factory(Supplier<B> factory) {
+    public EFactory<B> withFactory(Supplier<B> factory) {
         this.factory = factory;
         return this;
     }
@@ -110,8 +110,8 @@ public final class EFactory<B> {
     }
 
     private static class GeneratedExtractor<B> implements Extractor<B> {
-        private final Supplier<B> factory;
-        private final BiConsumer<B, ResultSet> consumer;
+        private final transient Supplier<B> factory;
+        private final transient BiConsumer<B, ResultSet> consumer;
 
         GeneratedExtractor(Supplier<B> factory, BiConsumer<B, ResultSet> consumer) {
             this.factory = factory;
@@ -127,9 +127,9 @@ public final class EFactory<B> {
     }
 
     private static class SingleEnricher<B, T, C> implements Enricher<B> {
-        final BiConsumer<B, T> setter;
-        final BiFunction<ResultSet, C, T> getter;
-        final C column;
+        final transient BiConsumer<B, T> setter;
+        final transient BiFunction<ResultSet, C, T> getter;
+        final transient C column;
 
         SingleEnricher(BiConsumer<B, T> setter, BiFunction<ResultSet, C, T> getter, C column) {
             this.setter = setter;

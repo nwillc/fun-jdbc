@@ -34,9 +34,11 @@ import java.util.stream.Stream;
 
 import static com.github.nwillc.funjdbc.utils.Closer.close;
 
+
 /**
  * Interface, with default methods providing JDBC database access functionality.
  */
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public interface DbAccessor extends ConnectionProvider {
 
     /**
@@ -178,6 +180,7 @@ public interface DbAccessor extends ConnectionProvider {
      * @throws SQLException Should the execution have issues.
      * @since 0.13.1
      */
+    @SuppressWarnings("PMD.CloseResource")
     default <T, S extends Statement> Stream<T> stream(final Extractor<T> extractor, ThrowingFunction<Connection, S> createStetement, ThrowingFunction<S, ResultSet> execution) throws SQLException {
         Connection connection = null;
         S statement = null;

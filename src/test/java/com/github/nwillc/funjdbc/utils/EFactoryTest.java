@@ -56,13 +56,13 @@ public class EFactoryTest {
 
     @Test
     public void testConstructorNoExtractor() {
-        assertThatThrownBy(() -> factory.factory(Bean::new).getExtractor()).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> factory.withFactory(Bean::new).getExtractor()).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testConstructorNo() {
         final Extractor<Bean> extractor = factory
-                .factory(Bean::new)
+                .withFactory(Bean::new)
                 .add(Bean::setOne, ResultSet::getInt, 1)
                 .getExtractor();
         assertThat(extractor).isNotNull();
@@ -70,7 +70,7 @@ public class EFactoryTest {
 
     @Test
     public void testInteger() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getInt(1);
@@ -83,7 +83,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testIntegerException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setOne, ResultSet::getInt, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getInt(1);
@@ -95,7 +95,7 @@ public class EFactoryTest {
 
     @Test
     public void testString() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getString(1);
@@ -108,7 +108,7 @@ public class EFactoryTest {
 
     @Test
     public void testStringColumn() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, "word").factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, "word").withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getString("word");
@@ -121,7 +121,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testStringException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getString(1);
@@ -133,7 +133,7 @@ public class EFactoryTest {
 
     @Test
     public void testBoolean() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getBoolean(1);
@@ -146,7 +146,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testBooleanException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setThree, ResultSet::getBoolean, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getBoolean(1);
@@ -158,7 +158,7 @@ public class EFactoryTest {
 
     @Test
     public void testLong() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getLong(1);
@@ -171,7 +171,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testLongException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setFour, ResultSet::getLong, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getLong(1);
@@ -183,7 +183,7 @@ public class EFactoryTest {
 
     @Test
     public void testDouble() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getDouble(1);
@@ -196,7 +196,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testDoubleException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setFive, ResultSet::getDouble, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getDouble(1);
@@ -208,7 +208,7 @@ public class EFactoryTest {
 
     @Test
     public void testFloat() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getFloat(1);
@@ -221,7 +221,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testFloatException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setSix, ResultSet::getFloat, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getFloat(1);
@@ -234,7 +234,7 @@ public class EFactoryTest {
 
     @Test
     public void testBigDecimal() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getBigDecimal(1);
@@ -247,7 +247,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testBigDecimalException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setSeven, ResultSet::getBigDecimal, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getBigDecimal(1);
@@ -259,7 +259,7 @@ public class EFactoryTest {
 
     @Test
     public void testTime() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).withFactory(Bean::new).getExtractor();
 
         final long time = TimeUnit.HOURS.toMillis(1) + TimeUnit.MINUTES.toMillis(30);
 
@@ -274,7 +274,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testTimeException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTime, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getTime(1);
@@ -286,7 +286,7 @@ public class EFactoryTest {
 
     @Test
     public void testDate() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).withFactory(Bean::new).getExtractor();
 
         final long date = TimeUnit.DAYS.toMillis(40);
 
@@ -301,7 +301,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testDateException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getDate, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getDate(1);
@@ -313,7 +313,7 @@ public class EFactoryTest {
 
     @Test
     public void testTimestamp() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).withFactory(Bean::new).getExtractor();
 
         final long timestamp = TimeUnit.DAYS.toMillis(40) + TimeUnit.MINUTES.toMillis(15);
 
@@ -328,7 +328,7 @@ public class EFactoryTest {
 
     @Test(expected = UncheckedSQLException.class)
     public void testTimestampException() throws Exception {
-        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).factory(Bean::new).getExtractor();
+        final Extractor<Bean> extractor = factory.add(Bean::setEight, ResultSet::getTimestamp, 1).withFactory(Bean::new).getExtractor();
 
         new Expectations() {{
             resultSet.getTimestamp(1);
@@ -358,7 +358,7 @@ public class EFactoryTest {
         final Extractor<Bean> extractor = factory.add(Bean::setTwo, ResultSet::getString, 1)
                 .add(Bean::setOne, ResultSet::getInt, 2)
                 .add(Bean::setFour, ResultSet::getLong, 4)
-                .factory(Bean::new)
+                .withFactory(Bean::new)
                 .getExtractor();
 
         new Expectations() {{
