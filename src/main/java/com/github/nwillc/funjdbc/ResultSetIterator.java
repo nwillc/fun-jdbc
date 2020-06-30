@@ -37,8 +37,7 @@ import static com.github.nwillc.funjdbc.utils.Throwables.propagate;
 public final class ResultSetIterator<T> implements Iterator<T>, AutoCloseable {
     private final ResultSet resultSet;
     private final Extractor<T> extractor;
-    private Runnable closers = () -> {
-    };
+    private Runnable closers = () -> { };
     private Boolean nextAvailable = null;
 
     /**
