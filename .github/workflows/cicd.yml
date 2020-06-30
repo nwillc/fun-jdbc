@@ -19,7 +19,7 @@ jobs:
       run: ./gradlew assemble
 
     - name: Check
-      run: ./gradlew check
+      run: ./gradlew check -x pmdTest
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
