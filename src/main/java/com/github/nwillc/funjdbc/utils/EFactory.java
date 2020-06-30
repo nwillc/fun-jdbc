@@ -22,7 +22,6 @@ import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.functions.ThrowingBiFunction;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
