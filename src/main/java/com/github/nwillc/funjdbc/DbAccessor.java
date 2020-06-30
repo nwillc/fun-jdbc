@@ -130,6 +130,8 @@ public interface DbAccessor extends ConnectionProvider {
      *
      * @param <T>          key type of generated keys for each tuple.
      * @param sqlStatement The SQL statement
+     * @param keyExtractor The key extractor
+     * @param keys The keys
      * @return the stream of keys generated
      * @throws SQLException if the insert failed
      * @since 0.13.0
@@ -166,6 +168,8 @@ public interface DbAccessor extends ConnectionProvider {
      * @param extractor Function to extract data from the ResultSet
      * @param execution Given a Statement, execute it returning a ResultSet
      * @param <T>       Type of the elements in the resultant Stream
+     * @param <S>       Type of the Statement
+     * @param createStetement The create statement
      * @return A Stream of type T
      * @throws SQLException Should the execution have issues.
      * @since 0.13.1
