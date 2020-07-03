@@ -21,7 +21,7 @@ import com.github.nwillc.funjdbc.utils.Closer;
 import mockit.Expectations;
 import mockit.integration.junit4.JMockit;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.zapodot.junit.db.EmbeddedDatabaseRule;
 

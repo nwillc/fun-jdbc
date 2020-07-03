@@ -23,10 +23,10 @@ import com.github.nwillc.funjdbc.utils.Closer;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.integration.junit4.JMockit;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.zapodot.junit.db.EmbeddedDatabaseRule;
 
@@ -59,12 +59,12 @@ public class ResultSetIteratorTest extends IteratorContract implements DbAccesso
     @Mocked
     Extractor mockExtractor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         iterators = new ArrayList<>();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         iterators.forEach(Closer::close);
         iterators = null;

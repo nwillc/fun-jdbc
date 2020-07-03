@@ -10,9 +10,9 @@ package com.github.nwillc.funjdbc;
 
 import com.github.nwillc.funjdbc.functions.Extractor;
 import com.github.nwillc.funjdbc.utils.EFactory;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -49,7 +49,7 @@ public class DbAccessorTest implements DbAccessor {
         wordExtractor = extractor;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         connectionFailed = false;
     }
@@ -139,9 +139,11 @@ public class DbAccessorTest implements DbAccessor {
         assertThatThrownBy(() -> dbUpdate(sql)).isInstanceOf(SQLException.class);
     }
 
-    @Test(expected = SQLException.class)
-    public void testFindFails() throws Exception {
-        dbFind(sql("SELECT * FROM WORDS WHERE WORD = 'a'"), wordExtractor);
+    @Test
+    public void testFindFails() {
+        assertThatThrownBy(() -> {
+            dbFind(sql("SELECT * FROM WORDS WHERE WORD = 'a'"), wordExtractor);
+        } ).isInstanceOf(SQLException.class);
     }
 
     @Test

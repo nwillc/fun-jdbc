@@ -32,12 +32,12 @@ group = "com.github.nwillc"
 version = "1.0.1-SNAPSHOT"
 
 val archivesBaseName = "fun-jdbc"
-val almost_functional_version = "1.9.7"
+val almostFunctionalVersion = "1.9.7"
 val assertj_version = "3.9.1"
 val embedded_db_junit_version = "2.0.0"
-val jdk_contract_version = "1.9.2"
+val jdk_contract_version = "2.0.0"
 val jmockit_version = "1.39"
-val junit_version = "5.5.0-RC2"
+val junit_version = "5.7.0-M1"
 val tinylog_version = "1.3.6"
 val funkjdbc_test_version = "0.12.0"
 val publication_name = "maven"
@@ -47,17 +47,15 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.nwillc:almost-functional:$almost_functional_version")
+    implementation("com.github.nwillc:almost-functional:$almostFunctionalVersion")
     implementation("org.tinylog:tinylog:$tinylog_version")
 
-    testImplementation("junit:junit:4.13")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
     testImplementation("org.jmockit:jmockit:$jmockit_version")
     testImplementation("org.zapodot:embedded-db-junit:$embedded_db_junit_version")
 
-    testImplementation("com.github.nwillc:jdk_contract_tests:$jdk_contract_version") {
-        exclude(module = "junit-jupiter-api")
-    }
+    testImplementation("com.github.nwillc:jdk_contract_tests:$jdk_contract_version")
 }
 
 val sourceJar by tasks.registering(Jar::class) {
@@ -121,7 +119,7 @@ gitPublish {
 
 tasks {
     withType<Test> {
-        useJUnit()
+        useJUnitPlatform()
         testLogging {
             showStandardStreams = true
             events("passed", "failed", "skipped")
